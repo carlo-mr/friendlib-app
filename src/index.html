@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <title>Ionic App</title>
 
-  <base href="/" />
+  <base href="/"/>
 
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
 
@@ -15,9 +16,12 @@
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
+  <!-- see https://stackoverflow.com/questions/50371593/angular-6-uncaught-referenceerror-buffer-is-not-defined/50377270#50377270 -->
+  <script>
+    var global = global || window;
+  </script>
 </head>
 <body>
-  <app-root></app-root>
+<app-root></app-root>
 </body>
 </html>
