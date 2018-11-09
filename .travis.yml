@@ -18,8 +18,15 @@ before_install:
 
 before_script:
   - npm install -g cordova ionic
-  - npm install -g
 
 script:
   - npm run lint
   - npm run test-ci
+  - ionic build --prod -- --base-href "/friendlib-app/"
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local_dir: www
