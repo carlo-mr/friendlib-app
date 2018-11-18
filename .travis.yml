@@ -2,26 +2,15 @@ sudo: required
 dist: trusty
 language: objective-c
 osx_image: xcode10.1
-branches:
-  except:
-  - "/\\+travis\\.\\d+$/"
 
 cache:
   - npm
   - bundler
 
-env:
-  global:
-    secure: "o6RbAfKp0YNYJTD3w3u91HIs1Ye7mPBk5cY6axiONqZ0na4fh/pGUiruym8bGTrCglRWpAmbf9rMSAqWVja9CTg8yLQBmfbLLkQcjw5ilJFBg4tB3IC1zRWQjSIx42sgrc2NyAH0Ed0t6SIarPYYGn4OfTZEtB2VUyw7i0TRXz1H4dchemGhfkx7FWkuy6v5DX5TIp7whYXV0QieJNlV0b38TKE666Glon4qi0bfQVDQyiAKG1/2DRyQ4CYN9P8Q+sl+Qt5yrW/tgBah33XyJDwXDyOlFIbRyS/EghsHP7BylRs+bybo3Bwt+vK2Jgo6HToWXqtKv6p7UOKjwerhCSB3SJqqqq5V5arJM8O/Dzyo+xlhtYlbVACktDt9xQfSIanWV5Vu5Nvel6ooe86f5mXmK2etgM/q5Ct7IJt8Co/BwKXK/WCgpnrnrbikMGLjZCU7LqiTIVFEnQIVVUO2De51MZ4AfrlmXA3vn7AU3srY/kD1sQBcovLzxmfjC5Zqq1SdW7pUe5wiJN/hkF8VdyJFD10+jCPx4/OzWsXDPJOj4AdjYlIQOy/57k0RBQLKbcFUns/vUt9ymgMVuadd1OcrgEIGLpbvrwcIVa4K7Xh2thHIwp4u7Zum9Tx1hbXzbjHYd88imAn6qs5S0M+m2DJH1NGS2GmsQtlppAlWrAk="
-
 addons:
   chrome: beta
 
 before_install:
-  - export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
-  #- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then ("/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost &")& fi
-  #- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then ( sudo Xvfb :99 -ac -screen 0 1024x768x8; echo ok )& fi
   - export LC_ALL=en_US.UTF-8
   - export LANG=en_US.UTF-8
   - bundle install
@@ -34,7 +23,7 @@ before_install:
 
 script:
   - npm run lint
-  #- npm run test-xvfb
+  - npm run test-ci
   - ionic build --prod -- --base-href "/friendlib-app/"
   - bundle exec fastlane beta
 
