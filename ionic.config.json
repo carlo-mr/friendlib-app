@@ -1,5 +1,7 @@
 {
   "name": "friendlib-app",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
