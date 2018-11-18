@@ -1,5 +1,6 @@
 #!/bin/bash
 # function to make a commit on a branch in a Travis CI build
+# taken from: https://gist.github.com/ddgenome/f3a60fe4c2af0cbe758556d982fbeea9
 # be sure to avoid creating a Travis CI fork bomb
 # see https://github.com/travis-ci/travis-ci/issues/1701
 function travis-branch-commit() {
@@ -29,7 +30,7 @@ function travis-branch-commit() {
         return 1
     fi
     # make Travis CI skip this build
-    if ! git commit -m "[ci skip] Version update"; then
+    if ! git commit -m "[skip travis] Buildnumber update"; then
         err "failed to commit updates"
         return 1
     fi

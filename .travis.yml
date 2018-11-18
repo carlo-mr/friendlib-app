@@ -11,25 +11,27 @@ addons:
   chrome: beta
 
 before_install:
-  - export LC_ALL=en_US.UTF-8
-  - export LANG=en_US.UTF-8
-  - bundle install
-  - bundle update
-  - sudo gem install fastlane -NV
   - nvm install --lts
   - nvm use --lts
   - npm install -g cordova ionic @angular/cli
   - npm install
+  # fastlane
+  # check if LANG US is really correct
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then export LC_ALL=en_US.UTF-8; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then export LANG=en_US.UTF-8; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle install; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle update; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then sudo gem install fastlane -NV; fi
 
 script:
   - npm run lint
   - npm run test-ci
   - ionic build --prod -- --base-href "/friendlib-app/"
-  - bundle exec fastlane beta
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle exec fastlane beta; fi
 
 after_success:
-  - chmod +x .travis/commit_push.bash
-  - .travis/commit_push.bash
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then chmod +x .travis/commit_push.bash; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then .travis/commit_push.bash; fi
 
 deploy:
   provider: pages
