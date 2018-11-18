@@ -17,21 +17,21 @@ before_install:
   - npm install
   # fastlane
   # check if LANG US is really correct
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then export LC_ALL=en_US.UTF-8; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then export LANG=en_US.UTF-8; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle install; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle update; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then sudo gem install fastlane -NV; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then export LC_ALL=en_US.UTF-8; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then export LANG=en_US.UTF-8; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then bundle install; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then bundle update; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then sudo gem install fastlane -NV; fi
 
 script:
   - npm run lint
   - npm run test-ci
   - ionic build --prod -- --base-href "/friendlib-app/"
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then bundle exec fastlane beta; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then bundle exec fastlane beta; fi
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then chmod +x .travis/commit_push.bash; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then .travis/commit_push.bash; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then chmod +x .travis/commit_push.bash; fi
+  - if [[ ("$TRAVIS_BRANCH" = "master") && ("$TRAVIS_PULL_REQUEST" = "false") ]]; then .travis/commit_push.bash; fi
 
 deploy:
   provider: pages
