@@ -1,30 +1,33 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {LoginDetails} from '../../models/auth.model';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: 'auth-login',
+  templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   loginForm = new FormGroup({
-    userName: new FormControl(''),
-    password: new FormControl(''),
+    userName: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required])
   });
 
   @Output()
   login = new EventEmitter<LoginDetails>();
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
   onSubmit() {
-    this.login.emit(this.loginForm.getRawValue());
+    if (this.loginForm.valid) {
+      this.login.emit(this.loginForm.getRawValue());
+    }
+  }
+
+  isControlInvalid(controlName: string) {
+    const control = this.loginForm.get(controlName);
+    if (control) {
+      return control.invalid && (control.dirty || control.touched);
+    }
+    return false;
   }
 
 }

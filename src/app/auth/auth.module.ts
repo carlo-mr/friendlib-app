@@ -11,11 +11,17 @@ import {EffectsModule} from '@ngrx/effects';
 import {AuthEffects} from './effects/auth.effects';
 import {LoginComponent} from './components/login/login.component';
 import {LoginPage} from './containers/login.page';
+import {RegisterPage} from './containers/register.page';
+import {RegisterComponent} from './components/register/register.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LoginPage
+  },
+  {
+    path: 'register',
+    component: RegisterPage
   }
 ];
 
@@ -29,7 +35,7 @@ const routes: Routes = [
     StoreModule.forFeature('auth', fromAuth.reducer),
     EffectsModule.forFeature([AuthEffects])
   ],
-  declarations: [LoginPage, LoginComponent]
+  declarations: [LoginPage, LoginComponent, RegisterPage, RegisterComponent]
 })
 export class AuthModule {
 }

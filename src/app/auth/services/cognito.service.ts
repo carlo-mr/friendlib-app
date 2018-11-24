@@ -1,9 +1,9 @@
 import {Inject, Injectable} from '@angular/core';
 // Cognito
-import {AuthenticationDetails, CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
+import {AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk';
 import {Subject} from 'rxjs';
-import {LoginDetails} from '../models/auth.model';
+import {LoginDetails, RegisterDetails} from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +67,40 @@ export class CognitoService {
         subject.error({message: 'custom challenge'});
       }
     });
+
+    return subject.asObservable();
+  }
+
+  register(registerDetails: RegisterDetails) {
+    const attributeList = [];
+
+    const dataEmail = {
+      Name: 'email',
+      Value: registerDetails.email
+    };
+
+    const attributeEmail = new CognitoUserAttribute(dataEmail);
+    attributeList.push(attributeEmail);
+
+    const subject = new Subject();
+
+    this.cognitoUserPool.signUp(
+      registerDetails.userName.replace(/ /g, ''),
+      registerDetails.password,
+      attributeList,
+      null,
+      function (err, result) {
+        if (err) {
+          console.log('error ' + err);
+          subject.error(err);
+        } else {
+          const cognitoUser = result.user;
+          console.log('user name is ' + cognitoUser.getUsername());
+
+          subject.next(cognitoUser);
+          subject.complete();
+        }
+      });
 
     return subject.asObservable();
   }

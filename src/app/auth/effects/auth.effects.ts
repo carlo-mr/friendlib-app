@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {NavController} from '@ionic/angular';
-import {AuthActionTypes, Login, LoginError, LoginSuccess} from '../actions/auth.actions';
+import {AuthActionTypes, Login, LoginError, LoginSuccess, Register, RegisterError, RegisterSuccess} from '../actions/auth.actions';
 import {CognitoService} from '../services/cognito.service';
 import {LoggedUser} from '../models/auth.model';
 import {of} from 'rxjs';
@@ -14,7 +14,7 @@ export class AuthEffects {
   login$ = this.actions$.pipe(
     ofType(AuthActionTypes.Login),
     switchMap((action: Login) => {
-        return this.loginService.logIn(action.payload.loginDetails).pipe(
+        return this.cognitoService.logIn(action.payload.loginDetails).pipe(
           map((cognitoUser: any) => {
             const loggedUser: LoggedUser = {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
@@ -32,6 +32,18 @@ export class AuthEffects {
     )
   );
 
+  @Effect()
+  register$ = this.actions$.pipe(
+    ofType(AuthActionTypes.Register),
+    switchMap((action: Register) => {
+      return this.cognitoService.register(action.payload.registerDetails).pipe(
+        tap((result) => console.log(JSON.stringify(result))),
+        map((cognitoUser: any) => new RegisterSuccess(cognitoUser)),
+        catchError((error) => of(new RegisterError({errorMessage: error.message})))
+      );
+    })
+  );
+
   @Effect({dispatch: false})
   navigateOnloginSuccess$ = this.actions$.pipe(
     ofType(AuthActionTypes.LoginSuccess),
@@ -40,6 +52,6 @@ export class AuthEffects {
     })
   );
 
-  constructor(private actions$: Actions, private navCtrl: NavController, private loginService: CognitoService) {
+  constructor(private actions$: Actions, private navCtrl: NavController, private cognitoService: CognitoService) {
   }
 }

@@ -1,22 +1,33 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <ion-list no-lines>
     <ion-item>
+      <ion-label position="floating">
+        <ion-text color="{{isControlInvalid('userName') ? 'danger' : 'primary'}}">
+          <h3>Name *</h3>
+        </ion-text>
+        <p *ngIf="isControlInvalid('userName')">Gib deinen Namen ein</p>
+      </ion-label>
       <ion-input
         type="text"
-        placeholder="Name"
         spellcheck="false"
         autocapitalize="off"
         formControlName="userName"></ion-input>
     </ion-item>
+
     <ion-item>
+      <ion-label position="floating">
+        <ion-text color="{{isControlInvalid('password') ? 'danger' : 'primary'}}">
+          <h3>Passwort *</h3>
+        </ion-text>
+        <p *ngIf="isControlInvalid('password')">Gib dein Passwort ein</p>
+      </ion-label>
       <ion-input
         type="password"
-        placeholder="Passwort"
         spellcheck="false"
         autocapitalize="off"
         formControlName="password"></ion-input>
     </ion-item>
   </ion-list>
 
-  <ion-button type="submit" [disabled]="!loginForm.valid" expand="block">Login</ion-button>
+  <ion-button type="submit" expand="block">Einloggen</ion-button>
 </form>
