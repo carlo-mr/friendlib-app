@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 // Cognito
 import {AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk';
-import {Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {LoginDetails, RegisterDetails} from '../models/auth.model';
 
 @Injectable({
@@ -34,15 +34,13 @@ export class CognitoService {
   }
 
   logIn(loginDetails: LoginDetails) {
-    const userPool = this.buildCognitoUserPool();
-
     const authenticationData = {
       Username: loginDetails.userName.replace(/ /g, ''),
       Password: loginDetails.password,
     };
 
     const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(authenticationData);
-    const cognitoUser: any = this.buildCognitoUser(loginDetails.userName.replace(/ /g, ''), userPool);
+    const cognitoUser: any = this.buildCognitoUser(loginDetails.userName.replace(/ /g, ''), this.cognitoUserPool);
 
     const subject = new Subject();
 
@@ -102,6 +100,40 @@ export class CognitoService {
         }
       });
 
+    return subject.asObservable();
+  }
+
+  retrieveUserFromLocalStorage() {
+    const subject = new Subject();
+
+    const cognitoUser: any = this.buildCognitoUserPool().getCurrentUser();
+
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function (getSessionError, session) {
+        if (getSessionError) {
+          alert(getSessionError.message);
+          return subject.error(getSessionError);
+        }
+
+        console.log('session validity: ' + session.isValid());
+
+        if (session.isValid()) {
+          console.log('refresh session');
+
+          cognitoUser.refreshSession(session.getRefreshToken(), (refreshSessionError, refreshedSession) => {
+            if (refreshSessionError) {
+              alert(refreshSessionError.message);
+              return subject.error(refreshSessionError);
+            }
+            return subject.next(cognitoUser);
+          });
+        } else {
+          return subject.error(null);
+        }
+      });
+    } else {
+      return of(null);
+    }
     return subject.asObservable();
   }
 

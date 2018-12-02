@@ -2,13 +2,42 @@ import {Action} from '@ngrx/store';
 import {LoggedUser, LoginDetails, RegisterDetails} from '../models/auth.model';
 
 export enum AuthActionTypes {
+  LoginLocalStorage = '[Auth] Login Local Storage',
+  LoginLocalStorageSuccess = '[Auth] Login Local Storage Success',
+  LoginLocalStorageError = '[Auth] Login Local Storage Error',
+
   Login = '[Auth] Login',
   LoginSuccess = '[Auth] Login Success',
   LoginError = '[Auth] Login Error',
 
   Register = '[Auth] Register',
   RegisterSuccess = '[Auth] Register Success',
-  RegisterError = '[Auth] Register Error'
+  RegisterError = '[Auth] Register Error',
+
+  Logout = '[Auth] Logout',
+  LogoutSuccess = '[Auth] Logout Success',
+  LogoutError = '[Auth] Logout Error'
+}
+
+export class LoginLocalStorage implements Action {
+  readonly type = AuthActionTypes.LoginLocalStorage;
+
+  constructor() {
+  }
+}
+
+export class LoginLocalStorageSuccess implements Action {
+  readonly type = AuthActionTypes.LoginLocalStorageSuccess;
+
+  constructor(public loggedUser: LoggedUser) {
+  }
+}
+
+export class LoginLocalStorageError implements Action {
+  readonly type = AuthActionTypes.LoginLocalStorageError;
+
+  constructor(public errorMessage: string) {
+  }
 }
 
 export class Login implements Action {
@@ -53,10 +82,37 @@ export class RegisterError implements Action {
   }
 }
 
+export class Logout implements Action {
+  readonly type = AuthActionTypes.Logout;
+
+  constructor(public payload: { loggedUser?: LoggedUser }) {
+  }
+}
+
+export class LogoutSuccess implements Action {
+  readonly type = AuthActionTypes.LogoutSuccess;
+
+  constructor() {
+  }
+}
+
+export class LogoutError implements Action {
+  readonly type = AuthActionTypes.LogoutError;
+
+  constructor(public payload: { errorMessage: string }) {
+  }
+}
+
 export type AuthActionsUnion =
-  Login
+  LoginLocalStorage
+  | LoginLocalStorageSuccess
+  | LoginLocalStorageError
+  | Login
   | LoginSuccess
   | LoginError
   | Register
   | RegisterSuccess
-  | RegisterError;
+  | RegisterError
+  | Logout
+  | LogoutSuccess
+  | LogoutError;

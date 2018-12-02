@@ -20,6 +20,12 @@ export function reducer(state = initialState, action: AuthActionsUnion): AuthSta
         loggedUser: action.payload.loggedUser
       };
 
+    case AuthActionTypes.LogoutSuccess:
+      return {
+        ...state,
+        isLoggedIn: false,
+        loggedUser: null
+      };
 
     default:
       return state;
