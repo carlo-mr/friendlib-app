@@ -9,6 +9,8 @@ import {CognitoService} from '../services/cognito.service';
 import * as fromActions from '../actions/auth.actions';
 import {cold, hot} from 'jasmine-marbles';
 import {LoggedUser, LoginDetails, RegisterDetails} from '../models/auth.model';
+import {StoreModule} from '@ngrx/store';
+import {reducers} from '../../reducers';
 
 describe('AuthEffects', () => {
   let actions$: Observable<any>;
@@ -38,6 +40,9 @@ describe('AuthEffects', () => {
             }
           }
         }
+      ],
+      imports: [
+        StoreModule.forRoot(reducers)
       ]
     });
 
@@ -136,6 +141,20 @@ describe('AuthEffects', () => {
 
       effects.navigateOnloginSuccess$.subscribe(() => {
         expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/app/tabs/(home:home)');
+      });
+    });
+  });
+
+  describe('navigateOnlogoutSuccess$ effect', () => {
+
+    it('should navigate on successful logout', () => {
+      spyOn(navCtrl, 'navigateRoot');
+
+      const action = new fromActions.LogoutSuccess();
+      actions$ = hot('--a', {a: action});
+
+      effects.navigateOnlogoutSuccess$.subscribe(() => {
+        expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/');
       });
     });
   });
