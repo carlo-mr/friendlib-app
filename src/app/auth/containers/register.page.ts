@@ -9,6 +9,7 @@ import {RegisterDetails} from '../models/auth.model';
     <auth-register (register)="onRegister($event)"></auth-register>
 
     <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
+    <ion-button fill="outline" routerLink="/forgot" routerDirection="forward">Passwort vergessen</ion-button>
   `
 })
 export class RegisterPage implements OnInit {

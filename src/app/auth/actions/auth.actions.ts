@@ -14,6 +14,10 @@ export enum AuthActionTypes {
   RegisterSuccess = '[Auth] Register Success',
   RegisterError = '[Auth] Register Error',
 
+  ForgotPassword = '[Auth] ForgotPassword',
+  ForgotPasswordSuccess = '[Auth] ForgotPassword Success',
+  ForgotPasswordError = '[Auth] ForgotPassword Error',
+
   Logout = '[Auth] Logout',
   LogoutSuccess = '[Auth] Logout Success',
   LogoutError = '[Auth] Logout Error'
@@ -82,6 +86,27 @@ export class RegisterError implements Action {
   }
 }
 
+export class ForgotPassword implements Action {
+  readonly type = AuthActionTypes.ForgotPassword;
+
+  constructor(public payload: { userName: string }) {
+  }
+}
+
+export class ForgotPasswordSuccess implements Action {
+  readonly type = AuthActionTypes.ForgotPasswordSuccess;
+
+  constructor(public payload: { destination: string }) {
+  }
+}
+
+export class ForgotPasswordError implements Action {
+  readonly type = AuthActionTypes.ForgotPasswordError;
+
+  constructor(public payload: { errorMessage: string }) {
+  }
+}
+
 export class Logout implements Action {
   readonly type = AuthActionTypes.Logout;
 
@@ -113,6 +138,9 @@ export type AuthActionsUnion =
   | Register
   | RegisterSuccess
   | RegisterError
+  | ForgotPassword
+  | ForgotPasswordSuccess
+  | ForgotPasswordError
   | Logout
   | LogoutSuccess
   | LogoutError;

@@ -1,9 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {NavController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {
   AuthActionTypes,
+  ForgotPassword,
+  ForgotPasswordError,
+  ForgotPasswordSuccess,
   Login,
   LoginError,
   LoginLocalStorageError,
@@ -108,9 +111,39 @@ export class AuthEffects {
     })
   );
 
+  @Effect()
+  forgotpassword$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ForgotPassword),
+    switchMap((action: ForgotPassword) => {
+      return this.cognitoService.forgotPassword(action.payload.userName).pipe(
+        map((destination: string) => new ForgotPasswordSuccess({destination})),
+        catchError((error) => of(new ForgotPasswordError({errorMessage: error.message})))
+      );
+    })
+  );
+
+  @Effect({dispatch: false})
+  showAlertOnForgotPasswordSuccess$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ForgotPasswordSuccess),
+    switchMap((action: ForgotPasswordSuccess) => {
+      return this.alertCtrl.create({
+        header: 'Password Code verschickt',
+        message: `Es wurde eine Email an ${action.payload.destination} geschickt. Nutze den Code um ein neues Passwort zuvergeben.`,
+        buttons: [
+          {
+            text: 'Alles klar'
+          }
+        ]
+      })
+        .then((alert) => alert.present())
+        .catch(() => console.log('Alert could not be created.'));
+    })
+  );
+
   constructor(private actions$: Actions,
               private store$: Store<State>,
               private navCtrl: NavController,
+              private alertCtrl: AlertController,
               private cognitoService: CognitoService) {
   }
 }

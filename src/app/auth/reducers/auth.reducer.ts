@@ -4,10 +4,12 @@ import {LoggedUser} from '../models/auth.model';
 export interface AuthState {
   isLoggedIn: boolean;
   loggedUser?: LoggedUser;
+  forgotPasswordCodeSent?: boolean;
 }
 
 export const initialState: AuthState = {
-  isLoggedIn: false
+  isLoggedIn: false,
+  forgotPasswordCodeSent: false
 };
 
 export function reducer(state = initialState, action: AuthActionsUnion): AuthState {
@@ -25,6 +27,12 @@ export function reducer(state = initialState, action: AuthActionsUnion): AuthSta
         ...state,
         isLoggedIn: false,
         loggedUser: null
+      };
+
+    case AuthActionTypes.ForgotPasswordSuccess:
+      return {
+        ...state,
+        forgotPasswordCodeSent: true
       };
 
     default:

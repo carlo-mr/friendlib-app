@@ -148,4 +148,24 @@ export class CognitoService {
       Pool: userPool
     });
   }
+
+  forgotPassword(userName: string) {
+    const subject = new Subject();
+
+    const cognitoUser = this.buildCognitoUser(userName, this.cognitoUserPool);
+
+    cognitoUser.forgotPassword({
+      onSuccess: function (result) {
+        console.log('call result: ' + result);
+      },
+      onFailure: function (err) {
+        subject.error(err);
+      },
+      inputVerificationCode(data) {
+        subject.next(data.CodeDeliveryDetails.Destination);
+      }
+    });
+
+    return subject.asObservable();
+  }
 }
