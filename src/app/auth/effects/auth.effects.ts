@@ -125,8 +125,8 @@ export class AuthEffects {
   @Effect({dispatch: false})
   showAlertOnForgotPasswordSuccess$ = this.actions$.pipe(
     ofType(AuthActionTypes.ForgotPasswordSuccess),
-    switchMap((action: ForgotPasswordSuccess) => {
-      return this.alertCtrl.create({
+    map((action: ForgotPasswordSuccess) => {
+      this.alertCtrl.create({
         header: 'Password Code verschickt',
         message: `Es wurde eine Email an ${action.payload.destination} geschickt. Nutze den Code um ein neues Passwort zuvergeben.`,
         buttons: [

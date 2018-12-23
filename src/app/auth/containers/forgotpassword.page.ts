@@ -9,8 +9,7 @@ import {map} from 'rxjs/operators';
   template: `
     <auth-forgotpassword
       [forgotPasswordCodeSent]="forgotPasswordCodeSent$ | async"
-      (newPassword)="onNewPassword($event)"
-      (submit)="onSubmit($event)">
+      (newPassword)="onNewPassword($event)">
     </auth-forgotpassword>
 
     <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
@@ -31,10 +30,6 @@ export class ForgotpasswordPage implements OnInit {
 
   onNewPassword(userName: string) {
     this.store.dispatch(new fromAuth.ForgotPassword({userName}));
-  }
-
-  onSubmit() {
-
   }
 
 }

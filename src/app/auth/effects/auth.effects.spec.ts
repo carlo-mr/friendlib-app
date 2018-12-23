@@ -3,7 +3,7 @@ import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable, of, throwError} from 'rxjs';
 
 import {AuthEffects} from './auth.effects';
-import {NavController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import {CognitoService} from '../services/cognito.service';
 
 import * as fromActions from '../actions/auth.actions';
@@ -17,6 +17,7 @@ describe('AuthEffects', () => {
   let effects: AuthEffects;
   let service: CognitoService;
   let navCtrl: NavController;
+  let alertCtrl: AlertController;
 
   const loginDetails: LoginDetails = {userName: '', password: ''};
   const registerDetails: RegisterDetails = {userName: '', email: 'test@friendlib.de', password: ''};
@@ -29,6 +30,12 @@ describe('AuthEffects', () => {
         {
           provide: NavController, useValue: {
             navigateRoot: () => {
+            }
+          }
+        },
+        {
+          provide: AlertController, useValue: {
+            create: () => {
             }
           }
         },
@@ -49,6 +56,7 @@ describe('AuthEffects', () => {
     effects = TestBed.get(AuthEffects);
     service = TestBed.get(CognitoService);
     navCtrl = TestBed.get(NavController);
+    alertCtrl = TestBed.get(AlertController);
   });
 
   describe('login$ effect', () => {
@@ -155,6 +163,19 @@ describe('AuthEffects', () => {
 
       effects.navigateOnlogoutSuccess$.subscribe(() => {
         expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/');
+      });
+    });
+  });
+
+  describe('showAlertOnForgotPasswordSuccess$ effect', () => {
+    it('should display an alert on forgot password', () => {
+      spyOn(alertCtrl, 'create').and.returnValue(Promise.resolve());
+
+      const action = new fromActions.ForgotPasswordSuccess({destination: 'test@friendlib.de'});
+      actions$ = hot('--a', {a: action});
+
+      effects.showAlertOnForgotPasswordSuccess$.subscribe(() => {
+        expect(alertCtrl.create).toHaveBeenCalled();
       });
     });
   });
