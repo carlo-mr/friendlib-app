@@ -148,7 +148,7 @@ describe('AuthEffects', () => {
       actions$ = hot('--a', {a: action});
 
       effects.navigateOnloginSuccess$.subscribe(() => {
-        expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/app/tabs/(home:home)');
+        expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/tabs/home');
       });
     });
   });

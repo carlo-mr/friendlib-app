@@ -20,7 +20,7 @@ export interface VerificationDetails {
   verificationCode: string;
 }
 
-export interface ResetPasswordDetails {
+export interface NewPasswordDetails {
   userName: string;
   verificationCode: string;
   password: string;

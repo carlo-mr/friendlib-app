@@ -13,6 +13,9 @@ import {
   LoginSuccess,
   LogoutError,
   LogoutSuccess,
+  NewPassword,
+  NewPasswordError,
+  NewPasswordSuccess,
   Register,
   RegisterError,
   RegisterSuccess
@@ -64,7 +67,7 @@ export class AuthEffects {
   navigateOnloginSuccess$ = this.actions$.pipe(
     ofType(AuthActionTypes.LoginSuccess),
     map((action: LoginSuccess) => {
-      this.navCtrl.navigateRoot('/app/tabs/(home:home)');
+      this.navCtrl.navigateRoot('/tabs/home');
     })
   );
 
@@ -137,6 +140,43 @@ export class AuthEffects {
       })
         .then((alert) => alert.present())
         .catch(() => console.log('Alert could not be created.'));
+    })
+  );
+
+  @Effect()
+  newPassword$ = this.actions$.pipe(
+    ofType(AuthActionTypes.NewPassword),
+    switchMap((action: NewPassword) => {
+      return this.cognitoService.newPassword(action.payload.newPasswordDetails).pipe(
+        map((destination: string) => new NewPasswordSuccess()),
+        catchError((error) => of(new NewPasswordError({errorMessage: error.message})))
+      );
+    })
+  );
+
+  @Effect({dispatch: false})
+  showAlertOnNewPasswordSuccess$ = this.actions$.pipe(
+    ofType(AuthActionTypes.NewPasswordSuccess),
+    map((action: NewPasswordSuccess) => {
+      this.alertCtrl.create({
+        header: 'Neues Passwort vergeben',
+        message: `Du hast erfolgreich ein neues Passwort vergeben. Du kannst dich nun wieder einloggen`,
+        buttons: [
+          {
+            text: 'Alles klar'
+          }
+        ]
+      })
+        .then((alert) => alert.present())
+        .catch(() => console.log('Alert could not be created.'));
+    })
+  );
+
+  @Effect({dispatch: false})
+  navigateOnNewPasswordSuccess$ = this.actions$.pipe(
+    ofType(AuthActionTypes.NewPasswordSuccess),
+    map((action: NewPasswordSuccess) => {
+      this.navCtrl.navigateRoot('/');
     })
   );
 

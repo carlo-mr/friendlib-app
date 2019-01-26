@@ -3,7 +3,7 @@ import {Inject, Injectable} from '@angular/core';
 import {AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk';
 import {of, Subject} from 'rxjs';
-import {LoginDetails, RegisterDetails} from '../models/auth.model';
+import {LoginDetails, NewPasswordDetails, RegisterDetails} from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -165,6 +165,21 @@ export class CognitoService {
         subject.next(data.CodeDeliveryDetails.Destination);
       }
     });
+
+    return subject.asObservable();
+  }
+
+  public newPassword(newPasswordDetails: NewPasswordDetails) {
+    const subject = new Subject();
+
+    const cognitoUser = this.buildCognitoUser(newPasswordDetails.userName, this.cognitoUserPool);
+    cognitoUser.confirmPassword(
+      newPasswordDetails.verificationCode,
+      newPasswordDetails.password,
+      {
+        onSuccess: () => subject.next(),
+        onFailure: error => subject.error(error.message)
+      });
 
     return subject.asObservable();
   }

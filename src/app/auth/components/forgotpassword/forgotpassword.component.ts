@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NewPasswordDetails} from '../../models/auth.model';
 
 @Component({
   selector: 'auth-forgotpassword',
@@ -17,10 +18,21 @@ export class ForgotpasswordComponent {
   forgotPasswordCodeSent: boolean;
 
   @Output()
-  newPassword = new EventEmitter<string>();
+  newPassword = new EventEmitter<NewPasswordDetails>();
+
+  @Output()
+  requestCode = new EventEmitter<string>();
 
   onSubmit() {
-    this.newPassword.emit(this.formGroup.get('userName').value);
+    if (this.forgotPasswordCodeSent) {
+      this.newPassword.emit({
+        userName: this.formGroup.get('userName').value,
+        verificationCode: this.formGroup.get('verificationCode').value,
+        password: this.formGroup.get('password').value
+      });
+    } else {
+      this.requestCode.emit(this.formGroup.get('userName').value);
+    }
   }
 
   isControlInvalid(controlName: string) {

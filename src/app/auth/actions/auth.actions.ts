@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {LoggedUser, LoginDetails, RegisterDetails} from '../models/auth.model';
+import {LoggedUser, LoginDetails, NewPasswordDetails, RegisterDetails} from '../models/auth.model';
 
 export enum AuthActionTypes {
   LoginLocalStorage = '[Auth] Login Local Storage',
@@ -17,6 +17,10 @@ export enum AuthActionTypes {
   ForgotPassword = '[Auth] ForgotPassword',
   ForgotPasswordSuccess = '[Auth] ForgotPassword Success',
   ForgotPasswordError = '[Auth] ForgotPassword Error',
+
+  NewPassword = '[Auth] NewPassword',
+  NewPasswordSuccess = '[Auth] NewPassword Success',
+  NewPasswordError = '[Auth] NewPassword Error',
 
   Logout = '[Auth] Logout',
   LogoutSuccess = '[Auth] Logout Success',
@@ -107,6 +111,27 @@ export class ForgotPasswordError implements Action {
   }
 }
 
+export class NewPassword implements Action {
+  readonly type = AuthActionTypes.NewPassword;
+
+  constructor(public payload: { newPasswordDetails: NewPasswordDetails }) {
+  }
+}
+
+export class NewPasswordSuccess implements Action {
+  readonly type = AuthActionTypes.NewPasswordSuccess;
+
+  constructor() {
+  }
+}
+
+export class NewPasswordError implements Action {
+  readonly type = AuthActionTypes.NewPasswordError;
+
+  constructor(public payload: { errorMessage: string }) {
+  }
+}
+
 export class Logout implements Action {
   readonly type = AuthActionTypes.Logout;
 
@@ -141,6 +166,9 @@ export type AuthActionsUnion =
   | ForgotPassword
   | ForgotPasswordSuccess
   | ForgotPasswordError
+  | NewPassword
+  | NewPasswordSuccess
+  | NewPasswordError
   | Logout
   | LogoutSuccess
   | LogoutError;
