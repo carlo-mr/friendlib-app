@@ -5,7 +5,8 @@
   <title>Ionic App</title>
 
   <base href="/friendlib-app/">
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
 
@@ -14,9 +15,12 @@
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-<link rel="stylesheet" href="styles.2e2fa868c0a2c8da4d57.css"></head>
+  <!-- see https://stackoverflow.com/questions/50371593/angular-6-uncaught-referenceerror-buffer-is-not-defined/50377270#50377270 -->
+  <script>
+    var global = global || window;
+  </script>
+<link rel="stylesheet" href="styles.0d36acd991424aafb82e.css"></head>
 <body>
-  <app-root></app-root>
-<script type="text/javascript" src="runtime.dfb59f9bb3080ddfac4b.js"></script><script type="text/javascript" src="polyfills.8f80c548ed4252672d3c.js"></script><script type="text/javascript" src="main.7c5a928da5be8b4126b1.js"></script></body>
+<app-root></app-root>
+<script type="text/javascript" src="runtime.45719605dcea0053de39.js"></script><script type="text/javascript" src="polyfills.64102907e5f319e83e42.js"></script><script type="text/javascript" src="main.48c001664e289e23f07f.js"></script></body>
 </html>
