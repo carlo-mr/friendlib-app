@@ -1,0 +1,6 @@
+# Command to generate this module
+
+`ng generate module auth`
+
+`ng generate @ngrx/schematics:feature auth/Auth -m auth/auth.module.ts --group`
+

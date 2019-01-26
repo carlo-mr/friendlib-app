@@ -1,0 +1,51 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <ion-list no-lines>
+    <ion-item>
+      <ion-label position="floating">
+        <ion-text color="{{isControlInvalid('userName') ? 'danger' : 'primary'}}">
+          <h3>Name *</h3>
+        </ion-text>
+        <p *ngIf="isControlInvalid('userName')" color="danger">Gib einen Namen an</p>
+      </ion-label>
+      <ion-input
+        type="text"
+        spellcheck="false"
+        autocapitalize="off"
+        formControlName="userName"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">
+        <ion-text color="{{isControlInvalid('email') ? 'danger' : 'primary'}}">
+          <h3>E-Mail *</h3>
+        </ion-text>
+        <p *ngIf="isControlInvalid('email')" color="danger">Eine gültige E-Mail Adresse
+          ist notwendig</p>
+      </ion-label>
+      <ion-input
+        type="email"
+        pattern="email"
+        spellcheck="false"
+        autocapitalize="off"
+        formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">
+        <ion-text color="{{isControlInvalid('password') ? 'danger' : 'primary'}}">
+          <h3>Passwort *</h3>
+        </ion-text>
+        <p *ngIf="isControlInvalid('password')" color="danger">Muss mindestens 8 Zeichen
+          enthalten</p>
+      </ion-label>
+
+      <ion-input
+        type="password"
+        spellcheck="false"
+        autocapitalize="off"
+        formControlName="password"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button type="submit" expand="block" fill="outline">Registrieren</ion-button>
+</form>
