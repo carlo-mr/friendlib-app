@@ -38,7 +38,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('auth', fromAuth.reducer),
+    StoreModule.forFeature('auth', fromAuth.authReducer),
     EffectsModule.forFeature([AuthEffects])
   ],
   declarations: [LoginPage, LoginComponent, RegisterPage, RegisterComponent, ForgotpasswordPage, ForgotpasswordComponent]

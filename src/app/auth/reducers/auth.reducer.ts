@@ -1,5 +1,6 @@
 import {AuthActionsUnion, AuthActionTypes} from '../actions/auth.actions';
 import {LoggedUser} from '../models/auth.model';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -12,7 +13,7 @@ export const initialState: AuthState = {
   forgotPasswordCodeSent: false
 };
 
-export function reducer(state = initialState, action: AuthActionsUnion): AuthState {
+export function authReducer(state = initialState, action: AuthActionsUnion): AuthState {
   switch (action.type) {
 
     case AuthActionTypes.LoginSuccess:
@@ -39,3 +40,6 @@ export function reducer(state = initialState, action: AuthActionsUnion): AuthSta
       return state;
   }
 }
+
+export const getAuthState = createFeatureSelector<AuthState>('auth');
+export const getForgotPasswordCodeSent = createSelector(getAuthState, (state: AuthState) => state.forgotPasswordCodeSent);

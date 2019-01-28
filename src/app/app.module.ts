@@ -13,6 +13,7 @@ import {metaReducers, reducers} from './reducers';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {EffectsModule} from '@ngrx/effects';
+import {BookModule} from './book/book.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import {EffectsModule} from '@ngrx/effects';
     AppRoutingModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([]),
+    BookModule,
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
