@@ -7,9 +7,11 @@ import {Observable} from 'rxjs';
 @Component({
   selector: 'book-search-page',
   template: `
-    <div *ngFor="let book of books$ | async">
-      {{ book.title }}
-    </div>
+    <app-book-search (search)="onSearch($event)"></app-book-search>
+
+    <ul>
+      <li *ngFor="let book of books$ | async">{{book.title}}</li>
+    </ul>
   `
 })
 export class BookSearchPage implements OnInit {
@@ -21,6 +23,10 @@ export class BookSearchPage implements OnInit {
   ngOnInit() {
     this.books$ = this.store.pipe(select(fromBook.selectAll));
     this.store.dispatch(new actions.SearchBooks('Harry'));
+  }
+
+  onSearch(searchTerm: string) {
+    this.store.dispatch(new actions.SearchBooks(searchTerm));
   }
 
 }

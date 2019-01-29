@@ -36,6 +36,8 @@ export function bookReducer(state: BookState = initialState, action: BookActions
   switch (action.type) {
     case BookActionTypes.SearchBooksSuccess:
       return bookAdapter.addAll(action.books, state);
+    default:
+      return state;
   }
 
 }

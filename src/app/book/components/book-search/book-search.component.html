@@ -1,3 +1,22 @@
-<p>
-  book-search works!
-</p>
+<ion-toolbar>
+  <ion-buttons slot="secondary" *ngIf="!hideScanner">
+    <button ion-button start icon-only (click)="scan()">
+      <ion-icon name="barcode"></ion-icon>
+    </button>
+  </ion-buttons>
+
+  <ion-searchbar
+    [value]="searchString"
+    placeholder="Suche"
+    (search)="onSearch($event)"></ion-searchbar>
+
+  <ion-buttons slot="primary">
+    <button ion-button icon-only (click)="onSearchButtonClicked($event)">
+      <ion-icon name="search"></ion-icon>
+    </button>
+
+    <button ion-button icon-only (click)="onClearButtonClicked()">
+      <ion-icon name="trash"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-toolbar>

@@ -7,15 +7,14 @@ import {Book} from './book.reducer';
 })
 export class BookService {
 
-
-  searchBooks(searchTerm: string) {
+  public searchBooks(searchTerm: string) {
     return of([{
-      id: 'test123',
-      title: 'Harry Potter'
+      id: searchTerm + '123',
+      title: searchTerm
     } as Book,
       {
-        id: 'asdbac',
-        title: 'Harry Potter 2'
+        id: searchTerm + 'abc',
+        title: searchTerm + ' 2'
       } as Book]);
   }
 }

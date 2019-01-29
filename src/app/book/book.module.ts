@@ -7,6 +7,8 @@ import {BookSearchPage} from './containers/booksearch.page';
 import {RouterModule, Routes} from '@angular/router';
 import {EffectsModule} from '@ngrx/effects';
 import {BookEffects} from './book.effects';
+import {IonicModule} from '@ionic/angular';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 
 const routes: Routes = [
   {
@@ -17,11 +19,13 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    IonicModule,
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('book', bookReducer),
     EffectsModule.forFeature([BookEffects])
   ],
+  providers: [BarcodeScanner],
   declarations: [BookSearchComponent, BookSearchPage]
 })
 export class BookModule {
