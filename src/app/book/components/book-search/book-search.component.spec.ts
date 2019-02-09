@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BookSearchComponent } from './book-search.component';
+import {BookSearchComponent} from './book-search.component';
+import {IonicModule} from '@ionic/angular';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 
 describe('BookSearchComponent', () => {
   let component: BookSearchComponent;
@@ -8,9 +10,11 @@ describe('BookSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BookSearchComponent ]
+      imports: [IonicModule.forRoot()],
+      providers: [BarcodeScanner],
+      declarations: [BookSearchComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
