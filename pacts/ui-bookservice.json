@@ -1,0 +1,49 @@
+{
+  "consumer": {
+    "name": "ui"
+  },
+  "provider": {
+    "name": "bookservice"
+  },
+  "interactions": [
+    {
+      "description": "a request with the searchTerm 'Harry Potter' returns a list of books containing the searchTerm in the title",
+      "providerState": "provider allows to search for books",
+      "request": {
+        "method": "GET",
+        "path": "/book-service/book",
+        "query": "q=Harry+Potter"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "42",
+            "title": "Harry Potter and the Half-Blood Prince",
+            "description": "Squashy armchairs dirt on your nose brass scales crush the Sopophorous bean with flat side of silver dagger.",
+            "binding": "Book",
+            "authors": [
+              "J. K. Rowling"
+            ],
+            "pages": 1337,
+            "coverUrl": "http://bookcover.harrypotter.png",
+            "productUrl": "http://amazon.de/harrypotter"
+          }
+        ],
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

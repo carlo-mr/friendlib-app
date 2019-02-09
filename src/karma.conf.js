@@ -4,9 +4,10 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine', '@angular-devkit/build-angular', 'pact'],
     plugins: [
       require('karma-jasmine'),
+      require('@pact-foundation/karma-pact'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
@@ -25,7 +26,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome', 'ChromeHeadless'],
+    browsers: ['ChromeHeadless'],
     // see https://docs.travis-ci.com/user/chrome#karma-chrome-launcher
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -33,6 +34,19 @@ module.exports = function (config) {
         flags: ['--no-sandbox']
       }
     },
-    singleRun: false
+    singleRun: false,
+    pact: [{
+      cors: true,
+      port: 1234,
+      consumer: 'ui',
+      provider: 'bookservice',
+      dir: 'pacts/',
+      logLevel: 'debug',
+      log: 'pact.log',
+      spec: 2
+    }],
+    proxies: {
+      '/book-service/book': 'http://localhost:1234/book-service/book'
+    }
   });
 };

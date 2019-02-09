@@ -15,6 +15,7 @@ import {Observable} from 'rxjs';
   `
 })
 export class BookSearchPage implements OnInit {
+
   books$: Observable<any>;
 
   constructor(private store: Store<fromBook.BookState>) {
@@ -22,7 +23,6 @@ export class BookSearchPage implements OnInit {
 
   ngOnInit() {
     this.books$ = this.store.pipe(select(fromBook.selectAll));
-    this.store.dispatch(new actions.SearchBooks('Harry'));
   }
 
   onSearch(searchTerm: string) {

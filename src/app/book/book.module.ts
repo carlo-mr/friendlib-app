@@ -9,6 +9,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {BookEffects} from './book.effects';
 import {IonicModule} from '@ionic/angular';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
+import {HttpClientModule} from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    HttpClientModule,
     IonicModule,
     CommonModule,
     RouterModule.forChild(routes),

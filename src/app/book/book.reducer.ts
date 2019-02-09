@@ -15,7 +15,7 @@ export interface Book {
   binding: string;
   pages: number;
 
-  alternatives: Book[];
+  alternatives?: Book[];
 }
 
 export const bookAdapter = createEntityAdapter<Book>();

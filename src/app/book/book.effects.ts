@@ -15,7 +15,7 @@ export class BookEffects {
   searchBooks$ = this.actions$.pipe(
     ofType(BookActionTypes.SearchBooks),
     switchMap((action: SearchBooks) => {
-        return this.bookService.searchBooks(action.searchTerm).pipe(
+        return this.bookService.search(action.searchTerm).pipe(
           map((books: fromBook.Book[]) => {
             return new SearchBooksSuccess(books);
           }),

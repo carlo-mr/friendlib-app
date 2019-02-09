@@ -1,20 +1,20 @@
 import {Injectable} from '@angular/core';
-import {of} from 'rxjs';
-import {Book} from './book.reducer';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
 
-  public searchBooks(searchTerm: string) {
-    return of([{
-      id: searchTerm + '123',
-      title: searchTerm
-    } as Book,
-      {
-        id: searchTerm + 'abc',
-        title: searchTerm + ' 2'
-      } as Book]);
+  private BASE_URL = 'http://localhost:8080/book-service/book';
+
+  constructor(private httpClient: HttpClient) {
+
+  }
+
+  public search(searchTerm: string) {
+    const requestUrl = this.BASE_URL + '?q=' + searchTerm;
+
+    return this.httpClient.get(requestUrl);
   }
 }
