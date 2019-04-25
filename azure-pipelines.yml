@@ -16,8 +16,6 @@ steps:
   inputs:
     versionSpec: '8.x'
 - script: |
-    nvm install --lts
-    nvm use --lts
     npm install -g cordova ionic @angular/cli
     npm install
   displayName: 'Setup'
