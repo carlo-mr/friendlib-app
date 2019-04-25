@@ -16,6 +16,8 @@ steps:
   inputs:
     versionSpec: '8.x'
 - script: |
+    brew install brew-cask
+    brew cask install google-chrome
     npm install -g cordova ionic @angular/cli
     npm install
   displayName: 'Setup'
