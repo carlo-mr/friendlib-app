@@ -1,0 +1,26 @@
+# Xcode
+# Build, test, and archive an Xcode workspace on macOS.
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
+
+trigger:
+ branches:
+   include:
+     - master
+
+pool:
+  vmImage: 'macOS-10.13'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+- script: |
+    nvm install --lts
+    nvm use --lts
+    npm install -g cordova ionic @angular/cli
+    npm install
+  displayName: 'Setup'
+- script: npm run lint
+- script: npm run test-ci
+- script: ionic build --prod -- --base-href "/friendlib-app/"
