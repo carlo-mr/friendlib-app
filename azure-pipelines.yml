@@ -4,24 +4,21 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
 
 trigger:
- branches:
-   include:
-     - master
+  branches:
+    include:
+      - master
 
 pool:
   vmImage: 'macOS-10.13'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '8.x'
-- script: |
-    brew update
-    brew install brew-cask
-    brew cask install google-chrome
-    npm install -g cordova ionic @angular/cli
-    npm install
-  displayName: 'Setup'
-- script: npm run lint
-- script: npm run test-ci
-- script: ionic build --prod -- --base-href "/friendlib-app/"
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x'
+  - script: |
+      npm install -g cordova ionic @angular/cli
+      npm install
+    displayName: 'Setup'
+  - script: npm run lint
+  - script: npm test
+  - script: ionic build --prod -- --base-href "/friendlib-app/"
