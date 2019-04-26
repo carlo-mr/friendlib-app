@@ -8,8 +8,5 @@ module.exports = {
   testMatch: [
     "**/?(*.)spec.ts?(x)"
   ],
-  setupFilesAfterEnv: [
-    "<rootDir>/setupJest.ts"
-  ],
   transformIgnorePatterns: [`<rootDir>/node_modules/(?!${esModules})`]
 };

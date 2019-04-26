@@ -5,15 +5,18 @@
     "baseUrl": "./",
     "module": "commonjs",
     "allowJs": true,
+    "target": "es5",
     "types": [
-      "jasmine",
       "jest",
       "node"
     ]
   },
+  "files": [
+    "polyfills.ts"
+  ],
   "include": [
-    "polyfills.ts",
     "**/*.spec.ts",
+    "**/*.pact.ts",
     "**/*.d.ts"
   ]
 }

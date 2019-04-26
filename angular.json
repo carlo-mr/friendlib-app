@@ -81,7 +81,17 @@
         },
         "test": {
           "builder": "@angular-builders/jest:run",
-          "options": {}
+          "options": {
+            "configPath": "jest/jest.config.js"
+          }
+        },
+        "pact": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "setupFilesAfterEnv": "<rootDir>/src/jest/jest.setup.pact.ts",
+            "configPath": "jest/jest.config.pact.js",
+            "coverage": false
+          }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",

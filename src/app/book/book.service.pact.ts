@@ -1,43 +1,21 @@
 import {TestBed} from '@angular/core/testing';
-import {Matchers, PactWeb} from '@pact-foundation/pact-web';
 import {BookService} from './book.service';
 import {HttpClientModule} from '@angular/common/http';
 import {Book} from './book.reducer';
+import {Matchers} from '@pact-foundation/pact';
 
 describe('BookService', () => {
-  let provider: PactWeb;
 
-  beforeAll(function (done) {
-    provider = new PactWeb({
-      consumer: 'ui',
-      provider: 'bookservice',
-      port: 1234,
-      host: 'localhost',
-    });
+  describe('search()', () => {
 
-    // required for slower CI environments
-    setTimeout(done, 2000);
-
-    // Required if run with `singleRun: false`
-    provider.removeInteractions();
-  });
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+    setupTestBed({
       imports: [
         HttpClientModule
       ],
       providers: [
         BookService
-      ],
+      ]
     });
-  });
-
-  afterEach((done) => {
-    provider.verify().then(done, e => done.fail(e));
-  });
-
-  describe('search()', () => {
 
     const searchTerm = 'Harry Potter';
 
@@ -68,7 +46,9 @@ describe('BookService', () => {
             'Content-Type': 'application/json'
           }
         }
-      }).then(done, error => done.fail(error));
+      }).then(() => {
+        done();
+      }, error => done.fail(error));
     });
 
     it('should search books', (done) => {
@@ -81,15 +61,5 @@ describe('BookService', () => {
       });
     });
 
-  });
-
-  afterAll(function (done) {
-    console.log('afterAll');
-    provider.finalize()
-      .then(function () {
-        done();
-      }, function (err) {
-        done.fail(err);
-      });
   });
 });
