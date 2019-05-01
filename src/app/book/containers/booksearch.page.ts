@@ -9,9 +9,18 @@ import {NavController} from '@ionic/angular';
 @Component({
   selector: 'book-search-page',
   template: `
-    <app-book-search (search)="onSearch($event)"></app-book-search>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>Suche</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
     <ion-content>
+      <app-book-search (search)="onSearch($event)"></app-book-search>
+
       <app-book-grid
         [books]="books$ | async"
         (bookSelected)="onBookSelected($event)"></app-book-grid>
@@ -30,7 +39,9 @@ export class BookSearchPage implements OnInit {
   }
 
   onSearch(searchTerm: string) {
-    this.store.dispatch(new actions.SearchBooks(searchTerm));
+    if (searchTerm && searchTerm.trim().length > 0) {
+      this.store.dispatch(new actions.SearchBooks(searchTerm));
+    }
   }
 
   onBookSelected(book: Book) {

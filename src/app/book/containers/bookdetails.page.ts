@@ -8,6 +8,15 @@ import {Observable} from 'rxjs';
 @Component({
   selector: 'book-details-page',
   template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{(book$ | async)?.title}}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
     <ion-content>
       <app-book-details [book]="book$ | async"></app-book-details>
     </ion-content>

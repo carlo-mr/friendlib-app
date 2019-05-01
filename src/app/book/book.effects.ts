@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {NavController} from '@ionic/angular';
+import {LoadingController} from '@ionic/angular';
 import {of} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {BookActionTypes, SearchBookError, SearchBooks, SearchBooksSuccess} from './book.actions';
@@ -27,9 +27,34 @@ export class BookEffects {
     )
   );
 
+  @Effect({dispatch: false})
+  createLoadingOnSearchBooks$ = this.actions$.pipe(
+    ofType(BookActionTypes.SearchBooks),
+    switchMap((action: SearchBooks) => {
+      this.loadingCtrl.create().then((loading) => {
+        this.loading = loading;
+        loading.present();
+      });
+      return of();
+    })
+  );
+
+  @Effect({dispatch: false})
+  dismissLoadingOnSearchBooks$ = this.actions$.pipe(
+    ofType(BookActionTypes.SearchBooksSuccess, BookActionTypes.SearchBooksError),
+    switchMap((action: SearchBooks) => {
+      if (this.loading) {
+        this.loading.dismiss();
+      }
+      return of();
+    })
+  );
+
+  private loading: any;
+
   constructor(private actions$: Actions,
               private store$: Store<fromBook.BookState>,
-              private navCtrl: NavController,
-              private bookService: BookService) {
+              private bookService: BookService,
+              private loadingCtrl: LoadingController) {
   }
 }

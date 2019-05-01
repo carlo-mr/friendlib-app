@@ -1,22 +1,19 @@
 <ion-toolbar>
   <ion-buttons slot="secondary" *ngIf="!hideScanner">
-    <button ion-button start icon-only (click)="scan()">
+    <ion-button start icon-only (click)="scan()">
       <ion-icon name="barcode"></ion-icon>
-    </button>
+    </ion-button>
   </ion-buttons>
 
   <ion-searchbar
     [value]="searchString"
+    (change)="onSearchStringChanged($event)"
     placeholder="Suche"
     (search)="onSearch($event)"></ion-searchbar>
 
   <ion-buttons slot="primary">
-    <button ion-button icon-only (click)="onSearchButtonClicked()">
+    <ion-button icon-only (click)="onSearchButtonClicked()">
       <ion-icon name="search"></ion-icon>
-    </button>
-
-    <button ion-button icon-only (click)="onClearButtonClicked()">
-      <ion-icon name="trash"></ion-icon>
-    </button>
+    </ion-button>
   </ion-buttons>
 </ion-toolbar>

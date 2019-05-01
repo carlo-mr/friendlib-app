@@ -8,8 +8,6 @@ import {BarcodeScanResult} from '@ionic-native/barcode-scanner';
 })
 export class BookSearchComponent implements OnInit {
 
-  private _analytics_component = 'search_book';
-
   @Input() hideScannerOnInit: boolean;
   @Input() hideScanner: boolean;
 
@@ -17,7 +15,6 @@ export class BookSearchComponent implements OnInit {
 
   @Output() search = new EventEmitter<string>();
   @Output() error = new EventEmitter<string>();
-  @Output() clear = new EventEmitter();
 
   constructor(private barcodeScanner: BarcodeScanner) {
   }
@@ -51,8 +48,8 @@ export class BookSearchComponent implements OnInit {
     this.search.emit(this.searchString);
   }
 
-  onClearButtonClicked() {
-    this.clear.emit();
+  onSearchStringChanged(event) {
+    this.searchString = event.target.value || null;
   }
 
 }

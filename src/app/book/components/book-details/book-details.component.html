@@ -8,7 +8,6 @@
       </div>
     </div>
 
-
-    {{book.description}}
+    <p class="ion-text-justify" *ngIf="book.description" [innerHtml]="book.description"></p>
   </ion-card-content>
 </ion-card>
