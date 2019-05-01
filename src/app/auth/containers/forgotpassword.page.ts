@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import * as fromAuth from '../actions/auth.actions';
+import * as actions from '../actions/auth.actions';
+import * as fromAuth from '../reducers/auth.reducer';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {NewPasswordDetails} from '../models/auth.model';
 
 @Component({
@@ -20,10 +20,9 @@ import {NewPasswordDetails} from '../models/auth.model';
 export class ForgotpasswordPage implements OnInit {
   forgotPasswordCodeSent$: Observable<boolean>;
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<fromAuth.AuthState>) {
     this.forgotPasswordCodeSent$ = this.store.pipe(
-      select(state => state.auth),
-      map(state => state.forgotPasswordCodeSent)
+      select(fromAuth.getForgotPasswordCodeSent)
     );
   }
 
@@ -31,11 +30,11 @@ export class ForgotpasswordPage implements OnInit {
   }
 
   onRequestCode(userName: string) {
-    this.store.dispatch(new fromAuth.ForgotPassword({userName}));
+    this.store.dispatch(new actions.ForgotPassword({userName}));
   }
 
   onNewPassword(newPasswordDetails: NewPasswordDetails) {
-    this.store.dispatch(new fromAuth.NewPassword({newPasswordDetails}));
+    this.store.dispatch(new actions.NewPassword({newPasswordDetails}));
   }
 
 }

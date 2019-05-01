@@ -18,6 +18,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'book',
+        children: [
+          {
+            path: '',
+            loadChildren: '../book/book.module#BookModule'
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
