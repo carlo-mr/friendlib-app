@@ -8,9 +8,7 @@ import {LoadBook} from '../book.actions';
 import {BookService} from '../book.service';
 
 /**
- * Guards are hooks into the route resolution process, providing an opportunity
- * to inform the router's navigation process whether the route should continue
- * to activate this route. Guards must return an observable of true or false.
+ * Heavily inspired by https://github.com/ngrx/platform/blob/master/projects/example-app/src/app/books/guards/book-exists.guard.ts
  */
 @Injectable({
   providedIn: 'root',

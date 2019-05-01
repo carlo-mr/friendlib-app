@@ -13,7 +13,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {BookGridComponent} from './components/book-grid/book-grid.component';
 import {BookDetailsPage} from './containers/bookdetails.page';
 import {BookExistsGuard} from './guards/book-exists.guard';
-import { BookDetailsComponent } from './components/book-details/book-details.component';
+import {BookDetailsComponent} from './components/book-details/book-details.component';
 
 const routes: Routes = [
   {

@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BookGridComponent } from './book-grid.component';
+import {BookGridComponent} from './book-grid.component';
+import {IonicModule} from '@ionic/angular';
 
 describe('BookGridComponent', () => {
   let component: BookGridComponent;
@@ -8,9 +9,10 @@ describe('BookGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BookGridComponent ]
+      imports: [IonicModule.forRoot()],
+      declarations: [BookGridComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
