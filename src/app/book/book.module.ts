@@ -10,11 +10,20 @@ import {BookEffects} from './book.effects';
 import {IonicModule} from '@ionic/angular';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {HttpClientModule} from '@angular/common/http';
+import {BookGridComponent} from './components/book-grid/book-grid.component';
+import {BookDetailsPage} from './containers/bookdetails.page';
+import {BookExistsGuard} from './guards/book-exists.guard';
+import { BookDetailsComponent } from './components/book-details/book-details.component';
 
 const routes: Routes = [
   {
     path: '',
     component: BookSearchPage
+  },
+  {
+    path: ':id',
+    component: BookDetailsPage,
+    canActivate: [BookExistsGuard]
   }
 ];
 
@@ -28,7 +37,7 @@ const routes: Routes = [
     EffectsModule.forFeature([BookEffects])
   ],
   providers: [BarcodeScanner],
-  declarations: [BookSearchComponent, BookSearchPage]
+  declarations: [BookSearchComponent, BookSearchPage, BookGridComponent, BookDetailsPage, BookDetailsComponent]
 })
 export class BookModule {
 }

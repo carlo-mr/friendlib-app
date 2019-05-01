@@ -16,8 +16,8 @@ export class BookEffects {
     ofType(BookActionTypes.SearchBooks),
     switchMap((action: SearchBooks) => {
         return this.bookService.search(action.searchTerm).pipe(
-          map((books: fromBook.Book[]) => {
-            return new SearchBooksSuccess(books);
+          map((response: any) => {
+            return new SearchBooksSuccess(response.books);
           }),
           catchError((error) => {
             return of(new SearchBookError(error.message));

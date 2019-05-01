@@ -4,8 +4,7 @@ import {BarcodeScanResult} from '@ionic-native/barcode-scanner';
 
 @Component({
   selector: 'app-book-search',
-  templateUrl: './book-search.component.html',
-  styleUrls: ['./book-search.component.scss']
+  templateUrl: './book-search.component.html'
 })
 export class BookSearchComponent implements OnInit {
 

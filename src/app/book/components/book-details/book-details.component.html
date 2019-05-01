@@ -1,0 +1,14 @@
+<ion-card *ngIf="book">
+  <ion-card-content>
+    <div class="row">
+      <div class="col">
+        <img src="{{book.coverUrl}}"/>
+        <h2>{{book.authors?.join(', ')}}</h2>
+        <span>{{book.binding}}<span *ngIf="book.pages">&nbsp;{{book.pages}} Seiten</span></span>
+      </div>
+    </div>
+
+
+    {{book.description}}
+  </ion-card-content>
+</ion-card>
