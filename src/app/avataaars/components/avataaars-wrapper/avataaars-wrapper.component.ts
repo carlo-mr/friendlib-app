@@ -160,12 +160,12 @@ export namespace Avataaars {
 @Component({
   selector: 'app-avataaars-wrapper',
   template: `
-    <img *ngIf="avataarsConfig" src="{{buildUrl()}}">
+    <img *ngIf="avataaarsConfig" src="{{buildUrl()}}">
   `
 })
 export class AvataaarsWrapperComponent implements OnInit {
 
-  @Input() avataarsConfig: AvataaarsConfig;
+  @Input() avataaarsConfig: AvataaarsConfig;
 
   constructor() {
 
@@ -176,7 +176,7 @@ export class AvataaarsWrapperComponent implements OnInit {
   }
 
   buildUrl() {
-    const queryString = Object.keys(this.avataarsConfig).map(key => key + '=' + this.avataarsConfig[key]).join('&');
+    const queryString = Object.keys(this.avataaarsConfig).map(key => key + '=' + this.avataaarsConfig[key]).join('&');
     return 'https://avataaars.io/?' + queryString;
   }
 

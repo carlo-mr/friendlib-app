@@ -40,7 +40,7 @@ export class AuthEffects {
           map((cognitoUser: any) => {
             const loggedUser: LoggedUser = {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
-              avatar: cognitoUser.signInUserSession.idToken.payload['picture'] || 'no',
+              avatar: this.parseAvatar(cognitoUser),
               session: cognitoUser.signInUserSession
             };
 

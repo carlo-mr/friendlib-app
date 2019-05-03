@@ -3,10 +3,9 @@ import {LoggedUser} from '../../../auth/models/auth.model';
 
 @Component({
   selector: 'app-avatar',
-  styleUrls: ['avatar.component.scss'],
   template: `
     <app-avataaars-wrapper *ngIf="user"
-                           [avataarsConfig]="user.avatar"></app-avataaars-wrapper>
+                           [avataaarsConfig]="user.avatar"></app-avataaars-wrapper>
   `
 })
 export class AvatarComponent implements OnInit {
