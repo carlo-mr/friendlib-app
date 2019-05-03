@@ -1,6 +1,6 @@
 export interface LoggedUser {
   name: string;
-  avatar: string;
+  avatar: object;
   session: any;
 }
 

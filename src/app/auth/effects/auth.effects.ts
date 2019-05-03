@@ -4,6 +4,9 @@ import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AlertController, NavController} from '@ionic/angular';
 import {
   AuthActionTypes,
+  ChangeAvatar,
+  ChangeAvatarError,
+  ChangeAvatarSuccess,
   ForgotPassword,
   ForgotPasswordError,
   ForgotPasswordSuccess,
@@ -78,7 +81,7 @@ export class AuthEffects {
         if (cognitoUser) {
           const loggedUser: LoggedUser = {
             name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
-            avatar: cognitoUser.signInUserSession.idToken.payload['picture'],
+            avatar: this.parseAvatar(cognitoUser),
             session: cognitoUser.signInUserSession,
             // settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
           };
@@ -180,10 +183,30 @@ export class AuthEffects {
     })
   );
 
+  @Effect()
+  changeAvatar$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ChangeAvatar),
+    switchMap((action: ChangeAvatar) => {
+      return this.cognitoService.changeAvatar(action.payload.avatar).pipe(
+        map((avatar: object) => new ChangeAvatarSuccess({avatar})),
+        catchError(error => of(new ChangeAvatarError({errorMessage: error.message})))
+      );
+    })
+  );
+
   constructor(private actions$: Actions,
               private store$: Store<State>,
               private navCtrl: NavController,
               private alertCtrl: AlertController,
               private cognitoService: CognitoService) {
+  }
+
+  private parseAvatar(cognitoUser: any) {
+    try {
+      return JSON.parse(cognitoUser.signInUserSession.idToken.payload['picture']);
+    } catch (e) {
+      console.error('error during picture parsing', e);
+      return {};
+    }
   }
 }

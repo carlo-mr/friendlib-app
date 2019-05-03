@@ -36,6 +36,15 @@ export function authReducer(state = initialState, action: AuthActionsUnion): Aut
         forgotPasswordCodeSent: true
       };
 
+    case AuthActionTypes.ChangeAvatarSuccess:
+      return {
+        ...state,
+        loggedUser: {
+          ...state.loggedUser,
+          avatar: action.payload.avatar
+        }
+      };
+
     default:
       return state;
   }
@@ -43,3 +52,5 @@ export function authReducer(state = initialState, action: AuthActionsUnion): Aut
 
 export const getAuthState = createFeatureSelector<AuthState>('auth');
 export const getForgotPasswordCodeSent = createSelector(getAuthState, (state: AuthState) => state.forgotPasswordCodeSent);
+export const getLoggedUser = createSelector(getAuthState, (state: AuthState) => state.loggedUser);
+
