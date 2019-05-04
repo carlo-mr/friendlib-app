@@ -15,7 +15,7 @@ import {environment} from '../environments/environment';
 import {EffectsModule} from '@ngrx/effects';
 import {BookModule} from './book/book.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {TokenInterceptor} from './auth/token-interceptor.service';
+import {TokenInterceptor} from './auth/token-interceptor';
 
 @NgModule({
   declarations: [AppComponent],

@@ -8,13 +8,15 @@ import {NewPasswordDetails} from '../models/auth.model';
 @Component({
   selector: 'auth-forgotpassword-page',
   template: `
-    <auth-forgotpassword
-      [forgotPasswordCodeSent]="forgotPasswordCodeSent$ | async"
-      (newPassword)="onNewPassword($event)"
-      (requestCode)="onRequestCode($event)">
-    </auth-forgotpassword>
+    <ion-content padding>
+      <auth-forgotpassword
+        [forgotPasswordCodeSent]="forgotPasswordCodeSent$ | async"
+        (newPassword)="onNewPassword($event)"
+        (requestCode)="onRequestCode($event)">
+      </auth-forgotpassword>
 
-    <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
+      <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
+    </ion-content>
   `
 })
 export class ForgotpasswordPage implements OnInit {
