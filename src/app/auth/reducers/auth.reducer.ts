@@ -51,6 +51,7 @@ export function authReducer(state = initialState, action: AuthActionsUnion): Aut
 }
 
 export const getAuthState = createFeatureSelector<AuthState>('auth');
+export const isLoggedIn = createSelector(getAuthState, (state: AuthState) => state.isLoggedIn);
 export const getForgotPasswordCodeSent = createSelector(getAuthState, (state: AuthState) => state.forgotPasswordCodeSent);
 export const getLoggedUser = createSelector(getAuthState, (state: AuthState) => state.loggedUser);
 
