@@ -57,10 +57,10 @@ export class BookSearchPage implements OnInit {
   onBookSelected(book: Book) {
     console.log('Navigating Book: ', book);
 
-    this.navCtrl.navigateForward('/tabs/book/' + book.externalIdentifiers.gbooksId);
+    this.navCtrl.navigateForward('/app/book/' + book.externalIdentifiers.gbooksId);
   }
 
   onAvatarClicked(event) {
-    this.navCtrl.navigateRoot('/tabs/profile');
+    this.navCtrl.navigateRoot('/app/profile');
   }
 }
