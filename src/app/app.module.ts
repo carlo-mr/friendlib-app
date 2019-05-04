@@ -14,6 +14,8 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {EffectsModule} from '@ngrx/effects';
 import {BookModule} from './book/book.module';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {TokenInterceptor} from './auth/token-interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,12 +27,14 @@ import {BookModule} from './book/book.module';
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([]),
     BookModule,
-    !environment.production ? StoreDevtoolsModule.instrument() : []
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    HttpClientModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     {provide: 'AWS_CONFIG', useValue: environment.awsConfig}
   ],
   bootstrap: [AppComponent]

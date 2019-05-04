@@ -42,11 +42,10 @@ export class BookEffects {
   @Effect({dispatch: false})
   dismissLoadingOnSearchBooks$ = this.actions$.pipe(
     ofType(BookActionTypes.SearchBooksSuccess, BookActionTypes.SearchBooksError),
-    switchMap((action: SearchBooks) => {
+    map(() => {
       if (this.loading) {
         this.loading.dismiss();
       }
-      return of();
     })
   );
 
