@@ -10,7 +10,8 @@ export interface AuthState {
 
 export const initialState: AuthState = {
   isLoggedIn: false,
-  forgotPasswordCodeSent: false
+  forgotPasswordCodeSent: false,
+  loggedUser: null
 };
 
 export function authReducer(state = initialState, action: AuthActionsUnion): AuthState {
@@ -54,4 +55,6 @@ export const getAuthState = createFeatureSelector<AuthState>('auth');
 export const isLoggedIn = createSelector(getAuthState, (state: AuthState) => state.isLoggedIn);
 export const getForgotPasswordCodeSent = createSelector(getAuthState, (state: AuthState) => state.forgotPasswordCodeSent);
 export const getLoggedUser = createSelector(getAuthState, (state: AuthState) => state.loggedUser);
+export const getIdToken = createSelector(getLoggedUser,
+  (user: LoggedUser) => user ? user.session ? user.session.idToken : null : null);
 
