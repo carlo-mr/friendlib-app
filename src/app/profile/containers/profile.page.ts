@@ -5,7 +5,7 @@ import * as fromProfile from '../profile.reducer';
 import {getLoggedUser} from '../../auth/reducers/auth.reducer';
 import {Observable} from 'rxjs';
 import {LoggedUser} from '../../auth/models/auth.model';
-import {ChangeAvatar} from '../../auth/actions/auth.actions';
+import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
 
 @Component({
   selector: 'profile-page',
@@ -17,6 +17,12 @@ import {ChangeAvatar} from '../../auth/actions/auth.actions';
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>Profil</ion-title>
+
+        <ion-buttons slot="end">
+          <ion-button icon-only (click)="onLogoutClicked($event)">
+            <ion-icon name="exit"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -46,6 +52,10 @@ export class ProfilePage implements OnInit {
 
   onAvatarChange(avatar) {
     this.store.dispatch(new ChangeAvatar({avatar}));
+  }
+
+  onLogoutClicked(event) {
+    this.store.dispatch(new Logout({}));
   }
 
 }
