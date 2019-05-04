@@ -183,4 +183,41 @@ export class CognitoService {
 
     return subject.asObservable();
   }
+
+  changeAvatar(newAvatar: object) {
+    const subject = new Subject();
+
+    const cognitoUser: any = this.buildCognitoUserPool().getCurrentUser();
+
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function (getSessionError, session) {
+        if (getSessionError) {
+          console.error('getsession: ', getSessionError);
+          subject.error(getSessionError);
+        }
+
+        const attributeList = [];
+        const attribute = {
+          Name: 'picture',
+          Value: JSON.stringify(newAvatar)
+        };
+
+        const cognitoAttribute = new CognitoUserAttribute(attribute);
+        attributeList.push(cognitoAttribute);
+
+        cognitoUser.updateAttributes(attributeList, function (updateAttributesError, result) {
+          if (updateAttributesError) {
+            console.error('updateattributes: ', updateAttributesError);
+            subject.error(updateAttributesError);
+          }
+          console.log('call result: ', result);
+
+          subject.next(newAvatar);
+          subject.complete();
+        });
+      });
+    }
+
+    return subject.asObservable();
+  }
 }

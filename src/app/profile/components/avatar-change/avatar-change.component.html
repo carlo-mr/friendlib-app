@@ -1,0 +1,6 @@
+<ng-container *ngIf="this.user">
+  <app-avatar [user]="this.user"></app-avatar>
+
+  <ion-button (click)="onGenerateClicked($event)">Neu generieren</ion-button>
+  <ion-button *ngIf="dirty" (click)="onSaveClicked($event)">Speichern</ion-button>
+</ng-container>

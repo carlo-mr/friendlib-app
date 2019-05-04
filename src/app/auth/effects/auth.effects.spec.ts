@@ -66,7 +66,7 @@ describe('AuthEffects', () => {
           idToken: {
             payload: {
               'cognito:username': 'test',
-              'picture': 'm2'
+              'picture': '{}'
             }
           }
         }
@@ -77,7 +77,7 @@ describe('AuthEffects', () => {
       const completion = new fromActions.LoginSuccess({
         loggedUser: {
           name: 'test',
-          avatar: 'm2',
+          avatar: {},
           session: mockCognitoUser.signInUserSession
         } as LoggedUser
       });
@@ -148,7 +148,7 @@ describe('AuthEffects', () => {
       actions$ = hot('--a', {a: action});
 
       effects.navigateOnloginSuccess$.subscribe(() => {
-        expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/tabs/home');
+        expect(navCtrl.navigateRoot).toHaveBeenCalledWith('/app/home');
       });
     });
   });

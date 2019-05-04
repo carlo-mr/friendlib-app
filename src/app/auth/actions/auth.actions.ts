@@ -24,7 +24,11 @@ export enum AuthActionTypes {
 
   Logout = '[Auth] Logout',
   LogoutSuccess = '[Auth] Logout Success',
-  LogoutError = '[Auth] Logout Error'
+  LogoutError = '[Auth] Logout Error',
+
+  ChangeAvatar = '[Auth] Change Avatar',
+  ChangeAvatarSuccess = '[Auth] Change Avatar Success',
+  ChangeAvatarError = '[Auth] Change Avatar Error'
 }
 
 export class LoginLocalStorage implements Action {
@@ -153,6 +157,27 @@ export class LogoutError implements Action {
   }
 }
 
+export class ChangeAvatar implements Action {
+  readonly type = AuthActionTypes.ChangeAvatar;
+
+  constructor(public payload: { avatar: object }) {
+  }
+}
+
+export class ChangeAvatarSuccess implements Action {
+  readonly type = AuthActionTypes.ChangeAvatarSuccess;
+
+  constructor(public payload: { avatar: object }) {
+  }
+}
+
+export class ChangeAvatarError implements Action {
+  readonly type = AuthActionTypes.ChangeAvatarError;
+
+  constructor(public payload: { errorMessage: string }) {
+  }
+}
+
 export type AuthActionsUnion =
   LoginLocalStorage
   | LoginLocalStorageSuccess
@@ -171,4 +196,7 @@ export type AuthActionsUnion =
   | NewPasswordError
   | Logout
   | LogoutSuccess
-  | LogoutError;
+  | LogoutError
+  | ChangeAvatar
+  | ChangeAvatarSuccess
+  | ChangeAvatarError;
