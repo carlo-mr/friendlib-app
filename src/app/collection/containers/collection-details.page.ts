@@ -24,6 +24,11 @@ import {LoadCollection} from '../actions/collection.actions';
                       (click)="onAvatarClicked($event)"></app-avatar>
         </ion-buttons>
         <ion-title>Sammlung</ion-title>
+        <ion-buttons slot="end">
+          <ion-button icon-only (click)="onAddClicked($event)">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -65,5 +70,9 @@ export class CollectionDetailsPage implements OnInit {
 
   onExemplarSelected(exemplar: Exemplar) {
     this.navCtrl.navigateForward(`/app/collection/${exemplar.ownerId}/${exemplar.exemplarId}`);
+  }
+
+  onAddClicked(event) {
+    this.navCtrl.navigateForward('/app/book');
   }
 }

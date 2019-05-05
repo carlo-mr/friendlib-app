@@ -12,7 +12,7 @@ import {Book} from '../../common/book.model';
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-back-button text="Zurück"></ion-back-button>
         </ion-buttons>
         <ion-title>{{(book$ | async)?.title}}</ion-title>
       </ion-toolbar>
@@ -20,8 +20,11 @@ import {Book} from '../../common/book.model';
 
     <ion-content>
       <app-book-details
+        [book]="book$ | async"></app-book-details>
+
+      <app-book-links
         [book]="book$ | async"
-        (addToCollection)="onAddToCollection($event)"></app-book-details>
+        (addToCollection)="onAddToCollection($event)"></app-book-links>
     </ion-content>
   `
 })

@@ -1,6 +1,6 @@
 <ng-container *ngIf="this.user && this.exemplar">
 
-  <ng-container *ngIf="(this.user.name == this.exemplar.ownerId) || this.exemplar.ownerId === '1337'">
+  <ng-container *ngIf="this.user.name == this.exemplar.ownerId">
     <ion-row>
       <ion-col center text-center>
         <ion-note>
@@ -14,7 +14,3 @@
 
   </ng-container>
 </ng-container>
-
-
-
-

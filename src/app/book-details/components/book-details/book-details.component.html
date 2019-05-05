@@ -9,10 +9,5 @@
     </div>
 
     <p class="ion-text-justify" *ngIf="book.description" [innerHtml]="book.description"></p>
-
-    <ion-button *ngIf="book._links && book._links.addToCollection" (click)="addToCollectionClicked($event)">
-      <ion-icon slot="start" name="add"></ion-icon>
-      Sammlung hinzufügen
-    </ion-button>
   </ion-card-content>
 </ion-card>
