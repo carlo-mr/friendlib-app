@@ -6,7 +6,6 @@ import {FormsModule} from '@angular/forms';
 import {TabsPageRoutingModule} from './tabs.router.module';
 
 import {TabsPage} from './tabs.page';
-import {HomePageModule} from '../home/home.module';
 import {BookModule} from '../book/book.module';
 import {CollectionModule} from '../collection/collection.module';
 
@@ -16,7 +15,6 @@ import {CollectionModule} from '../collection/collection.module';
     CommonModule,
     FormsModule,
     TabsPageRoutingModule,
-    HomePageModule,
     BookModule,
     CollectionModule
   ],

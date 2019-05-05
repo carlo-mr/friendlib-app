@@ -70,7 +70,7 @@ export class AuthEffects {
   navigateOnloginSuccess$ = this.actions$.pipe(
     ofType(AuthActionTypes.LoginSuccess),
     map((action: LoginSuccess) => {
-      this.navCtrl.navigateRoot('/app/home');
+      this.navCtrl.navigateRoot('/app');
     })
   );
 

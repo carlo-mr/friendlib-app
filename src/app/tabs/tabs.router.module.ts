@@ -9,24 +9,6 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'home',
-        children: [
-          {
-            path: '',
-            loadChildren: '../home/home.module#HomePageModule'
-          }
-        ]
-      },
-      {
-        path: 'book',
-        children: [
-          {
-            path: '',
-            loadChildren: '../book/book.module#BookModule'
-          }
-        ]
-      },
-      {
         path: 'profile',
         children: [
           {
@@ -45,15 +27,24 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'book',
+        children: [
+          {
+            path: '',
+            loadChildren: '../book/book.module#BookModule'
+          }
+        ]
+      },
+      {
         path: '',
-        redirectTo: '/app/home',
+        redirectTo: '/app/collection',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/app/home',
+    redirectTo: '/app/collection',
     pathMatch: 'full'
   }
 ];
