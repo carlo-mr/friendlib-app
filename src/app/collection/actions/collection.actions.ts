@@ -19,7 +19,7 @@ export enum CollectionActionTypes {
 export class LoadCollection implements Action {
   readonly type = CollectionActionTypes.LoadCollection;
 
-  constructor(public payload: { ownerId: string }) {
+  constructor(public payload?: { ownerId: string }) {
 
   }
 }

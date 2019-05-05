@@ -24,7 +24,11 @@ export class CollectionService {
   }
 
   loadCollection(ownerId: string) {
-    return this.httpClient.get(`${this.BASE_URL}/latest/collections/${ownerId}`);
+    if (ownerId) {
+      return this.httpClient.get(`${this.BASE_URL}/latest/collections/${ownerId}`);
+    } else {
+      return this.httpClient.get(`${this.BASE_URL}/latest/collections`);
+    }
   }
 
   removeExemplar(exemplar: Exemplar) {

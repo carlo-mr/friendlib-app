@@ -3,6 +3,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {Collection} from '../../common/collection.model';
 
+import * as fromAuth from '../../auth/reducers/auth.reducer';
+
 export const collectionAdapter = createEntityAdapter<Collection>({
   selectId: (collection: Collection) => collection.ownerId
 });
@@ -25,7 +27,9 @@ export function collectionReducer(state = initialState, action: CollectionAction
 
     case CollectionActionTypes.AddBookToCollectionSuccess:
       const addBookNewState = {...state};
-      addBookNewState.entities[action.payload.exemplar.ownerId].exemplars.push(action.payload.exemplar);
+      if (addBookNewState.entities[action.payload.exemplar.ownerId]) {
+        addBookNewState.entities[action.payload.exemplar.ownerId].exemplars.push(action.payload.exemplar);
+      }
       return addBookNewState;
 
     case CollectionActionTypes.RemoveExemplarSuccess:
@@ -41,19 +45,20 @@ export function collectionReducer(state = initialState, action: CollectionAction
 
 export const getCollectionState = createFeatureSelector<CollectionState>('collection');
 
-const {
+export const {
   selectIds,
   selectEntities,
   selectAll,
   selectTotal,
 } = collectionAdapter.getSelectors();
 
-export const selectCollectionIds = selectIds;
-export const selectCollectionEntities = selectEntities;
-export const selectAllCollections = selectAll;
-export const selectCollectionTotal = selectTotal;
-
 export const selectEntity = ownerId => createSelector(
   getCollectionState,
   (state: CollectionState) => state.entities[ownerId]
 );
+
+
+export const loggedInUserCollection = createSelector(
+  getCollectionState,
+  fromAuth.getLoggedUser,
+  (collectionState, loggedUser) => collectionState.entities[loggedUser.name]);

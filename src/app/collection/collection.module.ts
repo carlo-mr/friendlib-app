@@ -12,6 +12,7 @@ import {ExemplarGridComponent} from './components/exemplar-grid/exemplar-grid.co
 import {ExemplarDetailsPage} from './containers/exemplar-details.page';
 import {BookDetailsModule} from '../book-details/book-details.module';
 import {ExemplarLinksComponent} from './components/exemplar-links/exemplar-links.component';
+import {CollectionExistsGuard} from './guards/collection-exists.guard';
 
 const routes: Routes = [
   {
@@ -19,12 +20,14 @@ const routes: Routes = [
     component: CollectionDetailsPage
   },
   {
-    path: ':id',
-    component: CollectionDetailsPage
+    path: ':ownerId',
+    component: CollectionDetailsPage,
+    canActivate: [CollectionExistsGuard]
   },
   {
     path: ':ownerId/:exemplarId',
-    component: ExemplarDetailsPage
+    component: ExemplarDetailsPage,
+    canActivate: [CollectionExistsGuard]
   }
 ];
 

@@ -44,11 +44,19 @@ export class CollectionDetailsPage implements OnInit {
   }
 
   ngOnInit() {
-    const ownerId = this.activatedRoute.snapshot.paramMap.get('id') || '1337';
-    this.collection$ = this.store.pipe(select(fromCollection.selectEntity(ownerId)));
+    const ownerId = this.activatedRoute.snapshot.paramMap.get('ownerId');
+
+    if (ownerId) {
+      this.collection$ = this.store.pipe(select(fromCollection.selectEntity(ownerId)));
+    } else {
+      this.collection$ = this.store.pipe(
+        select(fromCollection.loggedInUserCollection),
+      );
+      this.store.dispatch(new LoadCollection());
+    }
+
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
 
-    this.store.dispatch(new LoadCollection({ownerId: '1337'}));
   }
 
   onAvatarClicked(event) {

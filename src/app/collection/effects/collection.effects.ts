@@ -28,11 +28,12 @@ export class CollectionEffects {
   loadCollection$ = this.actions$.pipe(
     ofType(CollectionActionTypes.LoadCollection),
     switchMap((action: LoadCollection) => {
-      if (!action.payload || !action.payload.ownerId) {
-        return of(new LoadCollectionError({errorMessage: 'ownerId payload is needed'}));
+      let ownerId;
+      if (action.payload && action.payload.ownerId) {
+        ownerId = action.payload.ownerId;
       }
 
-      return this.collectionService.loadCollection(action.payload.ownerId).pipe(
+      return this.collectionService.loadCollection(ownerId).pipe(
         map((collection: Collection) => {
           return new LoadCollectionSuccess({collection});
         }),
