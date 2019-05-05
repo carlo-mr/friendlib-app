@@ -16,9 +16,9 @@ import {LoggedUser} from '../../auth/models/auth.model';
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button text="Sammlung"></ion-back-button>
+          <ion-back-button text="Zurück"></ion-back-button>
         </ion-buttons>
-        <ion-title>{{(collection$ | async)?.ownerId}} Collection</ion-title>
+        <ion-title>{{(exemplar$ | async)?.book.title}}</ion-title>
       </ion-toolbar>
     </ion-header>
 
