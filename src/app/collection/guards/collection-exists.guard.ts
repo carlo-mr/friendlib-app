@@ -29,7 +29,6 @@ export class CollectionExistsGuard implements CanActivate {
   hasCollectionInStore(id: string): Observable<boolean> {
     return this.store.pipe(
       select(fromCollection.selectEntities),
-      tap(entities => console.log('CollectionExistsGuard hasCollectionInStore entities: ', entities)),
       map(entities => entities && !!entities[id]),
       take(1)
     );

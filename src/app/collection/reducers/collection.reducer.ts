@@ -50,7 +50,7 @@ export const {
   selectEntities,
   selectAll,
   selectTotal,
-} = collectionAdapter.getSelectors();
+} = collectionAdapter.getSelectors(getCollectionState);
 
 export const selectEntity = ownerId => createSelector(
   getCollectionState,
@@ -61,4 +61,4 @@ export const selectEntity = ownerId => createSelector(
 export const loggedInUserCollection = createSelector(
   getCollectionState,
   fromAuth.getLoggedUser,
-  (collectionState, loggedUser) => collectionState.entities[loggedUser.name]);
+  (collectionState, loggedUser) => loggedUser ? collectionState.entities[loggedUser.name] : null);

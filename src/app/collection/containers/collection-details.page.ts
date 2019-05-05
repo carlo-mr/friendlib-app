@@ -54,9 +54,7 @@ export class CollectionDetailsPage implements OnInit {
     if (ownerId) {
       this.collection$ = this.store.pipe(select(fromCollection.selectEntity(ownerId)));
     } else {
-      this.collection$ = this.store.pipe(
-        select(fromCollection.loggedInUserCollection),
-      );
+      this.collection$ = this.store.pipe(select(fromCollection.loggedInUserCollection));
       this.store.dispatch(new LoadCollection());
     }
 
