@@ -351,6 +351,9 @@ export function bookReducer(state: BookState = initialState, action: BookActions
   switch (action.type) {
     case BookActionTypes.SearchBooksSuccess:
       return bookAdapter.addAll(action.books, state);
+
+    case BookActionTypes.LoadBookSuccess:
+      return bookAdapter.addOne(action.book, state);
     default:
       return state;
   }

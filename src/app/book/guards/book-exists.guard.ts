@@ -4,8 +4,8 @@ import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap, take, tap} from 'rxjs/operators';
 import * as fromBooks from '../book.reducer';
-import {LoadBook} from '../book.actions';
 import {BookService} from '../book.service';
+import {LoadBookSuccess} from '../book.actions';
 
 /**
  * Heavily inspired by https://github.com/ngrx/platform/blob/master/projects/example-app/src/app/books/guards/book-exists.guard.ts
@@ -40,7 +40,7 @@ export class BookExistsGuard implements CanActivate {
   hasBookInApi(id: string): Observable<boolean> {
     console.log('hasBookInApi: ', id);
     return this.bookService.retrieveBook(id).pipe(
-      map(bookEntity => new LoadBook(bookEntity)),
+      map(bookEntity => new LoadBookSuccess(bookEntity)),
       tap(action => this.store.dispatch(action)),
       map(book => !!book),
       catchError(() => {
