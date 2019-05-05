@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {AlertController, NavController} from '@ionic/angular';
+import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {
   AuthActionTypes,
   ChangeAvatar,
@@ -40,7 +40,7 @@ export class AuthEffects {
           map((cognitoUser: any) => {
             const loggedUser: LoggedUser = {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
-              avatar: this.parseAvatar(cognitoUser),
+              avatar: AuthEffects.parseAvatar(cognitoUser),
               session: cognitoUser.signInUserSession
             };
 
@@ -81,7 +81,7 @@ export class AuthEffects {
         if (cognitoUser) {
           const loggedUser: LoggedUser = {
             name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
-            avatar: this.parseAvatar(cognitoUser),
+            avatar: AuthEffects.parseAvatar(cognitoUser),
             session: cognitoUser.signInUserSession,
             // settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
           };
@@ -194,14 +194,49 @@ export class AuthEffects {
     })
   );
 
+
+  @Effect({dispatch: false})
+  createLoadingOnRequests$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ChangeAvatar,
+      AuthActionTypes.ForgotPassword,
+      AuthActionTypes.Login,
+      AuthActionTypes.Register),
+    map(() => {
+      this.loadingCtrl.create().then((loading) => {
+        this.loading = loading;
+        loading.present();
+      });
+    })
+  );
+
+  @Effect({dispatch: false})
+  dismissLoadingAfterRequests$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ChangeAvatarSuccess,
+      AuthActionTypes.ChangeAvatarError,
+      AuthActionTypes.ForgotPasswordSuccess,
+      AuthActionTypes.ForgotPasswordError,
+      AuthActionTypes.LoginSuccess,
+      AuthActionTypes.LoginError,
+      AuthActionTypes.RegisterSuccess,
+      AuthActionTypes.RegisterError),
+    map(() => {
+      if (this.loading) {
+        this.loading.dismiss();
+      }
+    })
+  );
+
+  private loading: HTMLIonLoadingElement;
+
   constructor(private actions$: Actions,
               private store$: Store<State>,
               private navCtrl: NavController,
               private alertCtrl: AlertController,
+              private loadingCtrl: LoadingController,
               private cognitoService: CognitoService) {
   }
 
-  private parseAvatar(cognitoUser: any) {
+  private static parseAvatar(cognitoUser: any) {
     try {
       return JSON.parse(cognitoUser.signInUserSession.idToken.payload['picture']);
     } catch (e) {

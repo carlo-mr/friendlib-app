@@ -4,7 +4,7 @@ import * as actions from '../book.actions';
 import * as fromBook from '../book.reducer';
 import * as fromAuth from '../../auth/reducers/auth.reducer';
 import {Observable} from 'rxjs';
-import {NavController} from '@ionic/angular';
+import {NavController, ToastController} from '@ionic/angular';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {Book} from '../../common/book.model';
 
@@ -27,7 +27,8 @@ import {Book} from '../../common/book.model';
     </ion-header>
 
     <ion-content>
-      <app-book-search (search)="onSearch($event)"></app-book-search>
+      <app-book-search (search)="onSearch($event)"
+                       (error)="onSearchError($event)"></app-book-search>
 
       <app-book-grid
         [books]="books$ | async"
@@ -40,7 +41,9 @@ export class BookSearchPage implements OnInit {
   books$: Observable<any>;
   user$: Observable<LoggedUser>;
 
-  constructor(private store: Store<fromBook.BookState>, private navCtrl: NavController) {
+  constructor(private store: Store<fromBook.BookState>,
+              private navCtrl: NavController,
+              private toastCtrl: ToastController) {
   }
 
   ngOnInit() {
@@ -54,9 +57,21 @@ export class BookSearchPage implements OnInit {
     }
   }
 
-  onBookSelected(book: Book) {
-    console.log('Navigating Book: ', book);
+  onSearchError(message: string) {
+    this.showErrorMessage(message);
+  }
 
+  async showErrorMessage(message: string) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: 'top'
+    });
+
+    toast.present();
+  }
+
+  onBookSelected(book: Book) {
     this.navCtrl.navigateForward('/app/book/' + book.externalIdentifiers.gbooksId);
   }
 

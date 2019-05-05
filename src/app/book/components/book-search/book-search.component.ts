@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {BarcodeScanResult} from '@ionic-native/barcode-scanner';
 
@@ -7,9 +7,6 @@ import {BarcodeScanResult} from '@ionic-native/barcode-scanner';
   templateUrl: './book-search.component.html'
 })
 export class BookSearchComponent implements OnInit {
-
-  @Input() hideScannerOnInit: boolean;
-  @Input() hideScanner: boolean;
 
   searchString: string;
 
@@ -20,9 +17,6 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.hideScannerOnInit) {
-      this.scan();
-    }
   }
 
   scan() {
