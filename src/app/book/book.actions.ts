@@ -1,12 +1,12 @@
 import {Action} from '@ngrx/store';
-import {Book} from './book.reducer';
+import {Book} from '../common/book.model';
 
 export enum BookActionTypes {
   SearchBooks = '[Book] Search books',
   SearchBooksSuccess = '[Book] Search books success',
   SearchBooksError = '[Book] Search books error',
 
-  LoadBook = '[Book] Load Book'
+  LoadBookSuccess = '[Book] Load Book success'
 }
 
 export class SearchBooks implements Action {
@@ -30,8 +30,8 @@ export class SearchBookError implements Action {
   }
 }
 
-export class LoadBook implements Action {
-  readonly type = BookActionTypes.LoadBook;
+export class LoadBookSuccess implements Action {
+  readonly type = BookActionTypes.LoadBookSuccess;
 
   constructor(public book: Book) {
   }
@@ -41,4 +41,4 @@ export type BookActions =
   SearchBooks
   | SearchBooksSuccess
   | SearchBookError
-  | LoadBook;
+  | LoadBookSuccess;

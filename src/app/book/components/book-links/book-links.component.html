@@ -1,0 +1,12 @@
+<ng-container *ngIf="this.book">
+  <ion-row>
+    <ion-col center text-center>
+      <ion-note>
+        <ion-button *ngIf="book._links && book._links.addToCollection" (click)="addToCollectionClicked($event)">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Zur Sammlung hinzufügen
+        </ion-button>
+      </ion-note>
+    </ion-col>
+  </ion-row>
+</ng-container>

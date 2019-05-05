@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Book} from '../../book.reducer';
+import {Book} from '../../../common/book.model';
 
 @Component({
   selector: 'app-book-grid',

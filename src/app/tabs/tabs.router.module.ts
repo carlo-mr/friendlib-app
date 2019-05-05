@@ -36,6 +36,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'collection',
+        children: [
+          {
+            path: '',
+            loadChildren: '../collection/collection.module#CollectionModule'
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/app/home',
         pathMatch: 'full'
