@@ -1,31 +1,7 @@
 import {BookActions, BookActionTypes} from './book.actions';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-
-export interface Book {
-  bookId?: string;
-
-  title: string;
-  description?: string;
-  language?: string;
-
-  coverUrl?: string;
-  productUrl?: string;
-
-  authors?: string[];
-  binding?: string;
-  pages?: number;
-
-  alternatives?: Book[];
-  externalIdentifiers?: ExternalIdentifier;
-}
-
-export class ExternalIdentifier {
-  isbn10?: string;
-  isbn13?: string;
-  asin?: string;
-  gbooksId?: string;
-}
+import {Book} from '../common/book.model';
 
 export const bookAdapter = createEntityAdapter<Book>({
   selectId: (book: Book) => book.externalIdentifiers.gbooksId

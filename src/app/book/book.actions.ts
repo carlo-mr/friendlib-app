@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {Book} from './book.reducer';
+import {Book} from '../common/book.model';
 
 export enum BookActionTypes {
   SearchBooks = '[Book] Search books',

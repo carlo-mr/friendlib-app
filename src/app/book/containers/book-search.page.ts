@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import * as actions from '../book.actions';
 import * as fromBook from '../book.reducer';
-import {Book} from '../book.reducer';
 import * as fromAuth from '../../auth/reducers/auth.reducer';
 import {Observable} from 'rxjs';
 import {NavController} from '@ionic/angular';
 import {LoggedUser} from '../../auth/models/auth.model';
+import {Book} from '../../common/book.model';
 
 @Component({
   selector: 'book-search-page',
