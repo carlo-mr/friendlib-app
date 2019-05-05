@@ -1,0 +1,8 @@
+<ion-grid *ngIf="exemplars && exemplars.length > 0">
+  <ion-row align-items-end>
+    <ion-col *ngFor="let exemplar of exemplars" size="4" (click)="selectExemplar(exemplar)">
+      <img *ngIf="exemplar.book.coverUrl" src="{{exemplar.book.coverUrl || '../assets/img/no_cover.jpg'}}">
+      <span *ngIf="!exemplar.book.coverUrl">{{exemplar.book.title}}</span>
+    </ion-col>
+  </ion-row>
+</ion-grid>
