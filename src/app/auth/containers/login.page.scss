@@ -1,0 +1,39 @@
+:host {
+  background: #fff url("assets/img/login-background.jpg") no-repeat center center / cover !important;
+}
+
+ion-content {
+  --background: transparent !important;
+
+}
+
+.logo {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+ion-list {
+  --ion-item-background: transparent !important;
+}
+
+ion-item:first-child {
+  --border-radius: 5px;
+  --background: transparent;
+}
+
+ion-item:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+ion-item.item {
+  --ion-item-background: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1px;
+  color: #2f6c1f;
+  font-weight: bold;
+}
+
+ion-item.item::placeholder {
+  color: #2f6c1f
+}

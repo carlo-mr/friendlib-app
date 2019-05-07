@@ -5,7 +5,8 @@
                  color="secondary">
         {{book.owners.length}}
       </ion-badge>
-      <ion-img *ngIf="book.coverUrl" src="{{book.coverUrl || '../assets/img/no_cover.jpg'}}"></ion-img>
+      <ion-img *ngIf="book.coverUrl" [src]="book.coverUrl || '../assets/img/no_cover.jpg'"></ion-img>
+
       <span *ngIf="!book.coverUrl">{{book.title}}</span>
     </ion-col>
   </ion-row>
