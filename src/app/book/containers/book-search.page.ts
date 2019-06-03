@@ -47,6 +47,7 @@ export class BookSearchPage implements OnInit {
   }
 
   ngOnInit() {
+    // TODO split all books from search results in store
     this.books$ = this.store.pipe(select(fromBook.selectAll));
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
   }

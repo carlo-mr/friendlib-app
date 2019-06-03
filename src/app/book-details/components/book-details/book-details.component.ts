@@ -10,10 +10,18 @@ export class BookDetailsComponent implements OnInit {
 
   @Input() book: Book;
 
+  imgClass = 'hidden';
+  skeletonClass = 'block';
+
   constructor() {
   }
 
   ngOnInit() {
+  }
+
+  onImageLoad(event) {
+    this.imgClass = 'block';
+    this.skeletonClass = 'hidden';
   }
 
 

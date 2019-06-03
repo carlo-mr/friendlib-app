@@ -1,0 +1,10 @@
+<ng-container>
+  <ion-item no-margin lines="none" (click)="onToggleBtnClicked($event)" color="light">
+    <ion-label>{{title}}</ion-label>
+    <ion-icon [name]="expanded ? 'arrow-round-up' : 'arrow-round-down'" slot="end"></ion-icon>
+  </ion-item>
+
+  <ng-container *ngIf="expanded">
+    <ng-content></ng-content>
+  </ng-container>
+</ng-container>

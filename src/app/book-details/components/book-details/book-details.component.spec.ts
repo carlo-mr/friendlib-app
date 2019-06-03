@@ -2,6 +2,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BookDetailsComponent} from './book-details.component';
 import {IonicModule} from '@ionic/angular';
+import {CollapsiblePanelComponent} from '../../collapsible-panel/collapsible-panel.component';
+import {Book} from '../../../common/book.model';
 
 describe('BookDetailsComponent', () => {
   let component: BookDetailsComponent;
@@ -10,7 +12,7 @@ describe('BookDetailsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [IonicModule.forRoot()],
-      declarations: [BookDetailsComponent]
+      declarations: [BookDetailsComponent, CollapsiblePanelComponent]
     })
       .compileComponents();
   }));
@@ -18,6 +20,7 @@ describe('BookDetailsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BookDetailsComponent);
     component = fixture.componentInstance;
+    component.book = {} as Book;
     fixture.detectChanges();
   });
 
