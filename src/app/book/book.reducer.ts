@@ -4,7 +4,8 @@ import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {Book} from '../common/book.model';
 
 export const bookAdapter = createEntityAdapter<Book>({
-  selectId: (book: Book) => book.externalIdentifiers.gbooksId
+  selectId: (book: Book) => book.externalIdentifiers.gbooksId,
+  sortComparer: sortByOwners
 });
 
 export interface BookState extends EntityState<Book> {
@@ -53,6 +54,10 @@ const defaultState = {
         'Sam Newman'
       ],
       coverUrl: 'http://books.google.com/books/content?id=-OQVCgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
+      owners: [
+        {ownerId: 'Carlo', exemplarId: 'bd9448c5-f64b-4b27-bcbf-24df0d0eb909'},
+        {ownerId: 'Conny', exemplarId: 'bd9448c5-f64b-4b27-bcbf-24df0d0eb909'}
+      ],
       alternatives: [],
       _links: {
         addToCollection: {
@@ -267,6 +272,10 @@ const defaultState = {
       ],
       coverUrl: 'http://books.google.com/books/content?id=F8RiDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
       alternatives: [],
+      owners: [
+        {ownerId: 'Carlo', exemplarId: 'bd9448c5-f64b-4b27-bcbf-24df0d0eb909'},
+        {ownerId: 'Conny', exemplarId: 'bd9448c5-f64b-4b27-bcbf-24df0d0eb909'}
+      ],
       _links: {
         addToCollection: {
           href: '/latest/collections/exemplars?gbooksId=F8RiDwAAQBAJ',
@@ -374,3 +383,14 @@ export const selectEntity = id => createSelector(
   entities => entities[id]
 );
 
+export function sortByOwners(a: Book, b: Book): number {
+  const aOwners = a.owners ? a.owners : [];
+  const bOwners = b.owners ? b.owners : [];
+
+  if (aOwners.length < bOwners.length) {
+    return 1;
+  } else if (aOwners.length > bOwners.length) {
+    return -1;
+  }
+  return 0;
+}

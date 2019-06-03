@@ -15,7 +15,14 @@ export interface Book {
   alternatives?: Book[];
   externalIdentifiers?: ExternalIdentifier;
 
+  owners?: BookOwner[];
+
   _links?: { addToCollection?: { href: string, method: string } };
+}
+
+export class BookOwner {
+  exemplarId: string;
+  ownerId: string;
 }
 
 export class ExternalIdentifier {
