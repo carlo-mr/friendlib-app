@@ -9,6 +9,7 @@ import {TabsPage} from './tabs.page';
 import {BookModule} from '../book/book.module';
 import {CollectionModule} from '../collection/collection.module';
 import {BorrowingModule} from '../borrowing/borrowing.module';
+import {UserModule} from '../user/user.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {BorrowingModule} from '../borrowing/borrowing.module';
     TabsPageRoutingModule,
     BookModule,
     CollectionModule,
-    BorrowingModule
+    BorrowingModule,
+    UserModule
   ],
   declarations: [TabsPage]
 })
