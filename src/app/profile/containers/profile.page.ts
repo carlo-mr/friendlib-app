@@ -9,7 +9,8 @@ import {Observable} from 'rxjs';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
 import {LoadNotifications} from '../../notification/notification.actions';
-import {AlertController} from '@ionic/angular';
+import {AlertController, PopoverController} from '@ionic/angular';
+import {AvatarChangeComponent} from '../components/avatar-change/avatar-change.component';
 
 @Component({
   selector: 'profile-page',
@@ -18,7 +19,6 @@ import {AlertController} from '@ionic/angular';
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>Profil</ion-title>
 
@@ -37,8 +37,7 @@ import {AlertController} from '@ionic/angular';
       </ion-refresher>
 
       <div class="ion-text-center">
-        <app-avatar-change [user]="this.loggedUser$ | async"
-                           (change)="onAvatarChange($event)"></app-avatar-change>
+        <app-avatar class="avatar" [user]="this.loggedUser$ | async" (click)="onAvatarClicked($event)"></app-avatar>
       </div>
 
       <app-notification-list
@@ -56,15 +55,18 @@ export class ProfilePage implements OnInit {
   notificationLoading$: Observable<boolean>;
 
   loggedUser$: Observable<LoggedUser>;
+  private user: LoggedUser;
 
   constructor(public store: Store<fromProfile.ProfileState>,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private popoverCtrl: PopoverController) {
 
     this.loggedUser$ = store.pipe(select(getLoggedUser));
     this.notifcations$ = store.pipe(select(fromNotification.selectAll));
     this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
 
     this.store.dispatch(new LoadNotifications({}));
+    this.loggedUser$ = store.select(getLoggedUser);
   }
 
   ngOnInit() {
@@ -95,6 +97,29 @@ export class ProfilePage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  onAvatarClicked(event) {
+    this.presentAvatarChangePopover(event);
+  }
+
+  async presentAvatarChangePopover(event) {
+    const popover = await this.popoverCtrl.create({
+      component: AvatarChangeComponent,
+      componentProps: {
+        user: this.user
+      },
+      event: event,
+      translucent: true
+    });
+
+    popover.onDidDismiss().then((result) => {
+      if (result && result.data && result.data.avatar) {
+        this.store.dispatch(new ChangeAvatar({avatar: result.data.avatar}));
+      }
+    });
+
+    return await popover.present();
   }
 
 }

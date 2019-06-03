@@ -1,23 +1,31 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {LoggedUser} from '../../../auth/models/auth.model';
 import {Avataaars, AvataaarsConfig} from '../../../avataaars/components/avataaars-wrapper/avataaars-wrapper.component';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
   selector: 'app-avatar-change',
   templateUrl: './avatar-change.component.html'
 })
-export class AvatarChangeComponent implements OnInit {
+export class AvatarChangeComponent implements OnInit, OnChanges {
 
   @Input() user: LoggedUser;
 
   @Output() change = new EventEmitter<AvataaarsConfig>();
 
   private dirty: boolean;
+  private savedAvatar: AvataaarsConfig;
 
-  constructor() {
+  constructor(private popoverCtrl: PopoverController) {
   }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.user && this.user.avatar) {
+      this.savedAvatar = {...this.user.avatar} as AvataaarsConfig;
+    }
   }
 
   onGenerateClicked() {
@@ -37,8 +45,11 @@ export class AvatarChangeComponent implements OnInit {
   }
 
   onSaveClicked() {
-    this.change.emit(this.user.avatar as AvataaarsConfig);
-    this.dirty = false;
+    this.popoverCtrl.dismiss({avatar: this.user.avatar});
+  }
+
+  onCloseClicked() {
+    this.popoverCtrl.dismiss({avatar: this.savedAvatar});
   }
 
   getRandomEnumValue(enumClass: any) {

@@ -29,6 +29,9 @@ const routes: Routes = [
   declarations: [
     ProfilePage,
     AvatarChangeComponent
+  ],
+  entryComponents: [
+    AvatarChangeComponent
   ]
 })
 export class ProfileModule {
