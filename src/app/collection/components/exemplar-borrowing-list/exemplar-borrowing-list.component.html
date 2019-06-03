@@ -1,0 +1,15 @@
+<ion-card *ngIf="exemplarBorrowings">
+  <app-collapsible-panel title="Leihübersicht">
+    <ion-card-content no-padding>
+      <ion-list>
+        <ng-container *ngFor="let exemplarBorrowing of exemplarBorrowings">
+          <app-exemplar-borrowing-list-item [borrowing]="exemplarBorrowing"
+                                            (update)="onExemplarBorrowingUpdate(exemplarBorrowing, $event)">
+
+          </app-exemplar-borrowing-list-item>
+          <hr/>
+        </ng-container>
+      </ion-list>
+    </ion-card-content>
+  </app-collapsible-panel>
+</ion-card>

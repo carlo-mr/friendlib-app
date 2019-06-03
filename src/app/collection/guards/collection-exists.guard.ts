@@ -39,7 +39,6 @@ export class CollectionExistsGuard implements CanActivate {
    * it in the store, returning `true` or `false` if it was found.
    */
   hasCollectionInApi(ownerId: string): Observable<boolean> {
-    console.log('hasCollectionInApi: ', ownerId);
     return this.collectionService.loadCollection(ownerId).pipe(
       map((collection: Collection) => new LoadCollectionSuccess({collection})),
       tap(action => this.store.dispatch(action)),
@@ -57,7 +56,6 @@ export class CollectionExistsGuard implements CanActivate {
    * API.
    */
   hasCollection(id: string): Observable<boolean> {
-    console.log('hasCollection: ', id);
     return this.hasCollectionInStore(id).pipe(
       switchMap(inStore => {
         if (inStore) {
@@ -84,7 +82,6 @@ export class CollectionExistsGuard implements CanActivate {
    * to the 404 page.
    */
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    console.log('collectionexistsguard');
     return this.hasCollection(route.params['ownerId']);
   }
 }

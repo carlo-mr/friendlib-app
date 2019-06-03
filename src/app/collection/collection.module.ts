@@ -10,9 +10,12 @@ import {CollectionDetailsPage} from './containers/collection-details.page';
 import {IonicModule} from '@ionic/angular';
 import {ExemplarGridComponent} from './components/exemplar-grid/exemplar-grid.component';
 import {ExemplarDetailsPage} from './containers/exemplar-details.page';
-import {BookDetailsModule} from '../book-details/book-details.module';
 import {ExemplarLinksComponent} from './components/exemplar-links/exemplar-links.component';
 import {CollectionExistsGuard} from './guards/collection-exists.guard';
+import {BookDetailsModule} from '../book-details/book-details.module';
+import {ExemplarGridItemComponent} from './components/exemplar-grid-item/exemplar-grid-item.component';
+import {ExemplarBorrowingListComponent} from './components/exemplar-borrowing-list/exemplar-borrowing-list.component';
+import {ExemplarBorrowingListItemComponent} from './components/exemplar-borrowing-list-item/exemplar-borrowing-list-item.component';
 
 const routes: Routes = [
   {
@@ -32,7 +35,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CollectionDetailsPage, ExemplarGridComponent, ExemplarDetailsPage, ExemplarLinksComponent],
+  declarations: [
+    CollectionDetailsPage,
+    ExemplarGridComponent,
+    ExemplarDetailsPage,
+    ExemplarLinksComponent,
+    ExemplarGridItemComponent,
+    ExemplarBorrowingListComponent,
+    ExemplarBorrowingListItemComponent
+  ],
   imports: [
     CommonModule,
     IonicModule,

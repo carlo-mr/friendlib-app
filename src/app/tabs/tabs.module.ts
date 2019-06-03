@@ -8,6 +8,7 @@ import {TabsPageRoutingModule} from './tabs.router.module';
 import {TabsPage} from './tabs.page';
 import {BookModule} from '../book/book.module';
 import {CollectionModule} from '../collection/collection.module';
+import {BorrowingModule} from '../borrowing/borrowing.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import {CollectionModule} from '../collection/collection.module';
     FormsModule,
     TabsPageRoutingModule,
     BookModule,
-    CollectionModule
+    CollectionModule,
+    BorrowingModule
   ],
   declarations: [TabsPage]
 })

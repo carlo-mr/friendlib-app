@@ -1,0 +1,10 @@
+<div *ngIf="borrowing">
+  <ion-button *ngFor="let linkKey of Object.keys(borrowing._links || {})"
+              expand="block" fill="outline"
+              (click)="onUpdateBorrowing(linkKey)">
+    <ion-icon slot="start" name="thumbs-up"></ion-icon>
+    {{linkKey}}
+  </ion-button>
+</div>
+
+

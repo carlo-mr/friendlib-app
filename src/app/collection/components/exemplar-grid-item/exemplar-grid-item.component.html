@@ -1,0 +1,8 @@
+<img [ngClass]="imgClass"
+     [classList]="this.imgClass"
+     src="{{exemplar.book.coverUrl || '../assets/img/no_cover.jpg'}}"
+     (load)="onImageLoad($event)"/>
+<ion-skeleton-text style="height: 160px"
+                   [ngClass]="skeletonClass" animated></ion-skeleton-text>
+
+<span *ngIf="!exemplar.book.coverUrl">{{exemplar.book.title}}</span>

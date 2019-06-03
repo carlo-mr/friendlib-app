@@ -36,6 +36,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'borrowing',
+        children: [
+          {
+            path: '',
+            loadChildren: '../borrowing/borrowing.module#BorrowingModule'
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/app/collection',
         pathMatch: 'full'
