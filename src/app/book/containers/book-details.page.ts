@@ -4,7 +4,8 @@ import * as fromBook from '../book.reducer';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
 import {AddBookToCollection} from '../../collection/actions/collection.actions';
-import {Book} from '../../common/book.model';
+import {Book, BookOwner} from '../../common/book.model';
+import {AddBorrowing} from '../../borrowing/borrowing.actions';
 
 @Component({
   selector: 'book-details-page',
@@ -24,7 +25,8 @@ import {Book} from '../../common/book.model';
 
       <app-book-links
         [book]="book$ | async"
-        (addToCollection)="onAddToCollection($event)"></app-book-links>
+        (addToCollection)="onAddToCollection($event)"
+        (borrowRequest)="onBorrowRequest($event)"></app-book-links>
     </ion-content>
   `
 })
@@ -42,5 +44,9 @@ export class BookDetailsPage implements OnInit {
 
   onAddToCollection(book: Book) {
     this.store.dispatch(new AddBookToCollection({book}));
+  }
+
+  onBorrowRequest(bookOwner: BookOwner) {
+    this.store.dispatch(new AddBorrowing({exemplarId: bookOwner.exemplarId}));
   }
 }

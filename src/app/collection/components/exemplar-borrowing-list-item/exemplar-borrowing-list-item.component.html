@@ -1,0 +1,38 @@
+<ion-grid *ngIf="borrowing">
+  <ion-row>
+    <ion-col size="4" class="ion-text-center">
+      <app-avataaars-wrapper [avataaarsConfig]="borrowing.borrowerId.avatar"></app-avataaars-wrapper>
+      <span>{{borrowing.borrowerId}}</span>
+    </ion-col>
+    <ion-col>
+      <div>
+        Status: <span>{{getStatusText(borrowing.status)}}</span>
+      </div>
+      <div>
+        Erstellt:
+        <ion-datetime style="display: inline-flex"
+                      readonly
+                      displayFormat="DD MMM YYYY"
+                      value="{{borrowing.creationDate || '1986-08-04T23:45Z'}}"></ion-datetime>
+      </div>
+      <div *ngIf="borrowing.updateDate">
+        Geändert:
+        <ion-datetime style="display: inline-flex"
+                      readonly
+                      displayFormat="DD MMM YYYY"
+                      value="{{borrowing.updateDate || '1986-08-04T23:45Z'}}"></ion-datetime>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="borrowing._links && Object.keys(borrowing._links || []).length > 0"
+           class="ion-justify-content-between">
+    <ion-col>
+      <ion-button *ngFor="let linkKey of Object.keys(borrowing._links || {})"
+                  fill="outline"
+                  (click)="onUpdateBorrowing(linkKey)">
+        <ion-icon *ngFor="let icon of getActionIcon(linkKey)" [name]="icon"></ion-icon>
+        {{getActionText(linkKey)}}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
