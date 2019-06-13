@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, debounce, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {
   AuthActionTypes,
@@ -12,6 +12,7 @@ import {
   ForgotPasswordSuccess,
   Login,
   LoginError,
+  LoginLocalStorage,
   LoginLocalStorageError,
   LoginSuccess,
   LogoutError,
@@ -25,7 +26,7 @@ import {
 } from '../actions/auth.actions';
 import {CognitoService} from '../services/cognito.service';
 import {LoggedUser} from '../models/auth.model';
-import {defer, of} from 'rxjs';
+import {defer, of, timer} from 'rxjs';
 import {State} from '../../reducers';
 import {select, Store} from '@ngrx/store';
 
@@ -38,6 +39,7 @@ export class AuthEffects {
     switchMap((action: Login) => {
         return this.cognitoService.logIn(action.payload.loginDetails).pipe(
           map((cognitoUser: any) => {
+
             const loggedUser: LoggedUser = {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
               avatar: AuthEffects.parseAvatar(cognitoUser),
@@ -75,27 +77,30 @@ export class AuthEffects {
   );
 
   @Effect()
-  loginLocalStorage$ = defer(() => {
-    return this.cognitoService.retrieveUserFromLocalStorage().pipe(
-      map((cognitoUser: any) => {
-        if (cognitoUser) {
-          const loggedUser: LoggedUser = {
-            name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
-            avatar: AuthEffects.parseAvatar(cognitoUser),
-            session: cognitoUser.signInUserSession,
-            // settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
-          };
+  loginLocalStorage$ = this.actions$.pipe(
+    ofType(AuthActionTypes.LoginLocalStorage),
+    switchMap((action: LoginLocalStorage) => {
+      return this.cognitoService.retrieveUserFromLocalStorage().pipe(
+        map((cognitoUser: any) => {
+          if (cognitoUser) {
+            const loggedUser: LoggedUser = {
+              name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
+              avatar: AuthEffects.parseAvatar(cognitoUser),
+              session: cognitoUser.signInUserSession,
+              // settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
+            };
 
-          return new LoginSuccess({loggedUser});
-        }
+            return new LoginSuccess({loggedUser});
+          }
 
-        return new LoginLocalStorageError(null);
-      }),
-      catchError((error) => {
-        return of(new LoginLocalStorageError(error.message));
-      })
-    );
-  });
+          return new LoginLocalStorageError(null);
+        }),
+        catchError((error) => {
+          return of(new LoginLocalStorageError(error.message));
+        })
+      );
+    })
+  );
 
   @Effect()
   logout$ = this.actions$.pipe(
@@ -200,12 +205,13 @@ export class AuthEffects {
     ofType(AuthActionTypes.ChangeAvatar,
       AuthActionTypes.ForgotPassword,
       AuthActionTypes.Login,
+      AuthActionTypes.LoginLocalStorage,
       AuthActionTypes.Register),
-    map(() => {
-      this.loadingCtrl.create().then((loading) => {
-        this.loading = loading;
-        loading.present();
-      });
+    map(async () => {
+      const loading = await this.loadingCtrl.create();
+
+      this.loading = loading;
+      loading.present();
     })
   );
 
@@ -217,14 +223,20 @@ export class AuthEffects {
       AuthActionTypes.ForgotPasswordError,
       AuthActionTypes.LoginSuccess,
       AuthActionTypes.LoginError,
+      AuthActionTypes.LoginLocalStorageSuccess,
+      AuthActionTypes.LoginLocalStorageError,
       AuthActionTypes.RegisterSuccess,
       AuthActionTypes.RegisterError),
+    debounce(() => timer(500)),
     map(() => {
       if (this.loading) {
         this.loading.dismiss();
       }
     })
   );
+
+  @Effect()
+  triggerLoginLocalStorage$ = defer(() => of(new LoginLocalStorage()));
 
   private loading: HTMLIonLoadingElement;
 
