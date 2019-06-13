@@ -85,12 +85,14 @@ export class CollectionEffects {
 
   @Effect({dispatch: false})
   createLoadingOnRequests$ = this.actions$.pipe(
-    ofType(CollectionActionTypes.AddBookToCollection, CollectionActionTypes.LoadCollection, CollectionActionTypes.RemoveExemplar),
-    map((action: AddBookToCollection) => {
-      this.loadingCtrl.create().then((loading) => {
-        this.loading = loading;
-        loading.present();
-      });
+    ofType(CollectionActionTypes.AddBookToCollection,
+      CollectionActionTypes.LoadCollection,
+      CollectionActionTypes.RemoveExemplar),
+    map(async (action: AddBookToCollection) => {
+      const loading = await this.loadingCtrl.create();
+
+      this.loading = loading;
+      loading.present();
     })
   );
 
