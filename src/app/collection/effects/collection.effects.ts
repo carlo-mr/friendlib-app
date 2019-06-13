@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {
   AddBookToCollection,
@@ -20,6 +20,11 @@ import {CollectionService} from '../collection.service';
 import {Collection} from '../../common/collection.model';
 import {LoadingController, NavController, ToastController} from '@ionic/angular';
 import {Exemplar} from '../../common/exemplar.model';
+import {normalize} from 'normalizr';
+import {SearchBooksSuccess} from '../../book/book.actions';
+import {LoadBorrowingsSuccess} from '../../borrowing/borrowing.actions';
+import {CollectionSchema} from '../../common/friendlib.schema';
+import {LoadExemplarsSuccess} from '../../exemplar/exemplar.actions';
 
 @Injectable()
 export class CollectionEffects {
@@ -34,8 +39,20 @@ export class CollectionEffects {
       }
 
       return this.collectionService.loadCollection(ownerId).pipe(
-        map((collection: Collection) => {
-          return new LoadCollectionSuccess({collection});
+        tap(() => action.payload && action.payload.refresher ? action.payload.refresher.complete() : null),
+        mergeMap((collection: Collection) => {
+
+          const normalizedData = normalize(collection, CollectionSchema);
+          const books = Object.keys(normalizedData.entities.books).map(key => normalizedData.entities.books[key]);
+          const borrowings = Object.keys(normalizedData.entities.borrowings).map(key => normalizedData.entities.borrowings[key]);
+          const exemplars = Object.keys(normalizedData.entities.exemplars).map(key => normalizedData.entities.exemplars[key]);
+
+          return [
+            new SearchBooksSuccess(books),
+            new LoadExemplarsSuccess({exemplars}),
+            new LoadBorrowingsSuccess({borrowings}),
+            new LoadCollectionSuccess({collection})
+          ];
         }),
         catchError((error) => {
           return of(new LoadCollectionError({errorMessage: error.message}));
