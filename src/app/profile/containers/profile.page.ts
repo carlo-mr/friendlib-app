@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {AvataaarsConfig} from '../../avataaars/components/avataaars-wrapper/avataaars-wrapper.component';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import * as fromProfile from '../profile.reducer';
+import * as fromNotification from '../../notification/notification.reducer';
+import {Notification} from '../../notification/notification.model';
 import {getLoggedUser} from '../../auth/reducers/auth.reducer';
 import {Observable} from 'rxjs';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
+import {LoadNotifications} from '../../notification/notification.actions';
 
 @Component({
   selector: 'profile-page',
@@ -27,10 +30,18 @@ import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
     </ion-header>
 
     <ion-content>
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
       <div class="ion-text-center">
         <app-avatar-change [user]="this.loggedUser$ | async"
                            (change)="onAvatarChange($event)"></app-avatar-change>
       </div>
+
+      <app-notification-list
+        [notifications]="this.notifcations$ | async"></app-notification-list>
+
     </ion-content>
   `
 })
@@ -38,16 +49,24 @@ export class ProfilePage implements OnInit {
 
   avataaarsConfig: AvataaarsConfig;
   dirty: boolean;
+  notifcations$: Observable<Notification[]>;
 
   loggedUser$: Observable<LoggedUser>;
 
   constructor(public store: Store<fromProfile.ProfileState>) {
 
-    this.loggedUser$ = store.select(getLoggedUser);
+    this.loggedUser$ = store.pipe(select(getLoggedUser));
+    this.notifcations$ = store.pipe(select(fromNotification.selectAll));
+
+    this.store.dispatch(new LoadNotifications({}));
   }
 
   ngOnInit() {
 
+  }
+
+  doRefresh(event) {
+    this.store.dispatch(new LoadNotifications({refresher: event.target}));
   }
 
   onAvatarChange(avatar) {
