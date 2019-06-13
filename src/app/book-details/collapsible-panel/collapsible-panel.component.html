@@ -1,6 +1,8 @@
 <ng-container>
   <ion-item no-margin lines="none" (click)="onToggleBtnClicked($event)" color="light">
-    <ion-label>{{title}}</ion-label>
+    <ion-label>{{title}}
+    </ion-label>
+    <ion-badge slot="end" color="secondary" *ngIf="badge">{{badge}}</ion-badge>
     <ion-icon [name]="expanded ? 'arrow-round-up' : 'arrow-round-down'" slot="end"></ion-icon>
   </ion-item>
 

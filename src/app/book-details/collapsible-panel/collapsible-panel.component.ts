@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-collapsible-panel',
@@ -10,7 +10,12 @@ export class CollapsiblePanelComponent implements OnInit {
   @Input()
   title: string;
 
-  expanded = false;
+  @Input()
+  badge: number;
+
+  @Input() expanded = false;
+
+  @Output() toggle = new EventEmitter<any>();
 
   constructor() {
   }
@@ -20,6 +25,8 @@ export class CollapsiblePanelComponent implements OnInit {
 
   onToggleBtnClicked(event) {
     this.expanded = !this.expanded;
+
+    this.toggle.emit(this.expanded);
   }
 
 }
