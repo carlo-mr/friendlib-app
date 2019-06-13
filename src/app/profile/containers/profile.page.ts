@@ -9,6 +9,7 @@ import {Observable} from 'rxjs';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
 import {LoadNotifications} from '../../notification/notification.actions';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'profile-page',
@@ -22,8 +23,9 @@ import {LoadNotifications} from '../../notification/notification.actions';
         <ion-title>Profil</ion-title>
 
         <ion-buttons slot="end">
-          <ion-button icon-only (click)="onLogoutClicked($event)">
-            <ion-icon name="exit"></ion-icon>
+          <ion-button (click)="onLogoutClicked($event)">
+            Ausloggen
+            <ion-icon slot="end" name="exit"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -53,7 +55,8 @@ export class ProfilePage implements OnInit {
 
   loggedUser$: Observable<LoggedUser>;
 
-  constructor(public store: Store<fromProfile.ProfileState>) {
+  constructor(public store: Store<fromProfile.ProfileState>,
+              private alertController: AlertController) {
 
     this.loggedUser$ = store.pipe(select(getLoggedUser));
     this.notifcations$ = store.pipe(select(fromNotification.selectAll));
@@ -73,8 +76,22 @@ export class ProfilePage implements OnInit {
     this.store.dispatch(new ChangeAvatar({avatar}));
   }
 
-  onLogoutClicked(event) {
-    this.store.dispatch(new Logout({}));
+  async onLogoutClicked(event) {
+    const alert = await this.alertController.create({
+      header: `Ausloggen`,
+      message: 'Möchtest du dich ausloggen?',
+      buttons: [{
+        text: 'Ja',
+        handler: () => {
+          this.store.dispatch(new Logout({}));
+        }
+      }, {
+        text: 'Nee quatsch',
+        role: 'cancel'
+      }],
+    });
+
+    await alert.present();
   }
 
 }
