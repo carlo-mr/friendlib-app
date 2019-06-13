@@ -10,6 +10,7 @@ import {BookModule} from '../book/book.module';
 import {CollectionModule} from '../collection/collection.module';
 import {BorrowingModule} from '../borrowing/borrowing.module';
 import {UserModule} from '../user/user.module';
+import {ProfileModule} from '../profile/profile.module';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import {UserModule} from '../user/user.module';
     BookModule,
     CollectionModule,
     BorrowingModule,
-    UserModule
+    UserModule,
+    ProfileModule
   ],
   declarations: [TabsPage]
 })

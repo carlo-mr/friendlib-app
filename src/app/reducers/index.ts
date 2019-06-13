@@ -5,6 +5,7 @@ import * as fromBook from '../book/book.reducer';
 import * as fromBorrowing from '../borrowing/borrowing.reducer';
 import * as fromCollection from '../collection/reducers/collection.reducer';
 import * as fromUser from '../user/user.reducer';
+import * as fromNotification from '../notification/notification.reducer';
 
 export interface State {
   auth: fromAuth.AuthState;
@@ -12,6 +13,7 @@ export interface State {
   collection: fromCollection.CollectionState;
   borrowing: fromBorrowing.BorrowingState;
   user: fromUser.UserState;
+  notification: fromNotification.NotificationState;
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -19,7 +21,8 @@ export const reducers: ActionReducerMap<State> = {
   book: fromBook.bookReducer,
   collection: fromCollection.collectionReducer,
   borrowing: fromBorrowing.borrowingReducer,
-  user: fromUser.userReducer
+  user: fromUser.userReducer,
+  notification: fromNotification.notificationReducer
 };
 
 

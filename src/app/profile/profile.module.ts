@@ -7,6 +7,7 @@ import {StoreModule} from '@ngrx/store';
 import {profileReducer} from './profile.reducer';
 import {AvatarChangeComponent} from './components/avatar-change/avatar-change.component';
 import {AvataaarsModule} from '../avataaars/avataaars.module';
+import {NotificationModule} from '../notification/notification.module';
 
 const routes: Routes = [
   {
@@ -22,7 +23,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('profile', profileReducer),
-    AvataaarsModule
+    AvataaarsModule,
+    NotificationModule
   ],
   declarations: [
     ProfilePage,

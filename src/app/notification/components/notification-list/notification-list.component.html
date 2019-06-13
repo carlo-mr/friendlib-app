@@ -1,0 +1,19 @@
+<app-collapsible-panel *ngIf="this.notifications && this.notifications.length > 0"
+                       title="Mitteilungen"
+                       [expanded]="true"
+                       [badge]="this.notifications ? this.notifications.length : 0">
+
+  <ion-list>
+    <ion-item *ngFor="let notification of this.notifications">
+      <ion-label>
+        <h2>
+          {{notification.title}}
+          <ion-note slot="end">{{notification.createdAt | date:'dd MMM yyy'}}</ion-note>
+        </h2>
+        <p text-wrap>
+          {{notification.message}}
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</app-collapsible-panel>
