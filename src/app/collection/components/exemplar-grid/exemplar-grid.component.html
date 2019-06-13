@@ -1,7 +1,7 @@
-<ion-grid *ngIf="exemplars && exemplars.length > 0">
+<ion-grid *ngIf="users && exemplars && exemplars.length > 0">
   <ion-row align-items-end>
     <ion-col *ngFor="let exemplar of exemplars" size="4" (click)="selectExemplar(exemplar)">
-      <app-exemplar-grid-item [exemplar]="exemplar"></app-exemplar-grid-item>
+      <app-exemplar-grid-item [users]="users" [exemplar]="exemplar"></app-exemplar-grid-item>
     </ion-col>
   </ion-row>
 </ion-grid>

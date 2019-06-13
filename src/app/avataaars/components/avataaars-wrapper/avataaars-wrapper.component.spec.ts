@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AvataaarsWrapperComponent } from './avataaars-wrapper.component';
+import {AvataaarsWrapperComponent} from './avataaars-wrapper.component';
+import {IonicModule} from '@ionic/angular';
 
 describe('AvataaarsWrapperComponent', () => {
   let component: AvataaarsWrapperComponent;
@@ -8,9 +9,10 @@ describe('AvataaarsWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AvataaarsWrapperComponent ]
+      imports: [IonicModule.forRoot()],
+      declarations: [AvataaarsWrapperComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

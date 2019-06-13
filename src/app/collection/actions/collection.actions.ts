@@ -1,6 +1,7 @@
 import {Action} from '@ngrx/store';
-import {Collection, Exemplar} from '../../common/collection.model';
+import {Collection} from '../../common/collection.model';
 import {Book} from '../../common/book.model';
+import {Exemplar} from '../../common/exemplar.model';
 
 export enum CollectionActionTypes {
   LoadCollection = '[Collection] Load Collection',
@@ -19,7 +20,7 @@ export enum CollectionActionTypes {
 export class LoadCollection implements Action {
   readonly type = CollectionActionTypes.LoadCollection;
 
-  constructor(public payload?: { ownerId: string }) {
+  constructor(public payload?: { ownerId?: string, refresher?: any }) {
 
   }
 }

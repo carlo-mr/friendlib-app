@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Exemplar} from '../../../common/collection.model';
+import {Exemplar} from '../../../common/exemplar.model';
+import {User} from '../../../user/user.model';
 
 @Component({
   selector: 'app-exemplar-grid',
@@ -8,6 +9,7 @@ import {Exemplar} from '../../../common/collection.model';
 export class ExemplarGridComponent implements OnInit {
 
   @Input() exemplars: Exemplar[];
+  @Input() users: User[];
 
   @Output() exemplarSelected = new EventEmitter<Exemplar>();
 

@@ -17,9 +17,9 @@ import {
   RemoveExemplarSuccess
 } from '../actions/collection.actions';
 import {CollectionService} from '../collection.service';
-import {Collection, Exemplar} from '../../common/collection.model';
+import {Collection} from '../../common/collection.model';
 import {LoadingController, NavController, ToastController} from '@ionic/angular';
-
+import {Exemplar} from '../../common/exemplar.model';
 
 @Injectable()
 export class CollectionEffects {
@@ -69,7 +69,7 @@ export class CollectionEffects {
     ofType(CollectionActionTypes.RemoveExemplar),
     switchMap((action: RemoveExemplar) => {
         if (!action.payload.exemplar._links || !action.payload.exemplar._links.removeExemplar) {
-          return of(new AddBookToCollectionError({errorMessage: 'removeExemplar link is not present'}));
+          return of(new RemoveExemplarError({errorMessage: 'removeExemplar link is not present'}));
         }
         return this.collectionService.removeExemplar(action.payload.exemplar).pipe(
           map((exemplar: Exemplar) => {

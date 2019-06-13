@@ -8,31 +8,38 @@ import * as fromBorrowing from '../borrowing/borrowing.reducer';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {
+  AcceptBorrowing,
+  AcceptBorrowingError,
+  AcceptBorrowingSuccess,
   AddBorrowing,
   AddBorrowingError,
   AddBorrowingSuccess,
   BorrowingActionTypes,
-  LoadBorrowings,
-  LoadBorrowingsError,
-  LoadBorrowingsSuccess,
-  LoadExemplarBorrowings,
-  LoadExemplarBorrowingsError,
-  LoadExemplarBorrowingsSuccess,
-  UpdateBorrowing,
-  UpdateBorrowingError,
-  UpdateBorrowingSuccess
+  CompleteBorrowing,
+  CompleteBorrowingError,
+  CompleteBorrowingSuccess,
+  ReceiveBorrowing,
+  ReceiveBorrowingError,
+  ReceiveBorrowingSuccess,
+  RejectBorrowing,
+  RejectBorrowingError,
+  RejectBorrowingSuccess
 } from './borrowing.actions';
 import {Borrowing} from '../common/borrowing.model';
+import {Exemplar} from '../common/exemplar.model';
 
 @Injectable()
 export class BorrowingEffects {
 
   private loading: any;
 
-  @Effect()
-  loadBorrowings$ = this.actions$.pipe(
-    ofType(BorrowingActionTypes.LoadBorrowings),
-    switchMap((action: LoadBorrowings) => {
+  /**
+   *Borrowings are now included in the exemplar details direct and therefore do not need to be requested separately
+   *
+   @Effect()
+   loadBorrowings$ = this.actions$.pipe(
+   ofType(BorrowingActionTypes.LoadBorrowings),
+   switchMap((action: LoadBorrowings) => {
       return this.borrowingService.get().pipe(
         map((response: Borrowing[]) => {
           return new LoadBorrowingsSuccess({borrowings: response});
@@ -42,12 +49,12 @@ export class BorrowingEffects {
         })
       );
     })
-  );
+   );
 
-  @Effect()
-  loadExemplarBorrowings$ = this.actions$.pipe(
-    ofType(BorrowingActionTypes.LoadExemplarBorrowings),
-    switchMap((action: LoadExemplarBorrowings) => {
+   @Effect()
+   loadExemplarBorrowings$ = this.actions$.pipe(
+   ofType(BorrowingActionTypes.LoadExemplarBorrowings),
+   switchMap((action: LoadExemplarBorrowings) => {
       return this.borrowingService.get(action.payload.exemplarId).pipe(
         map((response: Borrowing[]) => {
           return new LoadExemplarBorrowingsSuccess({borrowings: response});
@@ -57,13 +64,14 @@ export class BorrowingEffects {
         })
       );
     })
-  );
+   );
+   */
 
   @Effect()
   addBorrowing$ = this.actions$.pipe(
     ofType(BorrowingActionTypes.AddBorrowing),
     switchMap((action: AddBorrowing) => {
-        return this.borrowingService.add(action.payload.exemplarId).pipe(
+        return this.borrowingService.add(action.payload.bookOwner).pipe(
           map((response: any) => {
             return new AddBorrowingSuccess({borrowing: response});
           }),
@@ -76,19 +84,73 @@ export class BorrowingEffects {
   );
 
   @Effect()
-  updateBorrowing$ = this.actions$.pipe(
-    ofType(BorrowingActionTypes.UpdateBorrowing),
-    switchMap((action: UpdateBorrowing) => {
+  acceptBorrowing$ = this.actions$.pipe(
+    ofType(BorrowingActionTypes.AcceptBorrowing),
+    switchMap((action: AcceptBorrowing) => {
         return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
-          map((response: any) => {
-            return new UpdateBorrowingSuccess({
-              borrowing: action.payload.borrowing,
-              newStatus: response.status,
-              updateDate: response.updateDate
+          map((response: Borrowing) => {
+            return new AcceptBorrowingSuccess({
+              borrowing: response
             });
           }),
           catchError((error) => {
-            return of(new UpdateBorrowingError({errorMessage: error.message}));
+            return of(new AcceptBorrowingError({errorMessage: error.message}));
+          })
+        );
+      }
+    )
+  );
+
+  @Effect()
+  rejectBorrowing$ = this.actions$.pipe(
+    ofType(BorrowingActionTypes.RejectBorrowing),
+    switchMap((action: RejectBorrowing) => {
+        return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
+          map((response: Borrowing) => {
+            return new RejectBorrowingSuccess({
+              borrowing: response
+            });
+          }),
+          catchError((error) => {
+            return of(new RejectBorrowingError({errorMessage: error.message}));
+          })
+        );
+      }
+    )
+  );
+
+  @Effect()
+  receiveBorrowing$ = this.actions$.pipe(
+    ofType(BorrowingActionTypes.ReceiveBorrowing),
+    switchMap((action: ReceiveBorrowing) => {
+        return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
+          map((response: Exemplar) => {
+            return new ReceiveBorrowingSuccess({
+              exemplar: response,
+              originalBorrowing: action.payload.borrowing
+            });
+          }),
+          catchError((error) => {
+            return of(new ReceiveBorrowingError({errorMessage: error.message}));
+          })
+        );
+      }
+    )
+  );
+
+  @Effect()
+  completeBorrowing$ = this.actions$.pipe(
+    ofType(BorrowingActionTypes.CompleteBorrowing),
+    switchMap((action: CompleteBorrowing) => {
+        return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
+          map((response: Exemplar) => {
+            return new CompleteBorrowingSuccess({
+              exemplar: response,
+              originalBorrowing: action.payload.borrowing
+            });
+          }),
+          catchError((error) => {
+            return of(new CompleteBorrowingError({errorMessage: error.message}));
           })
         );
       }

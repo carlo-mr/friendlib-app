@@ -4,6 +4,7 @@ import {BookDetailsComponent} from './book-details.component';
 import {IonicModule} from '@ionic/angular';
 import {CollapsiblePanelComponent} from '../../collapsible-panel/collapsible-panel.component';
 import {Book} from '../../../common/book.model';
+import {AvataaarsModule} from '../../../avataaars/avataaars.module';
 
 describe('BookDetailsComponent', () => {
   let component: BookDetailsComponent;
@@ -11,7 +12,10 @@ describe('BookDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot()],
+      imports: [
+        IonicModule.forRoot(),
+        AvataaarsModule
+      ],
       declarations: [BookDetailsComponent, CollapsiblePanelComponent]
     })
       .compileComponents();

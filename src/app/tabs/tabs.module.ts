@@ -23,7 +23,7 @@ import {ExemplarModule} from '../exemplar/exemplar.module';
     CollectionModule,
     BorrowingModule,
     UserModule,
-    ProfileModule
+    ProfileModule,
     ExemplarModule
   ],
   declarations: [TabsPage]

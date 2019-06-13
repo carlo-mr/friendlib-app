@@ -33,6 +33,12 @@ import {Book} from '../../common/book.model';
       <app-book-grid
         [books]="books$ | async"
         (bookSelected)="onBookSelected($event)"></app-book-grid>
+
+      <div *ngIf="(books$ | async)?.length == 0" class="ion-text-center">
+        <h2>Kein Ergebnis</h2>
+        <p>Nutze die Suche um ein Buch zu finden und zu sehen wer es besitzt.</p>
+        <img src="../../assets/img/empty_search.jpg"/>
+      </div>
     </ion-content>
   `
 })

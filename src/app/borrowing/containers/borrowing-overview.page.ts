@@ -4,10 +4,13 @@ import * as fromAuth from '../../auth/reducers/auth.reducer';
 import {Observable} from 'rxjs';
 import {NavController} from '@ionic/angular';
 import {LoggedUser} from '../../auth/models/auth.model';
-import * as fromBorrowing from '../borrowing.reducer';
+import * as fromUser from '../../user/user.reducer';
 import {ActivatedRoute} from '@angular/router';
-import {LoadBorrowings} from '../borrowing.actions';
 import {Borrowing} from '../../common/borrowing.model';
+import {User} from '../../user/user.model';
+import {Dictionary} from '@ngrx/entity';
+import * as fromCollection from '../../collection/reducers/collection.reducer';
+import {LoadCollection} from '../../collection/actions/collection.actions';
 
 @Component({
   selector: 'borrowing-overview-page',
@@ -31,32 +34,57 @@ import {Borrowing} from '../../common/borrowing.model';
     </ion-header>
 
     <ion-content>
-      <ng-container *ngIf="(borrowings$ | async)?.length > 0">
-        <app-borrowing-list [borrowings]="borrowings$ | async">
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
 
-        </app-borrowing-list>
-      </ng-container>
+      <app-borrowing-list [borrowings]="borrowings$ | async"
+                          [users]="users$ | async"
+                          (selectExemplar)="onSelectExemplar($event)">
+      </app-borrowing-list>
+
+      <div *ngIf="(borrowings$ | async)?.length == 0" class="ion-text-center">
+        <h2>Keine Leihen</h2>
+        <p>Aktuell hast du keine offenen Leihanfragen.</p>
+        <p>Nutze die Suche um Bücher zu finden und zu sehen, wer sie dir ausleihen könnte.</p>
+        <p>Bücher, die du dir ausgeliehen hast findest du <a (click)="onGoToCollection($event)">in deiner Sammlung.</a></p>
+        <img src="../../assets/img/empty_borrowings.jpg"/>
+      </div>
     </ion-content>
   `
 })
 export class BorrowingOverviewPage implements OnInit {
 
-  borrowings$: Observable<Borrowing[]>;
   user$: Observable<LoggedUser>;
+  borrowings$: Observable<Borrowing[]>;
+  users$: Observable<Dictionary<User>>;
 
-  constructor(private store: Store<fromBorrowing.BorrowingState>,
+  constructor(private store: Store<any>,
               private navCtrl: NavController,
               private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
-    this.borrowings$ = this.store.pipe(select(fromBorrowing.selectAll));
-    this.store.dispatch(new LoadBorrowings());
+    this.borrowings$ = this.store.pipe(select(fromCollection.loggedInUserBorrowingRequests));
+    this.users$ = this.store.pipe(select(fromUser.selectEntities));
+  }
+
+  doRefresh(event) {
+    this.store.dispatch(new LoadCollection({refresher: event.target}));
   }
 
   onAvatarClicked(event) {
     this.navCtrl.navigateRoot('/app/profile');
+  }
+
+  onSelectExemplar(event) {
+    this.navCtrl.navigateForward(`/app/collection/${event.ownerId}/${event.exemplarId}`);
+  }
+
+  onGoToCollection(event) {
+    // TODO find out why query params in navigation options do not work
+    this.navCtrl.navigateRoot(`/app/collection?segment=borrowed`);
   }
 
 }

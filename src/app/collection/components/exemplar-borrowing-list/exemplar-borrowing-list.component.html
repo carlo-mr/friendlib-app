@@ -1,10 +1,11 @@
-<ion-card *ngIf="exemplarBorrowings">
-  <app-collapsible-panel title="Leihübersicht">
+<ion-card *ngIf="exemplarBorrowings && users">
+  <app-collapsible-panel title="Leihübersicht" [expanded]="true" [badge]="countOpenBorrowings()">
     <ion-card-content no-padding>
       <ion-list>
         <ng-container *ngFor="let exemplarBorrowing of exemplarBorrowings">
           <app-exemplar-borrowing-list-item [borrowing]="exemplarBorrowing"
-                                            (update)="onExemplarBorrowingUpdate(exemplarBorrowing, $event)">
+                                            (update)="onExemplarBorrowingUpdate(exemplarBorrowing, $event)"
+                                            [borrower]="users[exemplarBorrowing.borrowerId]">
 
           </app-exemplar-borrowing-list-item>
           <hr/>

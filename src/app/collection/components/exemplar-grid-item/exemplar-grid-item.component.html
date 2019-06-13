@@ -1,3 +1,7 @@
+<ion-badge color="secondary"
+           *ngIf="countOpenBorrowings()">
+  {{countOpenBorrowings()}}
+</ion-badge>
 <img [ngClass]="imgClass"
      [classList]="this.imgClass"
      src="{{exemplar.book.coverUrl || '../assets/img/no_cover.jpg'}}"
@@ -6,3 +10,12 @@
                    [ngClass]="skeletonClass" animated></ion-skeleton-text>
 
 <span *ngIf="!exemplar.book.coverUrl">{{exemplar.book.title}}</span>
+
+<ng-container *ngIf="exemplar.status == 'LENT'">
+  <app-avataaars-wrapper class="lent-to"
+                         [avataaarsConfig]="users[exemplar.lentTo]?.avatar"
+                         [circle]="true"
+                         [clazz]="'size-small'"
+  ></app-avataaars-wrapper>
+</ng-container>
+

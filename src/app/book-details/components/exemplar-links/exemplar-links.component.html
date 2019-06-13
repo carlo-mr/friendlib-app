@@ -1,0 +1,8 @@
+<ion-list *ngIf="this.user && this.exemplar" lines="none" no-margin no-padding>
+  <ion-item *ngIf="this.user.name == this.exemplar.ownerId"
+            color="danger"
+            (click)="deleteExemplar()">
+    <ion-icon slot="start" name="trash"></ion-icon>
+    <ion-label>Entfernen</ion-label>
+  </ion-item>
+</ion-list>

@@ -1,4 +1,4 @@
-<ion-card *ngIf="book">
+<ion-card *ngIf="book && users">
   <ion-card-content no-padding>
     <ion-grid no-padding>
       <ion-row>
@@ -13,10 +13,30 @@
         </ion-col>
       </ion-row>
 
-      <hr/>
-
-      <app-collapsible-panel title="Beschreibung" *ngIf="book.description">
+      <app-collapsible-panel margin-bottom
+                             title="Beschreibung"
+                             [expanded]="book.description && book.description.length > 0"
+                             (toggle)="onDescriptionPanelToggled($event)">
         <p padding class="ion-text-justify" [innerHtml]="book.description"></p>
+      </app-collapsible-panel>
+
+      <app-collapsible-panel margin-bottom title="Besitzer" *ngIf="book.owners && book.owners.length > 0"
+                             [badge]="book.owners.length">
+        <ion-list>
+          <ion-item *ngFor="let bookOwner of book.owners">
+            <ion-avatar slot="start">
+              <app-avataaars-wrapper clazz="size-extra-small"
+                                     [avataaarsConfig]="users[bookOwner.ownerId]?.avatar"></app-avataaars-wrapper>
+            </ion-avatar>
+            <ion-label>
+              {{bookOwner.ownerId}}
+            </ion-label>
+            <ion-button slot="end" (click)="onBorrowRequest(bookOwner)">
+              <ion-icon slot="start" name="swap"></ion-icon>
+              Leihanfrage
+            </ion-button>
+          </ion-item>
+        </ion-list>
       </app-collapsible-panel>
     </ion-grid>
   </ion-card-content>

@@ -1,23 +1,6 @@
-<ng-container *ngIf="this.book">
-
-  <ion-list *ngIf="this.book.owners && this.book.owners.length > 0">
-    <ion-item *ngFor="let bookOwner of this.book.owners">
-      <ion-label>{{bookOwner.ownerId}}</ion-label>
-      <ion-button (click)="borrowRequestClicked(bookOwner)">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Leihen
-      </ion-button>
-    </ion-item>
-  </ion-list>
-
-  <ion-row>
-    <ion-col center text-center>
-      <ion-note>
-        <ion-button *ngIf="book._links && book._links.addToCollection" (click)="addToCollectionClicked()">
-          <ion-icon slot="start" name="add"></ion-icon>
-          Zur Sammlung hinzufügen
-        </ion-button>
-      </ion-note>
-    </ion-col>
-  </ion-row>
-</ng-container>
+<ion-list *ngIf="this.book" lines="none" no-margin no-padding>
+  <ion-item *ngIf="book._links && book._links.addToCollection" (click)="addToCollectionClicked()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    <ion-label>Hinzufügen</ion-label>
+  </ion-item>
+</ion-list>

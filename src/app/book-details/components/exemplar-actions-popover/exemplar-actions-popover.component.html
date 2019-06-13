@@ -1,0 +1,4 @@
+<app-exemplar-links
+  [exemplar]="exemplar$ | async"
+  [user]="user$ | async"
+  (removeExemplar)="deleteExemplar($event)"></app-exemplar-links>
