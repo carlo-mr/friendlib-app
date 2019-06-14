@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Exemplar} from '../../../common/collection.model';
+import {Exemplar} from '../../../common/exemplar.model';
 import {LoggedUser} from '../../../auth/models/auth.model';
 
 @Component({

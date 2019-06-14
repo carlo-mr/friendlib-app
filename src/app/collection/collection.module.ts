@@ -10,7 +10,6 @@ import {CollectionDetailsPage} from './containers/collection-details.page';
 import {IonicModule} from '@ionic/angular';
 import {ExemplarGridComponent} from './components/exemplar-grid/exemplar-grid.component';
 import {ExemplarDetailsPage} from './containers/exemplar-details.page';
-import {ExemplarLinksComponent} from './components/exemplar-links/exemplar-links.component';
 import {CollectionExistsGuard} from './guards/collection-exists.guard';
 import {BookDetailsModule} from '../book-details/book-details.module';
 import {ExemplarGridItemComponent} from './components/exemplar-grid-item/exemplar-grid-item.component';
@@ -39,7 +38,6 @@ const routes: Routes = [
     CollectionDetailsPage,
     ExemplarGridComponent,
     ExemplarDetailsPage,
-    ExemplarLinksComponent,
     ExemplarGridItemComponent,
     ExemplarBorrowingListComponent,
     ExemplarBorrowingListItemComponent

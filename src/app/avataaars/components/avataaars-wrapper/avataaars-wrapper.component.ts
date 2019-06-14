@@ -159,13 +159,23 @@ export namespace Avataaars {
 
 @Component({
   selector: 'app-avataaars-wrapper',
+  styles: [`
+    .size-small {
+      height: 75px;
+    }
+
+    .size-extra-small {
+      height: 50px;
+    }`],
   template: `
-    <img *ngIf="avataaarsConfig" src="{{buildUrl()}}">
+    <ion-img class="{{clazz}}" *ngIf="avataaarsConfig" [src]="buildUrl()"></ion-img>
   `
 })
 export class AvataaarsWrapperComponent implements OnInit {
 
   @Input() avataaarsConfig: AvataaarsConfig;
+  @Input() clazz: string;
+  @Input() circle: boolean;
 
   constructor() {
 
@@ -176,6 +186,9 @@ export class AvataaarsWrapperComponent implements OnInit {
   }
 
   buildUrl() {
+    if (this.circle) {
+      this.avataaarsConfig.avatarStyle = Avataaars.AvatarStyle.CIRCLE;
+    }
     const queryString = Object.keys(this.avataaarsConfig).map(key => key + '=' + this.avataaarsConfig[key]).join('&');
     return 'https://avataaars.io/?' + queryString;
   }

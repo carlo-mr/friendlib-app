@@ -1,8 +1,11 @@
 <ion-grid *ngIf="books && books.length > 0">
   <ion-row align-items-end>
     <ion-col *ngFor="let book of books" size="4" (click)="selectBook(book)">
-      <ion-badge *ngIf="book.owners && book.owners.length > 0">{{book.owners.length}}</ion-badge>
-      <img *ngIf="book.coverUrl" src="{{book.coverUrl || '../assets/img/no_cover.jpg'}}">
+      <ion-badge *ngIf="book.owners && book.owners.length > 0"
+                 color="secondary">
+        {{book.owners.length}}
+      </ion-badge>
+      <ion-img *ngIf="book.coverUrl" src="{{book.coverUrl || '../assets/img/no_cover.jpg'}}"></ion-img>
       <span *ngIf="!book.coverUrl">{{book.title}}</span>
     </ion-col>
   </ion-row>

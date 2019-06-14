@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {User} from '../../../user/user.model';
 import {Borrowing} from '../../../common/borrowing.model';
 
 @Component({
@@ -12,6 +13,9 @@ export class ExemplarBorrowingListItemComponent implements OnInit {
 
   @Input()
   borrowing: Borrowing;
+
+  @Input()
+  borrower: User;
 
   @Output()
   update = new EventEmitter();

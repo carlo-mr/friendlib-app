@@ -3,6 +3,13 @@ import {Book} from '../../../common/book.model';
 
 @Component({
   selector: 'app-book-grid',
+  styles: [`
+    ion-badge {
+      position: absolute;
+      right: 5px;
+      top: -5px;
+    }
+  `],
   templateUrl: './book-grid.component.html'
 })
 export class BookGridComponent implements OnInit {
@@ -18,7 +25,6 @@ export class BookGridComponent implements OnInit {
   }
 
   selectBook(book: Book) {
-    console.log('book selected', book);
     this.bookSelected.emit(book);
   }
 

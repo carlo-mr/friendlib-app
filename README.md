@@ -34,3 +34,12 @@ Setup Jest and Ionic:
 Setup Jest and Pact: 
 - [Jest Angular Example](https://github.com/McKratt/jest-angular-example)
 - [Test with Jest AND Angular not end correctly](https://github.com/pact-foundation/pact-js/issues/213#issuecomment-423175705)
+
+
+# Img credits
+
+Empty Shelf: Photo by Miguel Pinto on Unsplash (https://unsplash.com/photos/4cWNnW14NsU)
+
+No Borrowings: Photo by Nong Vang on Unsplash (https://unsplash.com/photos/9pw4TKvT3po)
+
+Empty Book Search result: Photo by chuttersnap on Unsplash (https://unsplash.com/photos/WfwxJIWufAE)

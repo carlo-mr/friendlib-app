@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Book, BookOwner} from '../../../common/book.model';
+import {Book} from '../../../common/book.model';
 
 @Component({
   selector: 'app-book-links',
@@ -10,7 +10,6 @@ export class BookLinksComponent implements OnInit {
   @Input() book: Book;
 
   @Output() addToCollection = new EventEmitter<Book>();
-  @Output() borrowRequest = new EventEmitter<BookOwner>();
 
   constructor() {
   }
@@ -21,9 +20,4 @@ export class BookLinksComponent implements OnInit {
   addToCollectionClicked(event) {
     this.addToCollection.emit(this.book);
   }
-
-  borrowRequestClicked(bookOwner) {
-    this.borrowRequest.emit(bookOwner);
-  }
-
 }

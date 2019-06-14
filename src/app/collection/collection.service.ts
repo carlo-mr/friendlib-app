@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Book} from '../common/book.model';
-import {Exemplar} from '../common/collection.model';
+import {Exemplar} from '../common/exemplar.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollectionService {
 
-  private BASE_URL = 'https://42ss414z2g.execute-api.eu-central-1.amazonaws.com';
+  private BASE_URL = 'https://42ss414z2g.execute-api.eu-central-1.amazonaws.com/latest';
 
   constructor(private httpClient: HttpClient) {
 
@@ -25,9 +25,9 @@ export class CollectionService {
 
   loadCollection(ownerId: string) {
     if (ownerId) {
-      return this.httpClient.get(`${this.BASE_URL}/latest/collections/${ownerId}`);
+      return this.httpClient.get(`${this.BASE_URL}/collections/${ownerId}`);
     } else {
-      return this.httpClient.get(`${this.BASE_URL}/latest/collections`);
+      return this.httpClient.get(`${this.BASE_URL}/collections`);
     }
   }
 

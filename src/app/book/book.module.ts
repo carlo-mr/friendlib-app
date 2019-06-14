@@ -16,6 +16,7 @@ import {BookExistsGuard} from './guards/book-exists.guard';
 import {AvataaarsModule} from '../avataaars/avataaars.module';
 import {BookDetailsModule} from '../book-details/book-details.module';
 import {BookLinksComponent} from './components/book-links/book-links.component';
+import {BookActionsPopoverComponent} from './components/book-actions-popover/book-actions-popover.component';
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
     BookDetailsModule
   ],
   providers: [BarcodeScanner],
-  declarations: [BookSearchComponent, BookSearchPage, BookGridComponent, BookDetailsPage, BookLinksComponent]
+  declarations: [BookSearchComponent, BookSearchPage, BookGridComponent, BookDetailsPage, BookLinksComponent, BookActionsPopoverComponent],
+  entryComponents: [BookActionsPopoverComponent]
 })
 export class BookModule {
 }

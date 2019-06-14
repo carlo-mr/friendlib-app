@@ -1,8 +1,16 @@
-<ion-list *ngIf="borrowings">
-  <ion-item *ngFor="let borrowing of borrowings">
-    {{borrowing.exemplarId}}
-  </ion-item>
-</ion-list>
+<ion-grid *ngIf="borrowings && users">
+  <ion-row *ngFor="let borrowing of borrowings" (click)="onBorrowingSelected(borrowing)">
+    <ion-col size="4">
+      <img *ngIf="borrowing.coverUrl" style="max-height: 150px" [src]=borrowing.coverUrl>
+    </ion-col>
+    <ion-col>
+      <span *ngIf="borrowing.title">{{borrowing.title}}</span> {{borrowing.status}}
+    </ion-col>
+    <ion-col size="4">
+      <app-avataaars-wrapper [avataaarsConfig]="users[borrowing.ownerId]?.avatar"></app-avataaars-wrapper>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
 
 

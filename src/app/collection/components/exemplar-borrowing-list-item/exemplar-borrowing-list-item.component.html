@@ -1,8 +1,8 @@
 <ion-grid *ngIf="borrowing">
-  <ion-row>
+  <ion-row *ngIf="borrowing.status == 'OPEN' || borrowing.status == 'ACCEPTED' || borrowing.status == 'RECEIVED'">
     <ion-col size="4" class="ion-text-center">
-      <app-avataaars-wrapper [avataaarsConfig]="borrowing.borrowerId.avatar"></app-avataaars-wrapper>
-      <span>{{borrowing.borrowerId}}</span>
+      <app-avataaars-wrapper [avataaarsConfig]="borrower.avatar"></app-avataaars-wrapper>
+      <span>{{borrower.id}}</span>
     </ion-col>
     <ion-col>
       <div>
@@ -24,6 +24,20 @@
       </div>
     </ion-col>
   </ion-row>
+
+  <ion-row *ngIf="borrowing.status == 'REJECTED' || borrowing.status == 'COMPLETED'">
+    <ion-col>
+      <div>
+        <span>{{getStatusText(borrowing.status)}} ({{borrowing.updateDate || '1986-08-04T23:45Z' | date:'dd MMM yyy'}}
+          )</span>
+      </div>
+    </ion-col>
+    <ion-col size="3" class="ion-text-center">
+      <app-avataaars-wrapper [clazz]="'size-extra-small'" [avataaarsConfig]="borrower.avatar"></app-avataaars-wrapper>
+      <span>{{borrower.id}}</span>
+    </ion-col>
+  </ion-row>
+
   <ion-row *ngIf="borrowing._links && Object.keys(borrowing._links || []).length > 0"
            class="ion-justify-content-between">
     <ion-col>
