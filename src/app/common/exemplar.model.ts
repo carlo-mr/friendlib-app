@@ -1,14 +1,11 @@
-import {Book} from './book.model';
-import {Borrowing} from './borrowing.model';
-
 export class Exemplar {
   exemplarId: string;
   ownerId: string;
-  book: Book;
+  book: string;
   status: string;
   lentTo: string;
 
-  borrowings: Borrowing[] = [];
+  borrowings: string[] = [];
 
   _links?: { removeExemplar?: { href: string, method: string } };
 }

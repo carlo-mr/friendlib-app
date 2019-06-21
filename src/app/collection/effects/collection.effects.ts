@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {
   AddBookToCollection,
   AddBookToCollectionError,
   AddBookToCollectionSuccess,
+  AddCollection,
   CollectionActions,
   CollectionActionTypes,
   LoadCollection,
@@ -16,10 +17,14 @@ import {
   RemoveExemplarError,
   RemoveExemplarSuccess
 } from '../actions/collection.actions';
+import {normalize} from 'normalizr';
+import {LoadBooksSuccess, LoadBookSuccess} from '../../book/book.actions';
+import {CollectionSchema, ExemplarSchema} from '../../common/friendlib.schema';
+import {Action, Store} from '@ngrx/store';
 import {CollectionService} from '../collection.service';
-import {Collection} from '../../common/collection.model';
 import {LoadingController, NavController, ToastController} from '@ionic/angular';
-import {Exemplar} from '../../common/exemplar.model';
+import {LoadExemplarsSuccess} from '../../exemplar/exemplar.actions';
+import {LoadBorrowingsSuccess} from '../../borrowing/borrowing.actions';
 
 @Injectable()
 export class CollectionEffects {
@@ -34,14 +39,26 @@ export class CollectionEffects {
       }
 
       return this.collectionService.loadCollection(ownerId).pipe(
-        map((collection: Collection) => {
-          return new LoadCollectionSuccess({collection});
+        tap(() => this.completeRefresher(action)),
+        mergeMap((loadCollectionResponse: any) => {
+
+          const normalizedloadCollectionResponse = normalize(loadCollectionResponse, CollectionSchema);
+          return this.normalizeLoadCollectionResponse(normalizedloadCollectionResponse);
         }),
         catchError((error) => {
           return of(new LoadCollectionError({errorMessage: error.message}));
         })
       );
 
+    })
+  );
+
+  @Effect()
+  loadUnnormalizedCollection$ = this.actions$.pipe(
+    ofType(CollectionActionTypes.LoadCollectionSuccess),
+    mergeMap((action: LoadCollectionSuccess) => {
+      const normalizedLoadCollectionResponse = normalize(action.payload.unnormalizedCollection, CollectionSchema);
+      return this.normalizeLoadCollectionResponse(normalizedLoadCollectionResponse);
     })
   );
 
@@ -53,12 +70,19 @@ export class CollectionEffects {
           return of(new AddBookToCollectionError({errorMessage: 'addToCollection link is not present'}));
         }
         return this.collectionService.addToCollection(action.payload.book).pipe(
-          map((exemplar: Exemplar) => {
-            return new AddBookToCollectionSuccess({exemplar});
+          mergeMap((addToCollectionResponse: any) => {
+
+            const normalizedAddToCollectionResponse = normalize(addToCollectionResponse, ExemplarSchema);
+            const books = this.mapEntities(normalizedAddToCollectionResponse, 'books');
+            const exemplar = normalizedAddToCollectionResponse.result;
+
+            return [
+              new AddBookToCollectionSuccess({exemplar: exemplar, book: action.payload.book}),
+              new LoadBookSuccess(books[0]),
+              new LoadExemplarsSuccess({exemplars: [exemplar]})
+            ];
           }),
-          catchError((error) => {
-            return of(new AddBookToCollectionError({errorMessage: error.message}));
-          })
+          catchError((error) => of(new AddBookToCollectionError({errorMessage: error.message})))
         );
       }
     )
@@ -72,12 +96,11 @@ export class CollectionEffects {
           return of(new RemoveExemplarError({errorMessage: 'removeExemplar link is not present'}));
         }
         return this.collectionService.removeExemplar(action.payload.exemplar).pipe(
-          map((exemplar: Exemplar) => {
-            return new RemoveExemplarSuccess({exemplar: action.payload.exemplar});
-          }),
-          catchError((error) => {
-            return of(new RemoveExemplarError({errorMessage: error.message}));
-          })
+          map((removeExemplarResponse: any) => new RemoveExemplarSuccess({
+            exemplar: action.payload.exemplar
+          })),
+          catchError((error) => of(new RemoveExemplarError({errorMessage: error.message})
+          ))
         );
       }
     )
@@ -101,6 +124,7 @@ export class CollectionEffects {
     ofType(CollectionActionTypes.AddBookToCollectionSuccess,
       CollectionActionTypes.AddBookToCollectionError,
       CollectionActionTypes.LoadCollectionSuccess,
+      CollectionActionTypes.AddCollection,
       CollectionActionTypes.LoadCollectionError,
       CollectionActionTypes.RemoveExemplarSuccess,
       CollectionActionTypes.RemoveExemplarError),
@@ -116,8 +140,10 @@ export class CollectionEffects {
     ofType(CollectionActionTypes.AddBookToCollectionSuccess),
     map((action: AddBookToCollectionSuccess) => {
       const exemplar = action.payload.exemplar;
+      const book = action.payload.book;
+
       this.toastCtrl.create({
-        message: `${exemplar.book.title} wurde zur Sammlung hinzugefügt`,
+        message: `${book.title} wurde zur Sammlung hinzugefügt`,
         duration: 2000,
         position: 'top',
         buttons: [
@@ -137,10 +163,11 @@ export class CollectionEffects {
   @Effect({dispatch: false})
   navigateOnRemoveExemplarSuccess$ = this.actions$.pipe(
     ofType(CollectionActionTypes.RemoveExemplarSuccess),
-    map((action: RemoveExemplarSuccess) => {
+    tap((action: RemoveExemplarSuccess) => {
       this.navCtrl.navigateRoot('/app/collection');
       this.toastCtrl.create({
-        message: `${action.payload.exemplar.book.title} wurde aus der Sammlung entfernt`,
+        // Use withLatest from store to select book from exemplar and display book title in toast!
+        message: `Das Buch wurde aus der Sammlung entfernt`,
         duration: 2000,
         position: 'top'
       }).then((toast) => toast.present());
@@ -149,12 +176,36 @@ export class CollectionEffects {
 
   private loading: HTMLIonLoadingElement;
 
-
   constructor(private actions$: Actions<CollectionActions>,
+              private store$: Store<any>,
               private collectionService: CollectionService,
               private loadingCtrl: LoadingController,
               private navCtrl: NavController,
               private toastCtrl: ToastController) {
   }
 
+  private normalizeLoadCollectionResponse(normalizedloadCollectionResponse): Action[] {
+    const books = this.mapEntities(normalizedloadCollectionResponse, 'books');
+    const borrowings = this.mapEntities(normalizedloadCollectionResponse, 'borrowings');
+    const exemplars = this.mapEntities(normalizedloadCollectionResponse, 'exemplars');
+
+    const collection = normalizedloadCollectionResponse.result;
+
+    return [
+      new LoadBooksSuccess(books),
+      new LoadExemplarsSuccess({exemplars}),
+      new LoadBorrowingsSuccess({borrowings}),
+      new AddCollection({collection: collection})
+    ];
+  }
+
+  private mapEntities(normalizedData: any, entityName: string) {
+    return Object.keys(normalizedData.entities[entityName]).map(key => normalizedData.entities[entityName][key]);
+  }
+
+  private completeRefresher(action) {
+    if (action.payload && action.payload.refresher) {
+      action.payload.refresher.complete();
+    }
+  }
 }

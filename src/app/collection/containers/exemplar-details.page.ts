@@ -1,12 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import * as fromCollection from '../reducers/collection.reducer';
+import * as fromExemplar from '../../exemplar/exemplar.reducer';
+import * as fromBorrowing from '../../borrowing/borrowing.reducer';
+import * as fromBook from '../../book/book.reducer';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
 import {AddBookToCollection, RemoveExemplar} from '../../collection/actions/collection.actions';
 import {Book} from '../../common/book.model';
 import {Collection} from '../../common/collection.model';
-import {map} from 'rxjs/operators';
 import * as fromAuth from '../../auth/reducers/auth.reducer';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {PopoverController} from '@ionic/angular';
@@ -24,34 +26,40 @@ import {Exemplar} from '../../common/exemplar.model';
     width: 40px;
   }`],
   template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button text="Zurück"></ion-back-button>
-        </ion-buttons>
+    <ng-container *ngIf="this.book$ | async as book">
+      <ng-container *ngIf="exemplar$ | async as exemplar">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-back-button text="Zurück"></ion-back-button>
+            </ion-buttons>
 
-        <ion-title>{{(exemplar$ | async)?.book.title}}</ion-title>
+            <ion-title>{{book?.title}}</ion-title>
 
-        <ion-buttons slot="end">
-          <ion-button icon-only (click)="onShowExemplarActionsPopover($event)">
-            <ion-icon name="more"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+            <ion-buttons *ngIf="exemplar._links" slot="end">
+              <ion-button icon-only (click)="onShowExemplarActionsPopover($event)">
+                <ion-icon name="more"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
 
-    <ion-content>
-      <app-book-details [book]="(exemplar$ | async)?.book"
-                        [users]="users$ | async"></app-book-details>
+        <ion-content>
+          <app-book-details [book]="book"
+                            [users]="users$ | async"
+                            [openDescription]="false"
+                            [exemplarOwner]="exemplar.ownerId"></app-book-details>
 
-      <ng-container *ngIf="(exemplar$ | async)?.borrowings?.length > 0">
-        <app-exemplar-borrowing-list [exemplarBorrowings]="(exemplar$ | async)?.borrowings"
-                                     (exemplarBorrowingUpdate)="onUpdateBorrowing($event)"
-                                     [users]="users$ | async">
+          <ng-container *ngIf="borrowings$ | async as borrowings">
+            <app-exemplar-borrowing-list [exemplarBorrowings]="borrowings"
+                                         (exemplarBorrowingUpdate)="onUpdateBorrowing($event)"
+                                         [users]="users$ | async">
 
-        </app-exemplar-borrowing-list>
+            </app-exemplar-borrowing-list>
+          </ng-container>
+        </ion-content>
       </ng-container>
-    </ion-content>
+    </ng-container>
   `
 })
 export class ExemplarDetailsPage implements OnInit {
@@ -62,8 +70,10 @@ export class ExemplarDetailsPage implements OnInit {
   users$: Observable<Dictionary<User>>;
 
   user$: Observable<LoggedUser>;
+  borrowings$: Observable<Borrowing[]>;
+  book$: Observable<Book>;
+
   private exemplarId: string;
-  Object = Object;
 
   constructor(private store: Store<fromCollection.CollectionState>,
               private activatedRoute: ActivatedRoute,
@@ -76,10 +86,15 @@ export class ExemplarDetailsPage implements OnInit {
 
     this.collection$ = this.store.pipe(select(fromCollection.selectEntity(ownerId)));
     this.exemplar$ = this.store.pipe(
-      select(fromCollection.selectEntity(ownerId)),
-      map((collection: Collection) => collection.exemplars.find((exemplar: Exemplar) => exemplar.exemplarId === this.exemplarId))
+      select(fromExemplar.selectEntity(this.exemplarId))
     );
 
+    this.exemplar$.subscribe((exemplar: Exemplar) => {
+      this.book$ = this.store.pipe(select(fromBook.selectByBookId(exemplar.book)));
+    });
+
+
+    this.borrowings$ = this.store.pipe(select(fromBorrowing.selectBorrowingsForExemplarId(this.exemplarId)));
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
 
     // TODO only load necessary users, via guard?
@@ -126,13 +141,7 @@ export class ExemplarDetailsPage implements OnInit {
 
     popover.onDidDismiss().then((result => {
       if (result && result.data && result.data.deleteExemplar) {
-
-        this
-          .onRemoveExemplar(result
-
-            .data
-            .deleteExemplar
-          );
+        this.onRemoveExemplar(result.data.deleteExemplar);
       }
     }));
 

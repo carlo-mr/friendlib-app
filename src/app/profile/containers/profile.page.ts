@@ -42,6 +42,7 @@ import {AlertController} from '@ionic/angular';
       </div>
 
       <app-notification-list
+        [loading]="notificationLoading$ | async"
         [notifications]="this.notifcations$ | async"></app-notification-list>
 
     </ion-content>
@@ -52,6 +53,7 @@ export class ProfilePage implements OnInit {
   avataaarsConfig: AvataaarsConfig;
   dirty: boolean;
   notifcations$: Observable<Notification[]>;
+  notificationLoading$: Observable<boolean>;
 
   loggedUser$: Observable<LoggedUser>;
 
@@ -60,6 +62,7 @@ export class ProfilePage implements OnInit {
 
     this.loggedUser$ = store.pipe(select(getLoggedUser));
     this.notifcations$ = store.pipe(select(fromNotification.selectAll));
+    this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
 
     this.store.dispatch(new LoadNotifications({}));
   }

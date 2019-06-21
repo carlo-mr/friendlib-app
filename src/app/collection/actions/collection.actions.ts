@@ -8,6 +8,10 @@ export enum CollectionActionTypes {
   LoadCollectionSuccess = '[Collection] Load Collection Success',
   LoadCollectionError = '[Collection] Load Collection Error',
 
+  AddCollection = '[Collection] Add Collection',
+
+  FilterCollection = '[Collection] Filter Collection',
+
   AddBookToCollection = '[Collection] Add book to collection',
   AddBookToCollectionSuccess = '[Collection] Add book to collection success',
   AddBookToCollectionError = '[Collection] Add book to collection error',
@@ -28,7 +32,7 @@ export class LoadCollection implements Action {
 export class LoadCollectionSuccess implements Action {
   readonly type = CollectionActionTypes.LoadCollectionSuccess;
 
-  constructor(public payload: { collection: Collection }) {
+  constructor(public payload: { unnormalizedCollection: any }) {
 
   }
 }
@@ -37,6 +41,22 @@ export class LoadCollectionError implements Action {
   readonly type = CollectionActionTypes.LoadCollectionError;
 
   constructor(public payload: { errorMessage: string }) {
+  }
+}
+
+export class AddCollection implements Action {
+  readonly type = CollectionActionTypes.AddCollection;
+
+  constructor(public payload: { collection: Collection }) {
+
+  }
+}
+
+export class FilterCollection implements Action {
+  readonly type = CollectionActionTypes.FilterCollection;
+
+  constructor(public payload: { filter: string }) {
+
   }
 }
 
@@ -51,7 +71,7 @@ export class AddBookToCollection implements Action {
 export class AddBookToCollectionSuccess implements Action {
   readonly type = CollectionActionTypes.AddBookToCollectionSuccess;
 
-  constructor(public payload: { exemplar: Exemplar }) {
+  constructor(public payload: { exemplar: Exemplar, book: Book }) {
 
   }
 }
@@ -92,6 +112,8 @@ export type CollectionActions =
   LoadCollection
   | LoadCollectionSuccess
   | LoadCollectionError
+  | AddCollection
+  | FilterCollection
   | AddBookToCollection
   | AddBookToCollectionSuccess
   | AddBookToCollectionError

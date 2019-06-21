@@ -4,9 +4,7 @@ import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {Collection} from '../../common/collection.model';
 
 import * as fromAuth from '../../auth/reducers/auth.reducer';
-import {BorrowingActions, BorrowingActionTypes} from '../../borrowing/borrowing.actions';
-import {Borrowing} from '../../common/borrowing.model';
-import {Exemplar} from '../../common/exemplar.model';
+import {BorrowingActions} from '../../borrowing/borrowing.actions';
 
 export const collectionAdapter = createEntityAdapter<Collection>({
   selectId: (collection: Collection) => collection.ownerId
@@ -25,85 +23,86 @@ export const initialState: CollectionState = collectionAdapter.getInitialState(d
 export function collectionReducer(state = initialState, action: CollectionActions | BorrowingActions): CollectionState {
   switch (action.type) {
 
-    case CollectionActionTypes.LoadCollectionSuccess:
+    case CollectionActionTypes.AddCollection:
       return collectionAdapter.addOne(action.payload.collection, state);
 
     case CollectionActionTypes.AddBookToCollectionSuccess:
       const addBookNewState = {...state};
       if (addBookNewState.entities[action.payload.exemplar.ownerId]) {
-        addBookNewState.entities[action.payload.exemplar.ownerId].exemplars.push(action.payload.exemplar);
+        addBookNewState.entities[action.payload.exemplar.ownerId].exemplars.push(action.payload.exemplar.exemplarId);
       }
       return addBookNewState;
 
     case CollectionActionTypes.RemoveExemplarSuccess:
       const removeExemplarNewState = {...state};
       const ownerCollection = removeExemplarNewState.entities[action.payload.exemplar.ownerId];
-      ownerCollection.exemplars.splice(ownerCollection.exemplars.indexOf(action.payload.exemplar), 1);
+      ownerCollection.exemplars.splice(ownerCollection.exemplars.indexOf(action.payload.exemplar.exemplarId), 1);
       return removeExemplarNewState;
 
-    case BorrowingActionTypes.AddBorrowingSuccess:
-      const addBorrowingNewState = {...state};
-      const borrowerCollection = addBorrowingNewState.entities[action.payload.borrowing.borrowerId];
-      borrowerCollection.borrowingRequests = borrowerCollection.borrowingRequests || [];
-      borrowerCollection.borrowingRequests.push(action.payload.borrowing);
-      return addBorrowingNewState;
-
     // TODO replace by normalizr
-    case BorrowingActionTypes.AcceptBorrowingSuccess:
-    case BorrowingActionTypes.RejectBorrowingSuccess:
-      const updateBorrowingNewState = {...state};
-      const updateOwnerCollection = updateBorrowingNewState.entities[action.payload.borrowing.ownerId];
+    /**
+     case BorrowingActionTypes.AddBorrowingSuccess:
+     const addBorrowingNewState = {...state};
+     const borrowerCollection = addBorrowingNewState.entities[action.payload.borrowing.borrowerId];
+     borrowerCollection.borrowingRequests = borrowerCollection.borrowingRequests || [];
+     borrowerCollection.borrowingRequests.push(action.payload.borrowing);
+     return addBorrowingNewState;
 
-      const existingExemplar = updateOwnerCollection.exemplars
-        .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.borrowing.exemplarId);
-      const existingBorrowing = existingExemplar.borrowings
-        .find((borrowing: Borrowing) => borrowing.borrowingId === action.payload.borrowing.borrowingId);
+     case BorrowingActionTypes.AcceptBorrowingSuccess:
+     case BorrowingActionTypes.RejectBorrowingSuccess:
+     const updateBorrowingNewState = {...state};
+     const updateOwnerCollection = updateBorrowingNewState.entities[action.payload.borrowing.ownerId];
 
-      existingExemplar.borrowings.splice(existingExemplar.borrowings.indexOf(existingBorrowing), 1);
-      existingExemplar.borrowings.push(action.payload.borrowing);
+     const existingExemplar = updateOwnerCollection.exemplars
+     .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.borrowing.exemplarId);
+     const existingBorrowing = existingExemplar.borrowings
+     .find((borrowing: Borrowing) => borrowing.borrowingId === action.payload.borrowing.borrowingId);
 
-      return collectionAdapter.upsertOne(updateOwnerCollection, state);
+     existingExemplar.borrowings.splice(existingExemplar.borrowings.indexOf(existingBorrowing), 1);
+     existingExemplar.borrowings.push(action.payload.borrowing);
 
-    case BorrowingActionTypes.ReceiveBorrowingSuccess:
-      const receiveBorrowingNewState = {...state};
-      const receiveBorrowerCollection = receiveBorrowingNewState.entities[action.payload.originalBorrowing.borrowerId];
+     return collectionAdapter.upsertOne(updateOwnerCollection, state);
 
-      const newBorrowing = action.payload.exemplar.borrowings
-        .find((borrowing: Borrowing) => borrowing.borrowingId === action.payload.originalBorrowing.borrowingId);
+     case BorrowingActionTypes.ReceiveBorrowingSuccess:
+     const receiveBorrowingNewState = {...state};
+     const receiveBorrowerCollection = receiveBorrowingNewState.entities[action.payload.originalBorrowing.borrowerId];
 
-      const existingBorrowing1 = receiveBorrowerCollection.borrowingRequests
-        .find((borrowingRequest: Borrowing) => borrowingRequest.borrowingId === newBorrowing.borrowingId);
+     const newBorrowing = action.payload.exemplar.borrowings
+     .find((borrowing: Borrowing) => borrowing.borrowingId === action.payload.originalBorrowing.borrowingId);
 
-      receiveBorrowerCollection.borrowingRequests
-        .splice(receiveBorrowerCollection.borrowingRequests.indexOf(existingBorrowing1), 1);
+     const existingBorrowing1 = receiveBorrowerCollection.borrowingRequests
+     .find((borrowingRequest: Borrowing) => borrowingRequest.borrowingId === newBorrowing.borrowingId);
 
-      receiveBorrowerCollection.borrowedExemplars.push(action.payload.exemplar);
+     receiveBorrowerCollection.borrowingRequests
+     .splice(receiveBorrowerCollection.borrowingRequests.indexOf(existingBorrowing1), 1);
 
-      const receiveOwnerCollection = receiveBorrowingNewState.entities[action.payload.exemplar.ownerId];
-      const existingReceiveOwnerExemplar = receiveOwnerCollection.exemplars
-        .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.exemplar.exemplarId);
+     receiveBorrowerCollection.borrowedExemplars.push(action.payload.exemplar);
 
-      receiveOwnerCollection.exemplars.splice(receiveOwnerCollection.exemplars.indexOf(existingReceiveOwnerExemplar), 1);
-      receiveOwnerCollection.exemplars.push({...action.payload.exemplar});
+     const receiveOwnerCollection = receiveBorrowingNewState.entities[action.payload.exemplar.ownerId];
+     const existingReceiveOwnerExemplar = receiveOwnerCollection.exemplars
+     .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.exemplar.exemplarId);
 
-      receiveBorrowingNewState.entities[action.payload.exemplar.ownerId] = receiveOwnerCollection;
+     receiveOwnerCollection.exemplars.splice(receiveOwnerCollection.exemplars.indexOf(existingReceiveOwnerExemplar), 1);
+     receiveOwnerCollection.exemplars.push({...action.payload.exemplar});
 
-      return collectionAdapter.upsertMany([receiveOwnerCollection, receiveBorrowerCollection], state);
+     receiveBorrowingNewState.entities[action.payload.exemplar.ownerId] = receiveOwnerCollection;
 
-    case BorrowingActionTypes.CompleteBorrowingSuccess:
-      const completeBorrowingNewState = {...state};
-      const completeOwnerCollection = completeBorrowingNewState.entities[action.payload.exemplar.ownerId];
+     return collectionAdapter.upsertMany([receiveOwnerCollection, receiveBorrowerCollection], state);
 
-      const existingOwnerExemplar = completeOwnerCollection.exemplars
-        .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.exemplar.exemplarId);
+     case BorrowingActionTypes.CompleteBorrowingSuccess:
+     const completeBorrowingNewState = {...state};
+     const completeOwnerCollection = completeBorrowingNewState.entities[action.payload.exemplar.ownerId];
 
-      completeOwnerCollection.exemplars.splice(completeOwnerCollection.exemplars.indexOf(existingOwnerExemplar), 1);
-      completeOwnerCollection.exemplars.push({...action.payload.exemplar});
+     const existingOwnerExemplar = completeOwnerCollection.exemplars
+     .find((exemplar: Exemplar) => exemplar.exemplarId === action.payload.exemplar.exemplarId);
 
-      completeBorrowingNewState.entities[action.payload.exemplar.ownerId] = completeOwnerCollection;
+     completeOwnerCollection.exemplars.splice(completeOwnerCollection.exemplars.indexOf(existingOwnerExemplar), 1);
+     completeOwnerCollection.exemplars.push({...action.payload.exemplar});
 
-      return collectionAdapter.upsertOne(completeOwnerCollection, state);
+     completeBorrowingNewState.entities[action.payload.exemplar.ownerId] = completeOwnerCollection;
 
+     return collectionAdapter.upsertOne(completeOwnerCollection, state);
+     */
     default:
       return state;
   }

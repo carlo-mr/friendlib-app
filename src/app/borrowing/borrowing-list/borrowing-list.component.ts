@@ -11,6 +11,9 @@ import {Dictionary} from '@ngrx/entity';
 export class BorrowingListComponent implements OnInit {
 
   @Input()
+  title: string;
+
+  @Input()
   borrowings: Borrowing[];
 
   @Input()
@@ -43,5 +46,4 @@ export class BorrowingListComponent implements OnInit {
   onBorrowingSelected(borrowing: Borrowing) {
     this.selectExemplar.emit({exemplarId: borrowing.exemplarId, ownerId: borrowing.ownerId});
   }
-
 }

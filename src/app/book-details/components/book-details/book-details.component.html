@@ -10,13 +10,17 @@
           <h2>{{book.authors?.join(', ')}}</h2>
           <h3>{{book.title}}</h3>
           <h3 *ngIf="book.pages">&nbsp;{{book.pages}} Seiten</h3>
+          <div *ngIf="exemplarOwner" class="ion-text-center">
+            <app-avataaars-wrapper [avataaarsConfig]="users[exemplarOwner]?.avatar"></app-avataaars-wrapper>
+            <span>{{exemplarOwner}}</span>
+          </div>
         </ion-col>
       </ion-row>
 
       <app-collapsible-panel margin-bottom
                              title="Beschreibung"
-                             [expanded]="book.description && book.description.length > 0"
-                             (toggle)="onDescriptionPanelToggled($event)">
+                             [expanded]="book.description && book.description.length > 0 && openDescription"
+                             (toggle)="onDescriptionPanelToggled()">
         <p padding class="ion-text-justify" [innerHtml]="book.description"></p>
       </app-collapsible-panel>
 
@@ -61,12 +65,6 @@
           </h3>
         </ion-col>
       </ion-row>
-
-      <hr/>
-
-      <app-collapsible-panel title="Beschreibung" *ngIf="book.description">
-        <ion-skeleton-text animated></ion-skeleton-text>
-      </app-collapsible-panel>
     </ion-grid>
   </ion-card-content>
 </ion-card>

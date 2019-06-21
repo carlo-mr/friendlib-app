@@ -38,7 +38,6 @@ export class BookExistsGuard implements CanActivate {
    * it in the store, returning `true` or `false` if it was found.
    */
   hasBookInApi(id: string): Observable<boolean> {
-    console.log('hasBookInApi: ', id);
     return this.bookService.retrieveBook(id).pipe(
       map(bookEntity => new LoadBookSuccess(bookEntity)),
       tap(action => this.store.dispatch(action)),
@@ -56,11 +55,9 @@ export class BookExistsGuard implements CanActivate {
    * API.
    */
   hasBook(id: string): Observable<boolean> {
-    console.log('hasBook: ', id);
     return this.hasBookInStore(id).pipe(
       switchMap(inStore => {
         if (inStore) {
-          console.log('book found in store');
           return of(inStore);
         }
 
@@ -83,7 +80,6 @@ export class BookExistsGuard implements CanActivate {
    * to the 404 page.
    */
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    console.log('bookexistsguard');
     return this.hasBook(route.params['id']);
   }
 }

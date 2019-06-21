@@ -12,6 +12,9 @@ export class BookDetailsComponent implements OnInit {
 
   @Input() book: Book;
   @Input() users: Dictionary<User>;
+  @Input() openDescription: boolean;
+
+  @Input() exemplarOwner: string;
 
   @Output() loadDescription = new EventEmitter<{ gbooksId?: string, bookId?: string }>();
   @Output() borrowRequest = new EventEmitter<{ book: Book, bookOwner: BookOwner }>();

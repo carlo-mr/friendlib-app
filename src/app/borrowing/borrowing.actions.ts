@@ -173,7 +173,7 @@ export class ReceiveBorrowing implements Action {
 export class ReceiveBorrowingSuccess implements Action {
   readonly type = BorrowingActionTypes.ReceiveBorrowingSuccess;
 
-  constructor(public payload: { exemplar: Exemplar, originalBorrowing: Borrowing }) {
+  constructor(public payload: { exemplar: Exemplar, borrowings: Borrowing[] }) {
   }
 }
 

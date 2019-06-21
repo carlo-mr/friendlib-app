@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {BookService} from './book.service';
 import {HttpClientModule} from '@angular/common/http';
-import {Book} from './book.reducer';
 import {Matchers} from '@pact-foundation/pact';
+import {Book} from '../common/book.model';
 
 describe('BookService', () => {
 

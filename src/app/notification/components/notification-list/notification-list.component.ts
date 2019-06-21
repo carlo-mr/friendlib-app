@@ -11,6 +11,9 @@ export class NotificationListComponent implements OnInit {
   @Input()
   notifications: Notification[];
 
+  @Input()
+  loading: boolean;
+
   @Output()
   refresh = new EventEmitter<any>();
 

@@ -9,7 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Borrowing} from '../../common/borrowing.model';
 import {User} from '../../user/user.model';
 import {Dictionary} from '@ngrx/entity';
-import * as fromCollection from '../../collection/reducers/collection.reducer';
+import * as fromBorrowing from '../../borrowing/borrowing.reducer';
 import {LoadCollection} from '../../collection/actions/collection.actions';
 
 @Component({
@@ -38,15 +38,33 @@ import {LoadCollection} from '../../collection/actions/collection.actions';
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
-      <app-borrowing-list [borrowings]="borrowings$ | async"
+      <app-borrowing-list [title]="'Offene Anfragen'"
+                          [borrowings]="openBorrowings$ | async"
                           [users]="users$ | async"
                           (selectExemplar)="onSelectExemplar($event)">
       </app-borrowing-list>
 
-      <div *ngIf="(borrowings$ | async)?.length == 0" class="ion-text-center">
+      <app-borrowing-list [title]="'Akzeptierte Anfragen'"
+                          [borrowings]="acceptedBorrowings$ | async"
+                          [users]="users$ | async"
+                          (selectExemplar)="onSelectExemplar($event)">
+      </app-borrowing-list>
+
+      <div>
+        <ion-item-divider>
+          <ion-label>
+            Geliehene Bücher
+          </ion-label>
+        </ion-item-divider>
+        <p class="ion-text-center">
+          Bücher, die du dir ausgeliehen hast findest du <a (click)="onGoToCollection($event)">in deiner Sammlung.</a>
+        </p>
+      </div>
+
+      <div *ngIf="(openBorrowings$ | async)?.length == 0" class="ion-text-center">
         <h2>Keine Leihen</h2>
         <p>Aktuell hast du keine offenen Leihanfragen.</p>
-        <p>Nutze die Suche um Bücher zu finden und zu sehen, wer sie dir ausleihen könnte.</p>
+        <p>Nutze die Suche, um Bücher zu finden und um zu sehen, wer sie dir ausleihen könnte.</p>
         <p>Bücher, die du dir ausgeliehen hast findest du <a (click)="onGoToCollection($event)">in deiner Sammlung.</a></p>
         <img src="../../assets/img/empty_borrowings.jpg"/>
       </div>
@@ -56,7 +74,9 @@ import {LoadCollection} from '../../collection/actions/collection.actions';
 export class BorrowingOverviewPage implements OnInit {
 
   user$: Observable<LoggedUser>;
-  borrowings$: Observable<Borrowing[]>;
+  openBorrowings$: Observable<Borrowing[]>;
+  acceptedBorrowings$: Observable<Borrowing[]>;
+  receivedBorrowings$: Observable<Borrowing[]>;
   users$: Observable<Dictionary<User>>;
 
   constructor(private store: Store<any>,
@@ -66,7 +86,8 @@ export class BorrowingOverviewPage implements OnInit {
 
   ngOnInit() {
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
-    this.borrowings$ = this.store.pipe(select(fromCollection.loggedInUserBorrowingRequests));
+    this.openBorrowings$ = this.store.pipe(select(fromBorrowing.getBorrowingsOfLoggedInUser('OPEN')));
+    this.acceptedBorrowings$ = this.store.pipe(select(fromBorrowing.getBorrowingsOfLoggedInUser('ACCEPTED')));
     this.users$ = this.store.pipe(select(fromUser.selectEntities));
   }
 
