@@ -24,3 +24,8 @@ export const CollectionSchema = {
   exemplars: [ExemplarEntity],
   borrowingRequests: [BorrowingEntity]
 };
+
+export const ExemplarSchema = {
+  book: BookEntity,
+  borrowings: [BorrowingEntity]
+};

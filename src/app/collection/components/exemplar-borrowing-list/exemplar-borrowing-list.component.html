@@ -1,16 +1,25 @@
 <ion-card *ngIf="exemplarBorrowings && users">
-  <app-collapsible-panel title="Leihübersicht" [expanded]="true" [badge]="countOpenBorrowings()">
-    <ion-card-content no-padding>
-      <ion-list>
-        <ng-container *ngFor="let exemplarBorrowing of exemplarBorrowings">
-          <app-exemplar-borrowing-list-item [borrowing]="exemplarBorrowing"
-                                            (update)="onExemplarBorrowingUpdate(exemplarBorrowing, $event)"
-                                            [borrower]="users[exemplarBorrowing.borrowerId]">
+  <app-collapsible-panel title="Leihübersicht"
+                         [expanded]="exemplarBorrowings.length > 0"
+                         [badge]="countOpenBorrowings()">
+    <ng-container *ngIf="exemplarBorrowings.length > 0">
+      <ion-card-content no-padding>
+        <ion-list>
+          <ng-container *ngFor="let exemplarBorrowing of exemplarBorrowings">
+            <app-exemplar-borrowing-list-item [borrowing]="exemplarBorrowing"
+                                              (update)="onExemplarBorrowingUpdate(exemplarBorrowing, $event)"
+                                              [borrower]="users[exemplarBorrowing.borrowerId]">
 
-          </app-exemplar-borrowing-list-item>
-          <hr/>
-        </ng-container>
-      </ion-list>
-    </ion-card-content>
+            </app-exemplar-borrowing-list-item>
+            <hr/>
+          </ng-container>
+        </ion-list>
+      </ion-card-content>
+    </ng-container>
+    <ng-container *ngIf="exemplarBorrowings.length === 0">
+      <div class="ion-text-center">
+        <p>Für dieses Buch gibt es keine Leihen</p>
+      </div>
+    </ng-container>
   </app-collapsible-panel>
 </ion-card>

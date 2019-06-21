@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {BorrowingService} from './borrowing.service';
 
 import * as fromBorrowing from '../borrowing/borrowing.reducer';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {
   AcceptBorrowing,
@@ -17,16 +17,17 @@ import {
   BorrowingActionTypes,
   CompleteBorrowing,
   CompleteBorrowingError,
-  CompleteBorrowingSuccess,
+  LoadBorrowingsSuccess,
   ReceiveBorrowing,
   ReceiveBorrowingError,
-  ReceiveBorrowingSuccess,
   RejectBorrowing,
   RejectBorrowingError,
   RejectBorrowingSuccess
 } from './borrowing.actions';
 import {Borrowing} from '../common/borrowing.model';
-import {Exemplar} from '../common/exemplar.model';
+import {normalize} from 'normalizr';
+import {ExemplarSchema} from '../common/friendlib.schema';
+import {LoadExemplarsSuccess} from '../exemplar/exemplar.actions';
 
 @Injectable()
 export class BorrowingEffects {
@@ -34,7 +35,7 @@ export class BorrowingEffects {
   private loading: any;
 
   /**
-   *Borrowings are now included in the exemplar details direct and therefore do not need to be requested separately
+   *Borrowings are now included in the exemplar details directly and therefore do not need to be requested separately
    *
    @Effect()
    loadBorrowings$ = this.actions$.pipe(
@@ -124,11 +125,18 @@ export class BorrowingEffects {
     ofType(BorrowingActionTypes.ReceiveBorrowing),
     switchMap((action: ReceiveBorrowing) => {
         return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
-          map((response: Exemplar) => {
-            return new ReceiveBorrowingSuccess({
-              exemplar: response,
-              originalBorrowing: action.payload.borrowing
-            });
+          mergeMap((receiveBorrowingResponse) => {
+            console.log('receiveBorrowingResponse: ', receiveBorrowingResponse);
+
+            const normalizedReceiveBorrowingResponse = normalize(receiveBorrowingResponse, ExemplarSchema);
+            console.log('normalizedReceiveBorrowingResponse: ', normalizedReceiveBorrowingResponse);
+
+            const borrowings = this.mapEntities(normalizedReceiveBorrowingResponse, 'borrowings');
+
+            return [
+              new LoadBorrowingsSuccess({borrowings: borrowings}),
+              new LoadExemplarsSuccess({exemplars: [normalizedReceiveBorrowingResponse.result]})
+            ];
           }),
           catchError((error) => {
             return of(new ReceiveBorrowingError({errorMessage: error.message}));
@@ -143,11 +151,18 @@ export class BorrowingEffects {
     ofType(BorrowingActionTypes.CompleteBorrowing),
     switchMap((action: CompleteBorrowing) => {
         return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
-          map((response: Exemplar) => {
-            return new CompleteBorrowingSuccess({
-              exemplar: response,
-              originalBorrowing: action.payload.borrowing
-            });
+          mergeMap((completeBorrowingResponse) => {
+            console.log('completeBorrowingResponse: ', completeBorrowingResponse);
+
+            const normalizedReceiveBorrowingResponse = normalize(completeBorrowingResponse, ExemplarSchema);
+            console.log('normalizedReceiveBorrowingResponse: ', normalizedReceiveBorrowingResponse);
+
+            const borrowings = this.mapEntities(normalizedReceiveBorrowingResponse, 'borrowings');
+
+            return [
+              new LoadBorrowingsSuccess({borrowings: borrowings}),
+              new LoadExemplarsSuccess({exemplars: [normalizedReceiveBorrowingResponse.result]})
+            ];
           }),
           catchError((error) => {
             return of(new CompleteBorrowingError({errorMessage: error.message}));
@@ -188,5 +203,9 @@ export class BorrowingEffects {
               private store$: Store<fromBorrowing.BorrowingState>,
               private borrowingService: BorrowingService,
               private loadingCtrl: LoadingController) {
+  }
+
+  private mapEntities(normalizedData: any, entityName: string) {
+    return Object.keys(normalizedData.entities[entityName]).map(key => normalizedData.entities[entityName][key]);
   }
 }

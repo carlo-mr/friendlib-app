@@ -6,6 +6,8 @@ export enum BookActionTypes {
   SearchBooksSuccess = '[Book] Search books success',
   SearchBooksError = '[Book] Search books error',
 
+  LoadBooksSuccess = '[Book] Load books success',
+
   LoadBookSuccess = '[Book] Load Book success'
 }
 
@@ -30,6 +32,13 @@ export class SearchBookError implements Action {
   }
 }
 
+export class LoadBooksSuccess implements Action {
+  readonly type = BookActionTypes.LoadBooksSuccess;
+
+  constructor(public books: Book[]) {
+  }
+}
+
 export class LoadBookSuccess implements Action {
   readonly type = BookActionTypes.LoadBookSuccess;
 
@@ -41,4 +50,5 @@ export type BookActions =
   SearchBooks
   | SearchBooksSuccess
   | SearchBookError
+  | LoadBooksSuccess
   | LoadBookSuccess;

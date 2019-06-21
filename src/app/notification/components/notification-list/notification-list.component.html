@@ -1,9 +1,8 @@
-<app-collapsible-panel *ngIf="this.notifications && this.notifications.length > 0"
-                       title="Mitteilungen"
+<app-collapsible-panel title="Mitteilungen"
                        [expanded]="true"
                        [badge]="this.notifications ? this.notifications.length : 0">
 
-  <ion-list>
+  <ion-list *ngIf="this.notifications && !this.loading">
     <ion-item *ngFor="let notification of this.notifications">
       <ion-label>
         <h2>
@@ -12,6 +11,69 @@
         </h2>
         <p text-wrap>
           {{notification.message}}
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="this.loading">
+    <ion-item>
+      <ion-label>
+        <h2>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-note slot="end">
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </ion-note>
+        </h2>
+        <p text-wrap>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 75%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h2>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-note slot="end">
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </ion-note>
+        </h2>
+        <p text-wrap>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 75%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h2>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-note slot="end">
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </ion-note>
+        </h2>
+        <p text-wrap>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 75%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h2>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-note slot="end">
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </ion-note>
+        </h2>
+        <p text-wrap>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 75%"></ion-skeleton-text>
         </p>
       </ion-label>
     </ion-item>

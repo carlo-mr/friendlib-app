@@ -15,6 +15,9 @@ export class Borrowing {
   exemplarId: string;
   ownerId: string;
 
+  coverUrl: string;
+  title: string;
+
   creationDate: string;
   updateDate?: string;
 

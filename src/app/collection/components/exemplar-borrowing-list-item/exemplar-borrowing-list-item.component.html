@@ -22,31 +22,29 @@
                       displayFormat="DD MMM YYYY"
                       value="{{borrowing.updateDate || '1986-08-04T23:45Z'}}"></ion-datetime>
       </div>
+      <div *ngIf="borrowing._links && Object.keys(borrowing._links || []).length > 0">
+        <ion-button *ngFor="let linkKey of Object.keys(borrowing._links || {})"
+                    fill="outline"
+                    expand="block"
+                    size="small"
+                    (click)="onUpdateBorrowing(linkKey)">
+          <ion-icon *ngFor="let icon of getActionIcon(linkKey)" [name]="icon"></ion-icon>&nbsp;
+          {{getActionText(linkKey)}}
+        </ion-button>
+      </div>
     </ion-col>
   </ion-row>
 
   <ion-row *ngIf="borrowing.status == 'REJECTED' || borrowing.status == 'COMPLETED'">
     <ion-col>
       <div>
-        <span>{{getStatusText(borrowing.status)}} ({{borrowing.updateDate || '1986-08-04T23:45Z' | date:'dd MMM yyy'}}
-          )</span>
+        <span>{{getStatusText(borrowing.status)}}
+          ({{borrowing.updateDate || '1986-08-04T23:45Z' | date:'dd MMM yyy'}})</span>
       </div>
     </ion-col>
     <ion-col size="3" class="ion-text-center">
       <app-avataaars-wrapper [clazz]="'size-extra-small'" [avataaarsConfig]="borrower.avatar"></app-avataaars-wrapper>
       <span>{{borrower.id}}</span>
-    </ion-col>
-  </ion-row>
-
-  <ion-row *ngIf="borrowing._links && Object.keys(borrowing._links || []).length > 0"
-           class="ion-justify-content-between">
-    <ion-col>
-      <ion-button *ngFor="let linkKey of Object.keys(borrowing._links || {})"
-                  fill="outline"
-                  (click)="onUpdateBorrowing(linkKey)">
-        <ion-icon *ngFor="let icon of getActionIcon(linkKey)" [name]="icon"></ion-icon>
-        {{getActionText(linkKey)}}
-      </ion-button>
     </ion-col>
   </ion-row>
 </ion-grid>

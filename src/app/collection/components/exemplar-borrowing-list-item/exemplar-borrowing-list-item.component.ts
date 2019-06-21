@@ -50,7 +50,7 @@ export class ExemplarBorrowingListItemComponent implements OnInit {
       case 'receive':
         return 'Erhalten';
       case 'complete':
-        return 'Zurück bekommen';
+        return 'Zurückbekommen';
       default:
         return action;
     }

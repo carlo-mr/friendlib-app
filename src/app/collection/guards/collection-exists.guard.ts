@@ -40,7 +40,7 @@ export class CollectionExistsGuard implements CanActivate {
    */
   hasCollectionInApi(ownerId: string): Observable<boolean> {
     return this.collectionService.loadCollection(ownerId).pipe(
-      map((collection: Collection) => new LoadCollectionSuccess({collection})),
+      map((collection: Collection) => new LoadCollectionSuccess({unnormalizedCollection: collection})),
       tap(action => this.store.dispatch(action)),
       map(collection => !!collection),
       catchError(() => {
@@ -59,7 +59,6 @@ export class CollectionExistsGuard implements CanActivate {
     return this.hasCollectionInStore(id).pipe(
       switchMap(inStore => {
         if (inStore) {
-          console.log('collection found in store');
           return of(inStore);
         }
 

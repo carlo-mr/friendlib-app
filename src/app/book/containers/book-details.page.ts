@@ -35,6 +35,7 @@ import {User} from '../../user/user.model';
       <app-book-details
         [book]="book$ | async"
         [users]="users$ | async"
+        [openDescription]="true"
         (borrowRequest)="onBorrowRequest($event)"></app-book-details>
     </ion-content>
   `

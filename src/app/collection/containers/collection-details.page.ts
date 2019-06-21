@@ -5,6 +5,9 @@ import {Observable} from 'rxjs';
 import {NavController} from '@ionic/angular';
 import {LoggedUser} from '../../auth/models/auth.model';
 import * as fromCollection from '../../collection/reducers/collection.reducer';
+import * as fromExemplar from '../../exemplar/exemplar.reducer';
+import * as fromBook from '../../book/book.reducer';
+import * as fromBorrowing from '../../borrowing/borrowing.reducer';
 import {ActivatedRoute} from '@angular/router';
 import {Collection} from '../../common/collection.model';
 import {LoadCollection} from '../actions/collection.actions';
@@ -12,6 +15,8 @@ import * as fromUser from '../../user/user.reducer';
 import {Dictionary} from '@ngrx/entity';
 import {User} from '../../user/user.model';
 import {Exemplar} from '../../common/exemplar.model';
+import {Book} from '../../common/book.model';
+import {Borrowing} from '../../common/borrowing.model';
 
 @Component({
   selector: 'collection-details-page',
@@ -51,11 +56,14 @@ import {Exemplar} from '../../common/exemplar.model';
       </ion-segment>
 
       <ng-container *ngIf="segment == 'own'">
-        <app-exemplar-grid [exemplars]="(this.collection$ | async)?.exemplars"
+        <app-exemplar-grid [exemplars]="exemplars$ | async"
                            [users]="users$ | async"
+                           [books]="books$ | async"
+                           [borrowings]="borrowings$ | async"
+                           [type]="segment"
                            (exemplarSelected)="onExemplarSelected($event)"></app-exemplar-grid>
 
-        <ng-container *ngIf="(this.collection$ | async)?.exemplars.length == 0">
+        <ng-container *ngIf="(exemplars$ | async)?.length == 0">
           <div class="ion-text-center">
             <h2>Noch keine Bücher</h2>
             <p>Nutze das '+' Symbol oben rechts um Bücher hinzuzufügen.</p>
@@ -64,9 +72,12 @@ import {Exemplar} from '../../common/exemplar.model';
         </ng-container>
 
       </ng-container>
+
       <ng-container *ngIf="segment == 'borrowed'">
-        <app-exemplar-grid [exemplars]="(this.collection$ | async)?.borrowedExemplars"
+        <app-exemplar-grid [exemplars]="borrowedExemplars$ | async"
                            [users]="users$ | async"
+                           [books]="books$ | async"
+                           [type]="segment"
                            (exemplarSelected)="onExemplarSelected($event)"></app-exemplar-grid>
 
         <ng-container *ngIf="(this.collection$ | async)?.borrowedExemplars.length == 0">
@@ -82,9 +93,19 @@ import {Exemplar} from '../../common/exemplar.model';
 })
 export class CollectionDetailsPage implements OnInit {
 
+  view = 'cards';
+  sort = 'titleAsc';
+  filterValue = '';
+
   collection$: Observable<Collection>;
   user$: Observable<LoggedUser>;
   users$: Observable<Dictionary<User>>;
+  books$: Observable<Book[]>;
+  borrowings$: Observable<Borrowing[]>;
+
+  // select based on collection
+  exemplars$: Observable<Exemplar[]>;
+  borrowedExemplars$: Observable<Exemplar[]>;
 
   segment = 'own';
 
@@ -98,18 +119,32 @@ export class CollectionDetailsPage implements OnInit {
 
     if (ownerId) {
       this.collection$ = this.store.pipe(select(fromCollection.selectEntity(ownerId)));
+
     } else {
       this.collection$ = this.store.pipe(select(fromCollection.loggedInUserCollection));
+
       this.store.dispatch(new LoadCollection());
     }
 
+    // TODO can this be rewritten using a selector?
+    // e.g. dispatch selectedCollection action
+    this.collection$.subscribe((collection: Collection) => {
+      if (collection) {
+        console.log('collection$ subscription: ', collection);
+        this.exemplars$ = this.store.pipe(select(fromExemplar.selectEntityList(collection.exemplars)));
+        this.borrowedExemplars$ = this.store.pipe(select(fromExemplar.selectEntityList(collection.borrowedExemplars)));
+      }
+    });
+
     this.activatedRoute.queryParams.subscribe((queryParams) => {
+      // TODO put into the store
       this.segment = queryParams['segment'] || 'own';
     });
 
     this.user$ = this.store.pipe(select(fromAuth.getLoggedUser));
     this.users$ = this.store.pipe(select(fromUser.selectEntities));
-
+    this.books$ = this.store.pipe(select(fromBook.selectAll));
+    this.borrowings$ = this.store.pipe(select(fromBorrowing.selectAll));
   }
 
   doRefresh(event) {
