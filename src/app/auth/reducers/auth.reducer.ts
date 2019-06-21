@@ -1,6 +1,7 @@
 import {AuthActionsUnion, AuthActionTypes} from '../actions/auth.actions';
 import {LoggedUser} from '../models/auth.model';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {AvataaarsConfig} from '../../avataaars/components/avataaars-wrapper/avataaars-wrapper.component';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -42,7 +43,7 @@ export function authReducer(state = initialState, action: AuthActionsUnion): Aut
         ...state,
         loggedUser: {
           ...state.loggedUser,
-          avatar: action.payload.avatar
+          avatar: action.payload.avatar as AvataaarsConfig
         }
       };
 

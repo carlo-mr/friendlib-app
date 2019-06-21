@@ -10,7 +10,8 @@ import {LoggedUser} from '../../auth/models/auth.model';
 import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
 import {LoadNotifications} from '../../notification/notification.actions';
 import {AlertController, PopoverController} from '@ionic/angular';
-import {AvatarChangeComponent} from '../components/avatar-change/avatar-change.component';
+import {AvatarChangeMenuPopoverComponent} from '../components/avatar-change-menu-popover/avatar-change-menu-popover.component';
+import {RandomAvatarChangeComponent} from '../components/random-avatar-change/random-avatar-change.component';
 
 @Component({
   selector: 'profile-page',
@@ -19,6 +20,9 @@ import {AvatarChangeComponent} from '../components/avatar-change/avatar-change.c
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
+          <ion-button (click)="onAvatarClicked($event)">
+            <ion-icon name="cog"></ion-icon>
+          </ion-button>
         </ion-buttons>
         <ion-title>Profil</ion-title>
 
@@ -37,12 +41,17 @@ import {AvatarChangeComponent} from '../components/avatar-change/avatar-change.c
       </ion-refresher>
 
       <div class="ion-text-center">
-        <app-avatar class="avatar" [user]="this.loggedUser$ | async" (click)="onAvatarClicked($event)"></app-avatar>
+        <app-avatar class="avatar"
+                    [user]="this.loggedUser$ | async"
+                    (click)="onAvatarClicked($event)"></app-avatar>
       </div>
+
+      <app-selection-avatar-change *ngIf="selectionAvatarChange" [user]="this.loggedUser$ | async"
+                                   (change)="this.onAvatarChange($event)"></app-selection-avatar-change>
 
       <app-notification-list
         [loading]="notificationLoading$ | async"
-        [notifications]="this.notifcations$ | async"></app-notification-list>
+        [notifications]="this.notifications$ | async"></app-notification-list>
 
     </ion-content>
   `
@@ -50,9 +59,11 @@ import {AvatarChangeComponent} from '../components/avatar-change/avatar-change.c
 export class ProfilePage implements OnInit {
 
   avataaarsConfig: AvataaarsConfig;
-  dirty: boolean;
-  notifcations$: Observable<Notification[]>;
+  changeAvatar: boolean;
+  notifications$: Observable<Notification[]>;
   notificationLoading$: Observable<boolean>;
+
+  selectionAvatarChange = false;
 
   loggedUser$: Observable<LoggedUser>;
   private user: LoggedUser;
@@ -62,11 +73,11 @@ export class ProfilePage implements OnInit {
               private popoverCtrl: PopoverController) {
 
     this.loggedUser$ = store.pipe(select(getLoggedUser));
-    this.notifcations$ = store.pipe(select(fromNotification.selectAll));
-    this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
+    this.loggedUser$.subscribe((user) => this.user = user);
 
+    this.notifications$ = store.pipe(select(fromNotification.selectAll));
+    this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
     this.store.dispatch(new LoadNotifications({}));
-    this.loggedUser$ = store.select(getLoggedUser);
   }
 
   ngOnInit() {
@@ -77,8 +88,9 @@ export class ProfilePage implements OnInit {
     this.store.dispatch(new LoadNotifications({refresher: event.target}));
   }
 
-  onAvatarChange(avatar) {
-    this.store.dispatch(new ChangeAvatar({avatar}));
+  onAvatarChange(event) {
+    this.store.dispatch(new ChangeAvatar({avatar: event.avatar}));
+    this.selectionAvatarChange = false;
   }
 
   async onLogoutClicked(event) {
@@ -100,26 +112,49 @@ export class ProfilePage implements OnInit {
   }
 
   onAvatarClicked(event) {
-    this.presentAvatarChangePopover(event);
+    if (!this.selectionAvatarChange) {
+      this.presentAvatarChangeMenuPopover(event);
+    }
   }
 
-  async presentAvatarChangePopover(event) {
+  async presentAvatarChangeMenuPopover(event) {
     const popover = await this.popoverCtrl.create({
-      component: AvatarChangeComponent,
-      componentProps: {
-        user: this.user
-      },
+      component: AvatarChangeMenuPopoverComponent,
+      keyboardClose: true,
       event: event,
       translucent: true
     });
 
     popover.onDidDismiss().then((result) => {
-      if (result && result.data && result.data.avatar) {
-        this.store.dispatch(new ChangeAvatar({avatar: result.data.avatar}));
+      if (result && result.data && result.data.type) {
+        this.presentAvatarChangePopover(result.data.type);
       }
     });
 
     return await popover.present();
+  }
+
+  async presentAvatarChangePopover(type) {
+    if (type === 'selection') {
+      this.selectionAvatarChange = true;
+    } else {
+      const popover = await this.popoverCtrl.create({
+        component: RandomAvatarChangeComponent,
+        componentProps: {
+          user: this.user
+        },
+        keyboardClose: true,
+        translucent: false
+      });
+
+      popover.onDidDismiss().then((result) => {
+        if (result && result.data && result.data.avatar) {
+          this.store.dispatch(new ChangeAvatar({avatar: result.data.avatar}));
+        }
+      });
+
+      return await popover.present();
+    }
   }
 
 }

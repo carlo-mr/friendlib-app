@@ -4,22 +4,24 @@ import {Avataaars, AvataaarsConfig} from '../../../avataaars/components/avataaar
 import {PopoverController} from '@ionic/angular';
 
 @Component({
-  selector: 'app-avatar-change',
-  templateUrl: './avatar-change.component.html'
+  selector: 'app-random-avatar-change',
+  templateUrl: './random-avatar-change.component.html'
 })
-export class AvatarChangeComponent implements OnInit, OnChanges {
+export class RandomAvatarChangeComponent implements OnInit, OnChanges {
 
   @Input() user: LoggedUser;
 
   @Output() change = new EventEmitter<AvataaarsConfig>();
 
-  private dirty: boolean;
   private savedAvatar: AvataaarsConfig;
+
+  generatedAvataaars: AvataaarsConfig[] = [];
 
   constructor(private popoverCtrl: PopoverController) {
   }
 
   ngOnInit() {
+    this.generateAvataaars();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -29,8 +31,26 @@ export class AvatarChangeComponent implements OnInit, OnChanges {
   }
 
   onGenerateClicked() {
-    this.dirty = true;
-    this.user.avatar = {
+    this.generateAvataaars();
+  }
+
+  generateAvataaars() {
+    this.generatedAvataaars = [];
+    for (let i = 0; i < 9; i++) {
+      this.generatedAvataaars.push(this.generateAvataaar());
+    }
+  }
+
+  onAvataaarSelected(avatar) {
+    this.popoverCtrl.dismiss({avatar: avatar});
+  }
+
+  onCloseClicked() {
+    this.popoverCtrl.dismiss({avatar: this.savedAvatar});
+  }
+
+  generateAvataaar() {
+    return {
       avatarStyle: Avataaars.AvatarStyle.TRANSPARENT,
       accessoriesType: this.getRandomEnumValue(Avataaars.Accessories),
       clotheType: this.getRandomEnumValue(Avataaars.Clothe),
@@ -42,14 +62,6 @@ export class AvatarChangeComponent implements OnInit, OnChanges {
       skinColor: this.getRandomEnumValue(Avataaars.SkinColor),
       topType: this.getRandomEnumValue(Avataaars.Top)
     } as AvataaarsConfig;
-  }
-
-  onSaveClicked() {
-    this.popoverCtrl.dismiss({avatar: this.user.avatar});
-  }
-
-  onCloseClicked() {
-    this.popoverCtrl.dismiss({avatar: this.savedAvatar});
   }
 
   getRandomEnumValue(enumClass: any) {
