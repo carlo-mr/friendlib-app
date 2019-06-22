@@ -48,7 +48,7 @@ export class LoginLocalStorageSuccess implements Action {
 export class LoginLocalStorageError implements Action {
   readonly type = AuthActionTypes.LoginLocalStorageError;
 
-  constructor(public errorMessage: string) {
+  constructor(public payload: { errorMessage: string }) {
   }
 }
 
