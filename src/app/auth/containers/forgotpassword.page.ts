@@ -7,16 +7,29 @@ import {NewPasswordDetails} from '../models/auth.model';
 
 @Component({
   selector: 'auth-forgotpassword-page',
+  styleUrls: ['auth.page.scss'],
   template: `
+    <ion-header>
+      <img class="logo" src="./assets/img/splash-transparent.png"/>
+    </ion-header>
+
     <ion-content padding>
       <auth-forgotpassword
         [forgotPasswordCodeSent]="forgotPasswordCodeSent$ | async"
         (newPassword)="onNewPassword($event)"
         (requestCode)="onRequestCode($event)">
       </auth-forgotpassword>
-
-      <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
     </ion-content>
+
+    <ion-footer>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-12>
+            <ion-button expand="full" routerLink="/" routerDirection="forward" color="secondary">Einloggen</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-footer>
   `
 })
 export class ForgotpasswordPage implements OnInit {

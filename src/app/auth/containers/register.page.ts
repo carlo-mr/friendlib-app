@@ -5,13 +5,28 @@ import {RegisterDetails} from '../models/auth.model';
 
 @Component({
   selector: 'auth-register-page',
+  styleUrls: ['auth.page.scss'],
   template: `
+    <ion-header>
+      <img class="logo" src="./assets/img/splash-transparent.png"/>
+    </ion-header>
+
     <ion-content padding>
       <auth-register (register)="onRegister($event)"></auth-register>
-
-      <ion-button fill="outline" routerLink="/" routerDirection="forward">Einloggen</ion-button>
-      <ion-button fill="outline" routerLink="/forgot" routerDirection="forward">Passwort vergessen</ion-button>
     </ion-content>
+
+    <ion-footer>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-6>
+            <ion-button expand="full" routerLink="/" routerDirection="forward" color="secondary">Einloggen</ion-button>
+          </ion-col>
+          <ion-col col-6>
+            <ion-button expand="full" routerLink="/forgot" routerDirection="forward" color="secondary">Passwort vergessen</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-footer>
   `
 })
 export class RegisterPage implements OnInit {

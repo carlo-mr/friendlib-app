@@ -1,5 +1,5 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <ion-list no-lines>
+  <ion-list lines="inset">
     <ion-item>
       <ion-label position="floating">
         <ion-text color="{{isControlInvalid('userName') ? 'danger' : 'primary'}}">

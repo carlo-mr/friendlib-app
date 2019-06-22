@@ -96,7 +96,7 @@ export class AuthEffects {
           return new LoginLocalStorageError(null);
         }),
         catchError((error) => {
-          return of(new LoginLocalStorageError(error.message));
+          return of(new LoginLocalStorageError({errorMessage: error.message}));
         })
       );
     })
@@ -140,6 +140,28 @@ export class AuthEffects {
       this.alertCtrl.create({
         header: 'Password Code verschickt',
         message: `Es wurde eine Email an ${action.payload.destination} geschickt. Nutze den Code um ein neues Passwort zuvergeben.`,
+        buttons: [
+          {
+            text: 'Alles klar'
+          }
+        ]
+      })
+        .then((alert) => alert.present())
+        .catch(() => console.log('Alert could not be created.'));
+    })
+  );
+
+  @Effect({dispatch: false})
+  showAlertOnError$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ForgotPasswordError,
+      AuthActionTypes.RegisterError,
+      AuthActionTypes.NewPasswordError,
+      AuthActionTypes.LoginError),
+    map((action: ForgotPasswordError | RegisterError | LoginError) => {
+      this.alertCtrl.create({
+        header: 'Fehler',
+        subHeader: `Es ist ein Fehler aufgetreten.`,
+        message: action.payload.errorMessage,
         buttons: [
           {
             text: 'Alles klar'

@@ -68,7 +68,7 @@ export const getBorrowingsOfLoggedInUser = createSelector(
   selectAll,
   (requests: string[], allBorrowings: Borrowing[]) =>
     allBorrowings
-      .filter((borrowing: Borrowing) => requests.indexOf(borrowing.borrowingId) > -1)
+      .filter((borrowing: Borrowing) => requests ? requests.indexOf(borrowing.borrowingId) > -1 : false)
 );
 
 export const selectEntityList = (ids: string[]) => createSelector(
