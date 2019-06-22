@@ -22,9 +22,6 @@ import {Exemplar} from '../../common/exemplar.model';
 
 @Component({
   selector: 'exemplar-details-page',
-  styles: [`.avatar-small {
-    width: 40px;
-  }`],
   template: `
     <ng-container *ngIf="this.book$ | async as book">
       <ng-container *ngIf="exemplar$ | async as exemplar">
@@ -44,19 +41,16 @@ import {Exemplar} from '../../common/exemplar.model';
           </ion-toolbar>
         </ion-header>
 
-        <ion-content>
+        <ion-content *ngIf="user$ | async as user">
           <app-book-details [book]="book"
                             [users]="users$ | async"
                             [openDescription]="false"
-                            [exemplarOwner]="exemplar.ownerId"></app-book-details>
+                            [exemplarOwner]="user.name !== exemplar.ownerId ? exemplar.ownerId : null"></app-book-details>
 
-          <ng-container *ngIf="borrowings$ | async as borrowings">
-            <app-exemplar-borrowing-list [exemplarBorrowings]="borrowings"
-                                         (exemplarBorrowingUpdate)="onUpdateBorrowing($event)"
-                                         [users]="users$ | async">
+          <app-exemplar-borrowing-list [exemplarBorrowings]="borrowings$ | async"
+                                       (exemplarBorrowingUpdate)="onUpdateBorrowing($event)"
+                                       [users]="users$ | async"></app-exemplar-borrowing-list>
 
-            </app-exemplar-borrowing-list>
-          </ng-container>
         </ion-content>
       </ng-container>
     </ng-container>

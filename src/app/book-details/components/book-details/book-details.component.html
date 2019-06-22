@@ -1,50 +1,64 @@
-<ion-card *ngIf="book && users">
-  <ion-card-content no-padding>
-    <ion-grid no-padding>
-      <ion-row>
-        <ion-col>
-          <img [ngClass]="imgClass" [classList]="this.imgClass" src="{{book.coverUrl}}" (load)="onImageLoad($event)"/>
-          <ion-skeleton-text style="height: 240px" [ngClass]="skeletonClass" animated></ion-skeleton-text>
-        </ion-col>
-        <ion-col>
-          <h2>{{book.authors?.join(', ')}}</h2>
-          <h3>{{book.title}}</h3>
-          <h3 *ngIf="book.pages">&nbsp;{{book.pages}} Seiten</h3>
-          <div *ngIf="exemplarOwner" class="ion-text-center">
-            <app-avataaars-wrapper [avataaarsConfig]="users[exemplarOwner]?.avatar"></app-avataaars-wrapper>
-            <span>{{exemplarOwner}}</span>
-          </div>
-        </ion-col>
-      </ion-row>
+<ng-container *ngIf="book && users">
+  <ion-card>
+    <ion-card-content no-padding>
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col>
+            <img [ngClass]="imgClass" [classList]="this.imgClass" src="{{book.coverUrl}}" (load)="onImageLoad($event)"/>
+            <ion-skeleton-text style="height: 240px" [ngClass]="skeletonClass" animated></ion-skeleton-text>
+          </ion-col>
+          <ion-col>
+            <h2>{{book.title}}</h2>
+            <h3>{{book.authors?.join(', ')}}</h3>
+            <h3 *ngIf="book.pages">{{book.pages}} Seiten</h3>
+            <div *ngIf="exemplarOwner" class="ion-text-center">
+              <app-avataaars-wrapper [avataaarsConfig]="users[exemplarOwner]?.avatar"></app-avataaars-wrapper>
+              <span>{{exemplarOwner}}</span>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 
-      <app-collapsible-panel margin-bottom
-                             title="Beschreibung"
-                             [expanded]="book.description && book.description.length > 0 && openDescription"
-                             (toggle)="onDescriptionPanelToggled()">
-        <p padding class="ion-text-justify" [innerHtml]="book.description"></p>
-      </app-collapsible-panel>
+  <ion-card>
+    <ion-card-content no-padding>
+      <ion-grid no-padding>
+        <app-collapsible-panel margin-bottom
+                               title="Beschreibung"
+                               [expanded]="book.description && book.description.length > 0 && openDescription"
+                               (toggle)="onDescriptionPanelToggled()">
+          <p padding class="ion-text-justify" [innerHtml]="book.description"></p>
+        </app-collapsible-panel>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 
-      <app-collapsible-panel margin-bottom title="Besitzer" *ngIf="book.owners && book.owners.length > 0"
-                             [badge]="book.owners.length">
-        <ion-list>
-          <ion-item *ngFor="let bookOwner of book.owners">
-            <ion-avatar slot="start">
-              <app-avataaars-wrapper clazz="size-extra-small"
-                                     [avataaarsConfig]="users[bookOwner.ownerId]?.avatar"></app-avataaars-wrapper>
-            </ion-avatar>
-            <ion-label>
-              {{bookOwner.ownerId}}
-            </ion-label>
-            <ion-button slot="end" (click)="onBorrowRequest(bookOwner)">
-              <ion-icon slot="start" name="swap"></ion-icon>
-              Leihanfrage
-            </ion-button>
-          </ion-item>
-        </ion-list>
-      </app-collapsible-panel>
-    </ion-grid>
-  </ion-card-content>
-</ion-card>
+  <ion-card *ngIf="book.owners && book.owners.length > 0">
+    <ion-card-content no-padding>
+      <ion-grid no-padding>
+        <app-collapsible-panel margin-bottom title="Besitzer" *ngIf="book.owners && book.owners.length > 0"
+                               [badge]="book.owners.length">
+          <ion-list>
+            <ion-item *ngFor="let bookOwner of book.owners">
+              <ion-avatar slot="start">
+                <app-avataaars-wrapper clazz="size-extra-small"
+                                       [avataaarsConfig]="users[bookOwner.ownerId]?.avatar"></app-avataaars-wrapper>
+              </ion-avatar>
+              <ion-label>
+                {{bookOwner.ownerId}}
+              </ion-label>
+              <ion-button slot="end" (click)="onBorrowRequest(bookOwner)">
+                <ion-icon slot="start" name="swap"></ion-icon>
+                Leihanfrage
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </app-collapsible-panel>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ng-container>
 
 <ion-card *ngIf="!book">
   <ion-card-content no-padding>

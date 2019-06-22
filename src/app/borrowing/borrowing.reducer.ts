@@ -2,8 +2,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {Borrowing} from '../common/borrowing.model';
 import {BorrowingActions, BorrowingActionTypes} from './borrowing.actions';
-import * as fromAuth from '../auth/reducers/auth.reducer';
-import {LoggedUser} from '../auth/models/auth.model';
+import * as fromCollection from '../collection/reducers/collection.reducer';
 
 export const borrowingAdapter = createEntityAdapter<Borrowing>({
   selectId: (borrowing: Borrowing) => borrowing.borrowingId,
@@ -64,13 +63,12 @@ export const selectBorrowingsForExemplarId = (exemplarId: string) => createSelec
   (borrowings: Borrowing[]) => borrowings.filter(borrowing => borrowing.exemplarId === exemplarId)
 );
 
-export const getBorrowingsOfLoggedInUser = (status: string) => createSelector(
-  fromAuth.getLoggedUser,
+export const getBorrowingsOfLoggedInUser = createSelector(
+  fromCollection.loggedInUserBorrowingRequests,
   selectAll,
-  (loggedUser: LoggedUser, allBorrowings: Borrowing[]) =>
+  (requests: string[], allBorrowings: Borrowing[]) =>
     allBorrowings
-      .filter((borrowing: Borrowing) => borrowing.borrowerId === loggedUser.name)
-      .filter((borrowing: Borrowing) => borrowing.status === status)
+      .filter((borrowing: Borrowing) => requests.indexOf(borrowing.borrowingId) > -1)
 );
 
 export const selectEntityList = (ids: string[]) => createSelector(
