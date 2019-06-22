@@ -1,9 +1,4 @@
 <ng-container *ngIf="borrowings && borrowings.length > 0 && users">
-  <ion-item-divider>
-    <ion-label>
-      {{title}}&nbsp;
-    </ion-label>
-  </ion-item-divider>
   <ion-grid>
     <ion-row>
       <ion-col size="4" *ngFor="let borrowing of borrowings" (click)="onBorrowingSelected(borrowing)"
