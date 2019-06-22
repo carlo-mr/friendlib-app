@@ -1,0 +1,105 @@
+<ng-container *ngIf="user">
+  <ion-list>
+    <ion-item>
+      <ion-label>Haare / Kopfbedeckung</ion-label>
+      <ion-button (click)="prev('Top', 'topType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Top', 'topType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Haarfarbe</ion-label>
+      <ion-button (click)="prev('HairColor', 'hairColor')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('HairColor', 'hairColor')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Accessoires</ion-label>
+      <ion-button (click)="prev('Accessories', 'accessoriesType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Accessories', 'accessoriesType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Augenbrauen</ion-label>
+      <ion-button (click)="prev('Eyebrow', 'eyebrowType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Eyebrow', 'eyebrowType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Augen</ion-label>
+      <ion-button (click)="prev('Eye', 'eyeType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Eye', 'eyeType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Mund</ion-label>
+      <ion-button (click)="prev('Mouth', 'mouthType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Mouth', 'mouthType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Bart</ion-label>
+      <ion-button (click)="prev('FacialHair', 'facialHairType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('FacialHair', 'facialHairType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Hautfarbe</ion-label>
+      <ion-button (click)="prev('SkinColor', 'skinColor')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('SkinColor', 'skinColor')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Klamotten</ion-label>
+      <ion-button (click)="prev('Clothe', 'clotheType')">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-button (click)="next('Clothe', 'clotheType')">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-6>
+            <ion-button
+              ion-item
+              expand="full"
+              (click)="save()">Speichern
+            </ion-button>
+          </ion-col>
+          <ion-col col-6>
+            <ion-button
+              ion-item
+              expand="full"
+              (click)="cancel()">Abbrechen
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ng-container>

@@ -1,28 +1,56 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {LoggedUser} from '../../../auth/models/auth.model';
 import {Avataaars, AvataaarsConfig} from '../../../avataaars/components/avataaars-wrapper/avataaars-wrapper.component';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
-  selector: 'app-avatar-change',
-  templateUrl: './avatar-change.component.html'
+  selector: 'app-random-avatar-change',
+  templateUrl: './random-avatar-change.component.html'
 })
-export class AvatarChangeComponent implements OnInit {
+export class RandomAvatarChangeComponent implements OnInit, OnChanges {
 
   @Input() user: LoggedUser;
 
   @Output() change = new EventEmitter<AvataaarsConfig>();
 
-  private dirty: boolean;
+  private savedAvatar: AvataaarsConfig;
 
-  constructor() {
+  generatedAvataaars: AvataaarsConfig[] = [];
+
+  constructor(private popoverCtrl: PopoverController) {
   }
 
   ngOnInit() {
+    this.generateAvataaars();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.user && this.user.avatar) {
+      this.savedAvatar = {...this.user.avatar} as AvataaarsConfig;
+    }
   }
 
   onGenerateClicked() {
-    this.dirty = true;
-    this.user.avatar = {
+    this.generateAvataaars();
+  }
+
+  generateAvataaars() {
+    this.generatedAvataaars = [];
+    for (let i = 0; i < 9; i++) {
+      this.generatedAvataaars.push(this.generateAvataaar());
+    }
+  }
+
+  onAvataaarSelected(avatar) {
+    this.popoverCtrl.dismiss({avatar: avatar});
+  }
+
+  onCloseClicked() {
+    this.popoverCtrl.dismiss({avatar: this.savedAvatar});
+  }
+
+  generateAvataaar() {
+    return {
       avatarStyle: Avataaars.AvatarStyle.TRANSPARENT,
       accessoriesType: this.getRandomEnumValue(Avataaars.Accessories),
       clotheType: this.getRandomEnumValue(Avataaars.Clothe),
@@ -34,11 +62,6 @@ export class AvatarChangeComponent implements OnInit {
       skinColor: this.getRandomEnumValue(Avataaars.SkinColor),
       topType: this.getRandomEnumValue(Avataaars.Top)
     } as AvataaarsConfig;
-  }
-
-  onSaveClicked() {
-    this.change.emit(this.user.avatar as AvataaarsConfig);
-    this.dirty = false;
   }
 
   getRandomEnumValue(enumClass: any) {

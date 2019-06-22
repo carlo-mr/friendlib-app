@@ -1,0 +1,47 @@
+<ng-container *ngIf="user && generatedAvataaars && generatedAvataaars.length > 0">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[0]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[0])"></app-avataaars-wrapper>
+      </ion-col>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[1]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[1])"></app-avataaars-wrapper>
+      </ion-col>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[2]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[2])"></app-avataaars-wrapper>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[3]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[3])"></app-avataaars-wrapper>
+      </ion-col>
+      <ion-col>
+        <ion-button icon-only (click)="onGenerateClicked()">
+          <ion-icon name="sync"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[4]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[4])"></app-avataaars-wrapper>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[5]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[5])"></app-avataaars-wrapper>
+      </ion-col>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[6]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[6])"></app-avataaars-wrapper>
+      </ion-col>
+      <ion-col>
+        <app-avataaars-wrapper [avataaarsConfig]="this.generatedAvataaars[7]"
+                               (click)="onAvataaarSelected(this.generatedAvataaars[7])"></app-avataaars-wrapper>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ng-container>

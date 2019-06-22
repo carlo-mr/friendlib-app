@@ -5,9 +5,11 @@ import {IonicModule} from '@ionic/angular';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
 import {profileReducer} from './profile.reducer';
-import {AvatarChangeComponent} from './components/avatar-change/avatar-change.component';
+import {RandomAvatarChangeComponent} from './components/random-avatar-change/random-avatar-change.component';
 import {AvataaarsModule} from '../avataaars/avataaars.module';
 import {NotificationModule} from '../notification/notification.module';
+import {SelectionAvatarChangeComponent} from './components/selection-avatar-change/selection-avatar-change.component';
+import {AvatarChangeMenuPopoverComponent} from './components/avatar-change-menu-popover/avatar-change-menu-popover.component';
 
 const routes: Routes = [
   {
@@ -28,7 +30,14 @@ const routes: Routes = [
   ],
   declarations: [
     ProfilePage,
-    AvatarChangeComponent
+    RandomAvatarChangeComponent,
+    SelectionAvatarChangeComponent,
+    AvatarChangeMenuPopoverComponent
+  ],
+  entryComponents: [
+    RandomAvatarChangeComponent,
+    SelectionAvatarChangeComponent,
+    AvatarChangeMenuPopoverComponent
   ]
 })
 export class ProfileModule {

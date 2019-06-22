@@ -1,6 +1,8 @@
+import {AvataaarsConfig} from '../../avataaars/components/avataaars-wrapper/avataaars-wrapper.component';
+
 export interface LoggedUser {
   name: string;
-  avatar: object;
+  avatar: AvataaarsConfig;
   session: any;
 }
 

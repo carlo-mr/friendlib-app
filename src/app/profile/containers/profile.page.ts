@@ -9,7 +9,9 @@ import {Observable} from 'rxjs';
 import {LoggedUser} from '../../auth/models/auth.model';
 import {ChangeAvatar, Logout} from '../../auth/actions/auth.actions';
 import {LoadNotifications} from '../../notification/notification.actions';
-import {AlertController} from '@ionic/angular';
+import {AlertController, PopoverController} from '@ionic/angular';
+import {AvatarChangeMenuPopoverComponent} from '../components/avatar-change-menu-popover/avatar-change-menu-popover.component';
+import {RandomAvatarChangeComponent} from '../components/random-avatar-change/random-avatar-change.component';
 
 @Component({
   selector: 'profile-page',
@@ -18,7 +20,9 @@ import {AlertController} from '@ionic/angular';
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-button (click)="onAvatarClicked($event)">
+            <ion-icon name="cog"></ion-icon>
+          </ion-button>
         </ion-buttons>
         <ion-title>Profil</ion-title>
 
@@ -37,13 +41,17 @@ import {AlertController} from '@ionic/angular';
       </ion-refresher>
 
       <div class="ion-text-center">
-        <app-avatar-change [user]="this.loggedUser$ | async"
-                           (change)="onAvatarChange($event)"></app-avatar-change>
+        <app-avatar class="avatar"
+                    [user]="this.loggedUser$ | async"
+                    (click)="onAvatarClicked($event)"></app-avatar>
       </div>
+
+      <app-selection-avatar-change *ngIf="selectionAvatarChange" [user]="this.loggedUser$ | async"
+                                   (change)="this.onAvatarChange($event)"></app-selection-avatar-change>
 
       <app-notification-list
         [loading]="notificationLoading$ | async"
-        [notifications]="this.notifcations$ | async"></app-notification-list>
+        [notifications]="this.notifications$ | async"></app-notification-list>
 
     </ion-content>
   `
@@ -51,19 +59,24 @@ import {AlertController} from '@ionic/angular';
 export class ProfilePage implements OnInit {
 
   avataaarsConfig: AvataaarsConfig;
-  dirty: boolean;
-  notifcations$: Observable<Notification[]>;
+  changeAvatar: boolean;
+  notifications$: Observable<Notification[]>;
   notificationLoading$: Observable<boolean>;
 
+  selectionAvatarChange = false;
+
   loggedUser$: Observable<LoggedUser>;
+  private user: LoggedUser;
 
   constructor(public store: Store<fromProfile.ProfileState>,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private popoverCtrl: PopoverController) {
 
     this.loggedUser$ = store.pipe(select(getLoggedUser));
-    this.notifcations$ = store.pipe(select(fromNotification.selectAll));
-    this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
+    this.loggedUser$.subscribe((user) => this.user = user);
 
+    this.notifications$ = store.pipe(select(fromNotification.selectAll));
+    this.notificationLoading$ = store.pipe(select(fromNotification.getNotificationLoading));
     this.store.dispatch(new LoadNotifications({}));
   }
 
@@ -75,8 +88,9 @@ export class ProfilePage implements OnInit {
     this.store.dispatch(new LoadNotifications({refresher: event.target}));
   }
 
-  onAvatarChange(avatar) {
-    this.store.dispatch(new ChangeAvatar({avatar}));
+  onAvatarChange(event) {
+    this.store.dispatch(new ChangeAvatar({avatar: event.avatar}));
+    this.selectionAvatarChange = false;
   }
 
   async onLogoutClicked(event) {
@@ -95,6 +109,52 @@ export class ProfilePage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  onAvatarClicked(event) {
+    if (!this.selectionAvatarChange) {
+      this.presentAvatarChangeMenuPopover(event);
+    }
+  }
+
+  async presentAvatarChangeMenuPopover(event) {
+    const popover = await this.popoverCtrl.create({
+      component: AvatarChangeMenuPopoverComponent,
+      keyboardClose: true,
+      event: event,
+      translucent: true
+    });
+
+    popover.onDidDismiss().then((result) => {
+      if (result && result.data && result.data.type) {
+        this.presentAvatarChangePopover(result.data.type);
+      }
+    });
+
+    return await popover.present();
+  }
+
+  async presentAvatarChangePopover(type) {
+    if (type === 'selection') {
+      this.selectionAvatarChange = true;
+    } else {
+      const popover = await this.popoverCtrl.create({
+        component: RandomAvatarChangeComponent,
+        componentProps: {
+          user: this.user
+        },
+        keyboardClose: true,
+        translucent: false
+      });
+
+      popover.onDidDismiss().then((result) => {
+        if (result && result.data && result.data.avatar) {
+          this.store.dispatch(new ChangeAvatar({avatar: result.data.avatar}));
+        }
+      });
+
+      return await popover.present();
+    }
   }
 
 }
