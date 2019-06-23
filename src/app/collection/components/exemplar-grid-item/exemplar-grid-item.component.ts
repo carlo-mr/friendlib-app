@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Borrowing} from '../../../common/borrowing.model';
 import {User} from '../../../user/user.model';
 import {Exemplar} from '../../../common/exemplar.model';
@@ -29,7 +29,7 @@ import {Book} from '../../../common/book.model';
   `],
   templateUrl: './exemplar-grid-item.component.html'
 })
-export class ExemplarGridItemComponent implements OnInit, OnChanges {
+export class ExemplarGridItemComponent implements OnInit {
 
   @Input() exemplar: Exemplar;
   @Input() book: Book;
@@ -43,10 +43,6 @@ export class ExemplarGridItemComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes in ExemplarGridItemComponent: ', changes);
   }
 
   onImageLoad(event) {

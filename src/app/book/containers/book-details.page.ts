@@ -81,7 +81,6 @@ export class BookDetailsPage implements OnInit {
   }
 
   async onShowBookActionsPopover(event) {
-    console.log('onShowBookActionsPopover');
     const popover = await this.popoverCtrl.create({
       component: BookActionsPopoverComponent,
       componentProps: {

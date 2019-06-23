@@ -9,7 +9,7 @@ import {NewPasswordDetails} from '../models/auth.model';
   selector: 'auth-forgotpassword-page',
   styleUrls: ['auth.page.scss'],
   template: `
-    <ion-header>
+    <ion-header text-center>
       <img class="logo" src="./assets/img/splash-transparent.png"/>
     </ion-header>
 

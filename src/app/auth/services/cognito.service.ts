@@ -47,7 +47,6 @@ export class CognitoService {
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (session: any) => {
         const username = session.idToken.payload['cognito:username'];
-        console.log(`User ${username} authenticated.`);
 
         subject.next(cognitoUser);
         subject.complete();
@@ -89,11 +88,9 @@ export class CognitoService {
       null,
       function (err, result) {
         if (err) {
-          console.log('error ' + err);
           subject.error(err);
         } else {
           const cognitoUser = result.user;
-          console.log('user name is ' + cognitoUser.getUsername());
 
           subject.next(cognitoUser);
           subject.complete();
@@ -115,11 +112,7 @@ export class CognitoService {
           return subject.error(getSessionError);
         }
 
-        console.log('session validity: ' + session.isValid());
-
         if (session.isValid()) {
-          console.log('refresh session');
-
           cognitoUser.refreshSession(session.getRefreshToken(), (refreshSessionError, refreshedSession) => {
             if (refreshSessionError) {
               alert(refreshSessionError.message);
@@ -156,7 +149,6 @@ export class CognitoService {
 
     cognitoUser.forgotPassword({
       onSuccess: function (result) {
-        console.log('call result: ' + result);
       },
       onFailure: function (err) {
         subject.error(err);
@@ -210,7 +202,6 @@ export class CognitoService {
             console.error('updateattributes: ', updateAttributesError);
             subject.error(updateAttributesError);
           }
-          console.log('call result: ', result);
 
           subject.next(newAvatar);
           subject.complete();

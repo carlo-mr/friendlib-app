@@ -4,13 +4,16 @@
 
 ion-content {
   --background: transparent !important;
+}
 
+ion-header {
+  background-color: rgba(255, 255, 255, 0.65);
 }
 
 .logo {
-  margin-top: 30px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.65);
+  margin-top: 3%;
+  padding: 5px;
+  max-height: 85px;
 }
 
 ion-list {
