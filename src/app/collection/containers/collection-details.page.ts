@@ -130,7 +130,6 @@ export class CollectionDetailsPage implements OnInit {
     // e.g. dispatch selectedCollection action
     this.collection$.subscribe((collection: Collection) => {
       if (collection) {
-        console.log('collection$ subscription: ', collection);
         this.exemplars$ = this.store.pipe(select(fromExemplar.selectEntityList(collection.exemplars)));
         this.borrowedExemplars$ = this.store.pipe(select(fromExemplar.selectEntityList(collection.borrowedExemplars)));
       }

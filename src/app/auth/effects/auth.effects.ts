@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {catchError, debounce, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, debounce, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {AlertController, LoadingController, NavController} from '@ionic/angular';
 import {
   AuthActionTypes,
@@ -61,7 +61,6 @@ export class AuthEffects {
     ofType(AuthActionTypes.Register),
     switchMap((action: Register) => {
       return this.cognitoService.register(action.payload.registerDetails).pipe(
-        tap((result) => console.log(JSON.stringify(result))),
         map((cognitoUser: any) => new RegisterSuccess(cognitoUser)),
         catchError((error) => of(new RegisterError({errorMessage: error.message})))
       );

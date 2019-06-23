@@ -126,10 +126,7 @@ export class BorrowingEffects {
     switchMap((action: ReceiveBorrowing) => {
         return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
           mergeMap((receiveBorrowingResponse) => {
-            console.log('receiveBorrowingResponse: ', receiveBorrowingResponse);
-
             const normalizedReceiveBorrowingResponse = normalize(receiveBorrowingResponse, ExemplarSchema);
-            console.log('normalizedReceiveBorrowingResponse: ', normalizedReceiveBorrowingResponse);
 
             const borrowings = this.mapEntities(normalizedReceiveBorrowingResponse, 'borrowings');
 
@@ -152,10 +149,7 @@ export class BorrowingEffects {
     switchMap((action: CompleteBorrowing) => {
         return this.borrowingService.update(action.payload.borrowing, action.payload.action).pipe(
           mergeMap((completeBorrowingResponse) => {
-            console.log('completeBorrowingResponse: ', completeBorrowingResponse);
-
             const normalizedReceiveBorrowingResponse = normalize(completeBorrowingResponse, ExemplarSchema);
-            console.log('normalizedReceiveBorrowingResponse: ', normalizedReceiveBorrowingResponse);
 
             const borrowings = this.mapEntities(normalizedReceiveBorrowingResponse, 'borrowings');
 

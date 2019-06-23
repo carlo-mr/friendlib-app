@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Exemplar} from '../../../common/exemplar.model';
 import {User} from '../../../user/user.model';
 import {Borrowing} from '../../../common/borrowing.model';
@@ -9,7 +9,7 @@ import {Book} from '../../../common/book.model';
   selector: 'app-exemplar-grid',
   templateUrl: './exemplar-grid.component.html'
 })
-export class ExemplarGridComponent implements OnInit, OnChanges {
+export class ExemplarGridComponent implements OnInit {
 
   @Input() exemplars: Exemplar[];
   @Input() borrowings: Borrowing[];
@@ -24,11 +24,6 @@ export class ExemplarGridComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log('exemplars: ', this.exemplars, ' users: ', this.users, ' books: ', this.books);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes in ExemplarGridComponent', changes);
   }
 
   selectExemplar(exemplar: Exemplar) {

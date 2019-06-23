@@ -8,7 +8,6 @@ declare var provider: Pact;
 
 beforeAll((done) => {
   provider.setup().then(() => {
-    console.log('before all');
     done();
   });
 });

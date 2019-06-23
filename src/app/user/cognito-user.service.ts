@@ -74,8 +74,6 @@ export class CognitoUserService {
 
                 if (pictureAttribute) {
                   user.avatar = CognitoUserService.parseAvatar(pictureAttribute.Value);
-                } else {
-                  console.log('user ' + user.id + ' has no picture');
                 }
               }
               return user;

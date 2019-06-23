@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Exemplar} from '../../../common/exemplar.model';
 import {LoggedUser} from '../../../auth/models/auth.model';
 
@@ -7,7 +7,7 @@ import {LoggedUser} from '../../../auth/models/auth.model';
   templateUrl: './exemplar-links.component.html',
   styleUrls: ['./exemplar-links.component.scss'],
 })
-export class ExemplarLinksComponent implements OnInit, OnChanges {
+export class ExemplarLinksComponent implements OnInit {
 
   @Input() exemplar: Exemplar;
 
@@ -23,10 +23,6 @@ export class ExemplarLinksComponent implements OnInit, OnChanges {
 
   deleteExemplar() {
     this.removeExemplar.emit(this.exemplar);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('ExemplarLinksComponent onChanges');
   }
 
 }
