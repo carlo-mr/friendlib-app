@@ -46,7 +46,7 @@ steps:
 
   #- script: bundle exec fastlane beta
 
-  - bash: ./.travis/commit_push.bash
+  - bash: ./.ci/commit_push.bash
     displayName: 'Commit and Push changes'
     env:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
