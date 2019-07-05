@@ -7,21 +7,52 @@ trigger:
   branches:
     include:
       - master
+      - feature/add-fastlane
 
 pool:
   vmImage: 'macOS-10.13'
 
 steps:
+  - checkout: self
+    persistCredentials: true
+    clean: true
+
+  - bash: 'export LC_ALL=en_US.UTF-8'
+    displayName: 'Setting variables'
+  - bash: 'export LANG=en_US.UTF-8'
+    displayName: 'Setting variables'
+
   - task: NodeTool@0
+    displayName: 'Setup'
     inputs:
       versionSpec: '8.x'
+
   - script: |
       npm install -g cordova ionic @angular/cli
       npm install
+      bundle install
+      bundle update
+      sudo gem install fastlane -NV
     displayName: 'Setup'
+
   - script: npm run lint
+    displayName: 'Linting'
   - script: npm run test-ci
+    displayName: 'Test'
   - script: ionic build --prod -- --base-href "/friendlib-app/"
+    displayName: 'Webapp Build'
+  - script: ionic cordova build ios
+    displayName: 'Cordova iOS Build'
+
+  #- script: bundle exec fastlane beta
+
+  - bash: ./.travis/commit_push.bash
+    displayName: 'Commit and Push changes'
+    env:
+      GITHUB_TOKEN: $(GITHUB_TOKEN)
+      BUILD_BUILDNUMBER: $(BUILD_BUILDNUMBER)
+      BUILD_SOURCEBRANCH: $(BUILD_SOURCEBRANCH)
+      REPO_SLUG: carlo-mr/friendlib-app
 
   - task: PublishTestResults@2
     condition: succeededOrFailed()

@@ -3,25 +3,10 @@
 # taken from: https://gist.github.com/ddgenome/f3a60fe4c2af0cbe758556d982fbeea9
 # be sure to avoid creating a Travis CI fork bomb
 # see https://github.com/travis-ci/travis-ci/issues/1701
+
 function travis-branch-commit() {
-    local head_ref branch_ref
-    head_ref=$(git rev-parse HEAD)
-    if [[ $? -ne 0 || ! $head_ref ]]; then
-        err "failed to get HEAD reference"
-        return 1
-    fi
-    branch_ref=$(git rev-parse "$TRAVIS_BRANCH")
-    if [[ $? -ne 0 || ! $branch_ref ]]; then
-        err "failed to get $TRAVIS_BRANCH reference"
-        return 1
-    fi
-    if [[ $head_ref != $branch_ref ]]; then
-        msg "HEAD ref ($head_ref) does not match $TRAVIS_BRANCH ref ($branch_ref)"
-        msg "someone may have pushed new commits before this build cloned the repo"
-        return 0
-    fi
-    if ! git checkout "$TRAVIS_BRANCH"; then
-        err "failed to checkout $TRAVIS_BRANCH"
+    if ! git checkout "$BUILD_SOURCEBRANCH"; then
+        err "failed to checkout $BUILD_SOURCEBRANCH"
         return 1
     fi
 
@@ -29,26 +14,26 @@ function travis-branch-commit() {
         err "failed to add modified files to git index"
         return 1
     fi
-    # make Travis CI skip this build
-    if ! git commit -m "[skip travis] Buildnumber update"; then
+    # make CI skip this build
+    if ! git commit -m "[skip ci] Buildnumber update"; then
         err "failed to commit updates"
         return 1
     fi
     # add to your .travis.yml: `branches\n  except:\n  - "/\\+travis\\d+$/"\n`
-    local git_tag=CI_BUILD+travis$TRAVIS_BUILD_NUMBER
-    if ! git tag "$git_tag" -m "Generated tag from Travis CI build $TRAVIS_BUILD_NUMBER"; then
-        err "failed to create git tag: $git_tag"
-        return 1
-    fi
+    #local git_tag=CI_BUILD+$BUILD_BUILDNUMBER
+    #if ! git tag "$git_tag" -m "Generated tag from CI build $BUILD_BUILDNUMBER"; then
+    #    err "failed to create git tag: $git_tag"
+    #    return 1
+    #fi
     local remote=origin
     if [[ $GITHUB_TOKEN ]]; then
-        remote=https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG
+        remote=https://$GITHUB_TOKEN@github.com/$REPO_SLUG
     fi
-    #if [[ $TRAVIS_BRANCH != master ]]; then
-    #    msg "not pushing updates to branch $TRAVIS_BRANCH"
+    #if [[ $BUILD_SOURCEBRANCH != master ]]; then
+    #    msg "not pushing updates to branch $BUILD_SOURCEBRANCH"
     #    return 0
     #fi
-    if ! git push --quiet --follow-tags "$remote" "$TRAVIS_BRANCH" > /dev/null 2>&1; then
+    if ! git push --quiet --follow-tags "$remote" "$BUILD_SOURCEBRANCH" > /dev/null 2>&1; then
         err "failed to push git changes"
         return 1
     fi
