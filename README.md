@@ -25,6 +25,16 @@ or
 
 `docker run -t -p 8080:8080 -v "$(pwd)/pacts/:/app/pacts" pactfoundation/pact-stub-server -p 8080 -d pacts`
 
+# Fastlane
+
+`bundle install`
+
+`bundle update`
+
+`sudo gem install fastlane -NV`
+
+`bundle exec fastlane beta`
+
 # Helpful Links
 
 Setup Jest and Ionic:
