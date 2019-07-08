@@ -17,11 +17,6 @@ steps:
     persistCredentials: true
     clean: true
 
-  - bash: 'export LC_ALL=en_US.UTF-8'
-    displayName: 'Setting variables'
-  - bash: 'export LANG=en_US.UTF-8'
-    displayName: 'Setting variables'
-
   - task: NodeTool@0
     displayName: 'Setup'
     inputs:
@@ -30,10 +25,7 @@ steps:
   - script: |
       npm install -g cordova ionic @angular/cli
       npm install
-      bundle install
-      bundle update
-      sudo gem install fastlane -NV
-    displayName: 'Setup'
+    displayName: 'npm Setup'
 
   - script: npm run lint
     displayName: 'Linting'
@@ -41,10 +33,25 @@ steps:
     displayName: 'Test'
   - script: ionic build --prod -- --base-href "/friendlib-app/"
     displayName: 'Webapp Build'
-  - script: ionic cordova build ios
-    displayName: 'Cordova iOS Build'
 
-  #- script: bundle exec fastlane beta
+  - script: |
+      sudo gem install fastlane -NV
+      bundle install
+      bundle update
+      bundle update --bundler
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: 'Fastlane Setup'
+
+  - script: bundle exec fastlane beta
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: 'Publish Beta'
+    env:
+      CERTIFICATES_REPO: $(CERTIFICATES_REPO)
+      MATCH_PASSWORD: $(MATCH_PASSWORD)
+      FASTLANE_USER: $(FASTLANE_USER)
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
 
   - bash: ./.ci/commit_push.bash
     displayName: 'Commit and Push changes'
