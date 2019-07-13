@@ -31,7 +31,7 @@ steps:
     displayName: 'Linting'
   - script: npm run test-ci
     displayName: 'Test'
-  - script: ionic build --prod -- --base-href "/friendlib-app/"
+  - script: ionic build --prod
     displayName: 'Webapp Build'
 
   - script: |
