@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {LoggedUser, LoginDetails, NewPasswordDetails, RegisterDetails} from '../models/auth.model';
+import {LoggedUser, LoginDetails, NewPasswordDetails, RegisterDetails, Settings} from '../models/auth.model';
 
 export enum AuthActionTypes {
   LoginLocalStorage = '[Auth] Login Local Storage',
@@ -28,7 +28,13 @@ export enum AuthActionTypes {
 
   ChangeAvatar = '[Auth] Change Avatar',
   ChangeAvatarSuccess = '[Auth] Change Avatar Success',
-  ChangeAvatarError = '[Auth] Change Avatar Error'
+  ChangeAvatarError = '[Auth] Change Avatar Error',
+
+  ChangeSettings = '[Auth] Change Settings',
+  ChangeSettingsSuccess = '[Auth] Change Settings Success',
+  ChangeSettingsError = '[Auth] Change Settings Error',
+
+  DeviceRegistered = '[Auth] Device Registered'
 }
 
 export class LoginLocalStorage implements Action {
@@ -178,6 +184,34 @@ export class ChangeAvatarError implements Action {
   }
 }
 
+export class DeviceRegistered implements Action {
+  readonly type = AuthActionTypes.DeviceRegistered;
+
+  constructor(public registration: any) {
+  }
+}
+
+export class ChangeSettings implements Action {
+  readonly type = AuthActionTypes.ChangeSettings;
+
+  constructor(public payload: { settings: Settings }) {
+  }
+}
+
+export class ChangeSettingsSuccess implements Action {
+  readonly type = AuthActionTypes.ChangeSettingsSuccess;
+
+  constructor(public payload: { settings: Settings }) {
+  }
+}
+
+export class ChangeSettingsError implements Action {
+  readonly type = AuthActionTypes.ChangeSettingsError;
+
+  constructor(public payload: { errorMessage: string }) {
+  }
+}
+
 export type AuthActionsUnion =
   LoginLocalStorage
   | LoginLocalStorageSuccess
@@ -199,4 +233,8 @@ export type AuthActionsUnion =
   | LogoutError
   | ChangeAvatar
   | ChangeAvatarSuccess
-  | ChangeAvatarError;
+  | ChangeAvatarError
+  | ChangeSettings
+  | ChangeSettingsSuccess
+  | ChangeSettingsError
+  | DeviceRegistered;

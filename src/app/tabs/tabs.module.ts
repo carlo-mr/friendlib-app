@@ -12,6 +12,8 @@ import {BorrowingModule} from '../borrowing/borrowing.module';
 import {UserModule} from '../user/user.module';
 import {ProfileModule} from '../profile/profile.module';
 import {ExemplarModule} from '../exemplar/exemplar.module';
+import {StoreModule} from '@ngrx/store';
+import {Push} from '@ionic-native/push/ngx';
 
 @NgModule({
   imports: [
@@ -24,7 +26,11 @@ import {ExemplarModule} from '../exemplar/exemplar.module';
     BorrowingModule,
     UserModule,
     ProfileModule,
-    ExemplarModule
+    ExemplarModule,
+    StoreModule
+  ],
+  providers: [
+    Push
   ],
   declarations: [TabsPage]
 })

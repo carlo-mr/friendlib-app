@@ -7,6 +7,9 @@ import {
   ChangeAvatar,
   ChangeAvatarError,
   ChangeAvatarSuccess,
+  ChangeSettings,
+  ChangeSettingsError,
+  ChangeSettingsSuccess,
   ForgotPassword,
   ForgotPasswordError,
   ForgotPasswordSuccess,
@@ -25,7 +28,7 @@ import {
   RegisterSuccess
 } from '../actions/auth.actions';
 import {CognitoService} from '../services/cognito.service';
-import {LoggedUser} from '../models/auth.model';
+import {LoggedUser, Settings} from '../models/auth.model';
 import {defer, of, timer} from 'rxjs';
 import {State} from '../../reducers';
 import {select, Store} from '@ngrx/store';
@@ -43,7 +46,8 @@ export class AuthEffects {
             const loggedUser: LoggedUser = {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
               avatar: AuthEffects.parseAvatar(cognitoUser),
-              session: cognitoUser.signInUserSession
+              session: cognitoUser.signInUserSession,
+              settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
             };
 
             return new LoginSuccess({loggedUser});
@@ -86,7 +90,7 @@ export class AuthEffects {
               name: cognitoUser.signInUserSession.idToken.payload['cognito:username'],
               avatar: AuthEffects.parseAvatar(cognitoUser),
               session: cognitoUser.signInUserSession,
-              // settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
+              settings: JSON.parse(cognitoUser.signInUserSession.idToken.payload['profile'] || '{}')
             };
 
             return new LoginSuccess({loggedUser});
@@ -220,7 +224,6 @@ export class AuthEffects {
     })
   );
 
-
   @Effect({dispatch: false})
   createLoadingOnRequests$ = this.actions$.pipe(
     ofType(AuthActionTypes.ChangeAvatar,
@@ -252,6 +255,48 @@ export class AuthEffects {
     map(() => {
       if (this.loading) {
         this.loading.dismiss();
+      }
+    })
+  );
+
+  @Effect()
+  changeSettings$ = this.actions$.pipe(
+    ofType(AuthActionTypes.ChangeSettings),
+    map((action: ChangeSettings) => action.payload.settings),
+    switchMap((settings: Settings) => {
+
+      return this.cognitoService.changeSettings(settings)
+        .pipe(
+          map(() => new ChangeSettingsSuccess({settings})),
+          catchError((error) => of(new ChangeSettingsError({errorMessage: error.message})))
+        );
+    })
+  );
+
+  @Effect()
+  registerPushDevice$ = this.actions$.pipe(
+    ofType(AuthActionTypes.DeviceRegistered),
+    withLatestFrom(this.store$.pipe(select(state => state.auth.loggedUser))),
+    switchMap(([deviceRegistered, loggedUser]: [any, LoggedUser]) => {
+      const deviceToken = deviceRegistered.registration.registrationId;
+
+      if (loggedUser && loggedUser.settings && loggedUser.settings.deviceToken !== deviceToken) {
+
+        return this.cognitoService
+          .registerPlatformEndpoint(deviceToken, loggedUser)
+          .pipe(
+            map((result: any) => new ChangeSettings({
+              settings: {
+                ...loggedUser.settings,
+                endpointArn: result.EndpointArn,
+                deviceToken: deviceToken
+              }
+            })),
+            catchError((error) => of(new ChangeSettingsError({errorMessage: error.message})))
+          );
+      } else {
+        console.log('Nothing todo');
+        return of();
       }
     })
   );

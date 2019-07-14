@@ -3,7 +3,7 @@ import {Inject, Injectable} from '@angular/core';
 import {AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk';
 import {of, Subject} from 'rxjs';
-import {LoginDetails, NewPasswordDetails, RegisterDetails} from '../models/auth.model';
+import {LoggedUser, LoginDetails, NewPasswordDetails, RegisterDetails, Settings} from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -184,7 +184,7 @@ export class CognitoService {
     if (cognitoUser != null) {
       cognitoUser.getSession(function (getSessionError, session) {
         if (getSessionError) {
-          console.error('getsession: ', getSessionError);
+          console.error('getSession: ', getSessionError);
           subject.error(getSessionError);
         }
 
@@ -208,6 +208,85 @@ export class CognitoService {
         });
       });
     }
+
+    return subject.asObservable();
+  }
+
+  changeSettings(settings: Settings) {
+    const subject = new Subject();
+
+    const cognitoUser: any = this.buildCognitoUserPool().getCurrentUser();
+
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function (getSessionError, session) {
+        if (getSessionError) {
+          console.error('getSession: ', getSessionError);
+          subject.error(getSessionError);
+        }
+
+        const attributeList = [];
+        const attribute = {
+          Name: 'profile',
+          Value: JSON.stringify(settings)
+        };
+
+        const cognitoAttribute = new CognitoUserAttribute(attribute);
+        attributeList.push(cognitoAttribute);
+
+        cognitoUser.updateAttributes(attributeList, function (updateAttributesError, result) {
+          if (updateAttributesError) {
+            console.error('updateattributes: ' + updateAttributesError.message);
+            subject.error(updateAttributesError);
+          }
+
+          subject.next(settings);
+          subject.complete();
+        });
+      });
+    }
+
+    return subject.asObservable();
+  }
+
+  registerPlatformEndpoint(deviceToken: string, user: LoggedUser) {
+    const subject = new Subject();
+
+    // Add the User's Id Token to the Cognito credentials login map.
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: 'eu-central-1:777946e1-88b2-41ac-ba2e-f83325b2bca4',
+      Logins: {
+        'cognito-idp.eu-central-1.amazonaws.com/eu-central-1_pfvYGaiqz': user.session.idToken.jwtToken
+      }
+    });
+
+    // call refresh method in order to authenticate user and get new temp credentials
+    (<AWS.CognitoIdentityCredentials>AWS.config.credentials).refresh((error) => {
+      if (error) {
+        console.error(error);
+        alert('problem refreshing user. :( ' + JSON.stringify(error));
+      } else {
+
+        const params = {
+          PlatformApplicationArn: this.config.platformApplicationArn,
+          Token: deviceToken,
+          CustomUserData: user.name
+        };
+
+        new AWS.SNS().createPlatformEndpoint(params, function (err, data) {
+
+          if (err) {
+            // an error occurred
+            console.log(err, err.stack);
+            subject.error(err);
+          } else {
+            // successful response
+            console.log('create endpoint success: ' + JSON.stringify(data));
+            subject.next(data);
+            subject.complete();
+          }
+        });
+      }
+    });
 
     return subject.asObservable();
   }

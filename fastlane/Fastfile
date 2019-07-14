@@ -26,4 +26,12 @@ platform :ios do
 
     upload_to_testflight(ipa: ENV['CORDOVA_IOS_RELEASE_BUILD_PATH'], skip_waiting_for_build_processing: true)
   end
+
+
+  lane :dev do
+
+    match(type: 'development', readonly: false, git_url: ENV['CERTIFICATES_REPO'])
+
+    cordova(platform: 'ios', release: true, build_flag: ['-UseModernBuildSystem=0'])
+  end
 end
