@@ -35,6 +35,17 @@ or
 
 `bundle exec fastlane beta`
 
+# Push
+
+`ionic cordova plugin add phonegap-plugin-push`
+
+`npm install @ionic-native/push`
+
+[iOS Push with Amazon's AWS Simple Notifications Service (SNS) and Swift Made Easy](https://medium.com/@thabodavidnyakalloklass/ios-push-with-amazons-aws-simple-notifications-service-sns-and-swift-made-easy-51d6c79bc206)
+
+[Generate APNS certificate for iOS Push Notifications](https://medium.com/@ankushaggarwal/generate-apns-certificate-for-ios-push-notifications-85e4a917d522)
+
+
 # Helpful Links
 
 Setup Jest and Ionic:

@@ -10,7 +10,8 @@ export const environment = {
     loginId: 'cognito-idp.eu-central-1.amazonaws.com/eu-central-1_pfvYGaiqz',
     clientId: '28902im3i13g5qnfljcg84at1t',
     region: 'eu-central-1',
-    identityPoolId: 'eu-central-1:777946e1-88b2-41ac-ba2e-f83325b2bca4'
+    identityPoolId: 'eu-central-1:777946e1-88b2-41ac-ba2e-f83325b2bca4',
+    platformApplicationArn: 'arn:aws:sns:eu-central-1:423733755847:app/APNS_SANDBOX/FriendLibApp'
   }
 };
 

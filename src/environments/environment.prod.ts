@@ -4,6 +4,7 @@ export const environment = {
     // apparantly it save to push: https://stackoverflow.com/questions/47833797/are-the-cognito-user-pool-id-and-client-id-sensitive
     userPoolId: 'eu-central-1_pfvYGaiqz',
     clientId: '28902im3i13g5qnfljcg84at1t',
-    region: 'eu-central-1'
+    region: 'eu-central-1',
+    platformApplicationArn: 'arn:aws:sns:eu-central-1:423733755847:app/APNS/FriendLibAppProd'
   }
 };

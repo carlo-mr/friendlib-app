@@ -4,6 +4,14 @@ export interface LoggedUser {
   name: string;
   avatar: AvataaarsConfig;
   session: any;
+  settings: Settings;
+}
+
+export interface Settings {
+  push?: boolean;
+  deviceToken?: string;
+  endpointArn?: string;
+  loadDescriptions?: boolean;
 }
 
 export interface LoginDetails {

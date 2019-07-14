@@ -66,7 +66,8 @@ describe('AuthEffects', () => {
           idToken: {
             payload: {
               'cognito:username': 'test',
-              'picture': '{}'
+              'picture': '{}',
+              'profile': '{ "deviceToken": "xxx" }'
             }
           }
         }
@@ -78,7 +79,8 @@ describe('AuthEffects', () => {
         loggedUser: {
           name: 'test',
           avatar: {},
-          session: mockCognitoUser.signInUserSession
+          session: mockCognitoUser.signInUserSession,
+          settings: {deviceToken: 'xxx'}
         } as LoggedUser
       });
 
