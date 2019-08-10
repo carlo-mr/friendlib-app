@@ -108,20 +108,21 @@ export class CognitoService {
     if (cognitoUser != null) {
       cognitoUser.getSession(function (getSessionError, session) {
         if (getSessionError) {
-          alert(getSessionError.message);
+          console.error(getSessionError.message);
           return subject.error(getSessionError);
         }
 
         if (session.isValid()) {
           cognitoUser.refreshSession(session.getRefreshToken(), (refreshSessionError, refreshedSession) => {
             if (refreshSessionError) {
-              alert(refreshSessionError.message);
+              console.error(refreshSessionError.message);
               return subject.error(refreshSessionError);
             }
             return subject.next(cognitoUser);
           });
         } else {
-          return subject.error(null);
+          console.error('session not valid');
+          return subject.error({message: 'session not valid'});
         }
       });
     } else {

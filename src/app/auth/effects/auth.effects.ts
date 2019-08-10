@@ -159,20 +159,30 @@ export class AuthEffects {
     ofType(AuthActionTypes.ForgotPasswordError,
       AuthActionTypes.RegisterError,
       AuthActionTypes.NewPasswordError,
-      AuthActionTypes.LoginError),
-    map((action: ForgotPasswordError | RegisterError | LoginError) => {
-      this.alertCtrl.create({
-        header: 'Fehler',
-        subHeader: `Es ist ein Fehler aufgetreten.`,
-        message: action.payload.errorMessage,
-        buttons: [
-          {
-            text: 'Alles klar'
-          }
-        ]
-      })
-        .then((alert) => alert.present())
-        .catch(() => console.log('Alert could not be created.'));
+      AuthActionTypes.LoginError,
+      AuthActionTypes.LoginLocalStorageError),
+    map((action: ForgotPasswordError | RegisterError | LoginError | LoginLocalStorageError) => {
+
+      if (action.payload && action.payload.errorMessage) {
+        this.alertCtrl.create({
+          header: 'Fehler',
+          subHeader: `Es ist ein Fehler aufgetreten.`,
+          message: action.payload.errorMessage,
+          buttons: [
+            {
+              text: 'Alles klar'
+            }
+          ]
+        })
+          .then((alert) => {
+            alert.present();
+          })
+          .catch(() => console.log('Alert could not be created.'));
+      } else {
+        if (this.loading) {
+          this.loading.dismiss();
+        }
+      }
     })
   );
 
@@ -232,7 +242,9 @@ export class AuthEffects {
       AuthActionTypes.LoginLocalStorage,
       AuthActionTypes.Register),
     map(async () => {
-      const loading = await this.loadingCtrl.create();
+      const loading = await this.loadingCtrl.create({
+        duration: 5000
+      });
 
       this.loading = loading;
       loading.present();
@@ -251,7 +263,7 @@ export class AuthEffects {
       AuthActionTypes.LoginLocalStorageError,
       AuthActionTypes.RegisterSuccess,
       AuthActionTypes.RegisterError),
-    debounce(() => timer(500)),
+    debounce(() => timer(700)),
     map(() => {
       if (this.loading) {
         this.loading.dismiss();
