@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="21" id="de.clietsch.friendlib" ios-CFBundleVersion="21" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
+<widget android-versionCode="23" id="de.clietsch.friendlib" ios-CFBundleVersion="23" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
   <name>Friendlib</name>
   <description>FriendLib</description>
   <author email="code@clietsch" href="http://friendlib.de/">carlo-mr</author>
