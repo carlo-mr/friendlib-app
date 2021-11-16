@@ -40,7 +40,7 @@
     "@ngrx/store": "~7.4.0",
     "@ngrx/store-devtools": "~7.4.0",
     "amazon-cognito-identity-js": "^3.0.11",
-    "aws-sdk": "^2.348.0",
+    "aws-sdk": "^2.814.0",
     "cordova-browser": "5.0.4",
     "cordova-ios": "4.5.5",
     "cordova-plugin-build-increment": "^2.0.1",
