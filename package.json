@@ -76,7 +76,7 @@
     "@types/jest": "^24.0.11",
     "@types/node": "~10.12.0",
     "acorn": "^6.0.5",
-    "ajv": "^6.6.1",
+    "ajv": "^6.12.3",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-marbles": "^0.4.0",
